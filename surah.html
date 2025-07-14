@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Surah Page</title>
+    <link rel="stylesheet" href="../../styles/style.css" />
+    <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css" />
+    <script src="fontawesome-free-6.6.0-web/js/all.min.js"></script>
+
+    <meta charset="UTF-8" />
+
+    <style>
+      .content {
+        background-color: var(--content-bg-color);
+        width: calc(100% - 40%);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        direction: rtl;
+        font-size: 1.4em;
+        color: var(--text-color);
+      }
+
+      .content p {
+        display: flex;
+        font-size: 1.8em;
+        text-align: center;
+        background-color: var(--light-bg-color);
+        padding: 20px;
+        color: var(--secondary-text-color);
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        font-family: "Lateef";
+      }
+
+      a.button {
+        text-align: center;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+      }
+
+      @media screen and (max-width: 1500px) {
+        .content {
+          width: 100%;
+          
+        }
+      }
+    </style>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <div
+      id="header-container"
+      class="header"
+      data-page-title="جاري تحميل السورة"></div>
+
+    <div class="content">
+      <a href="" class="button" id="gomark" style="visibility: hidden"
+        >الذهاب للعلامة <i class="fa fa-bookmark"></i
+      ></a>
+      
+      
+      <div class="d1" id="surah-ayahs"></div>
+
+      <a href="" class="button" id="nextsurah"
+        >السورة التالية</i
+      ></a>
+      <a href="" class="button" id="prevsurah"
+        >السورة السابقة</i
+      ></a>
+
+
+      <div class="fixed-container">
+        <a class="button" onclick="lunch()" id="scroll-btn">تشغيل السحب التلقائي</a>
+  
+      </div>
+    </div>
+    
+
+    <script src="../../header.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        // دالة الانتظار
+        function sleep(ms) {
+          return new Promise((resolve) => setTimeout(resolve, ms));
+        }
+
+        // ننتظر 2 ثانية قبل البدء
+        await sleep(200);
+
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
+        const hijriDate = `${day}-${month}-${year}`;
+
+        fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const hijri = data.data.hijri;
+            const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+            const hijiryDiv = document.getElementById("hijiry");
+            if (hijiryDiv) hijiryDiv.innerHTML = display;
+          })
+          .catch((error) => {
+            console.error("Fetch Error:", error);
+          });
+
+        const params = new URLSearchParams(window.location.search);
+        const surahNumber = params.get("number");
+
+        const surahNameElement = document.getElementById("surah-name");
+        const ayahsDiv = document.getElementById("surah-ayahs");
+        const storage = localStorage;
+
+        
+        if (!surahNumber) {
+          surahNameElement.textContent = "لم يتم اختيار سورة.";
+        } else {
+          document.getElementById("nextsurah").href = `surah.html?number=${Number(surahNumber)+1}`
+          document.getElementById("prevsurah").href = `surah.html?number=${Number(surahNumber)-1}`
+          surahNameElement.textContent = "جاري التحميل...";
+          ayahsDiv.textContent = "جاري تحميل الآيات...";
+
+          await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              surahNameElement.textContent = `${data.data.name}`;
+              ayahsDiv.innerHTML = "";
+
+              data.data.ayahs.forEach((ayah) => {
+                const p = document.createElement("p");
+                p.textContent = `${ayah.text} (${ayah.numberInSurah})`;
+                p.id = ayah.numberInSurah;
+
+                if (
+                  storage.getItem("ayah") == ayah.numberInSurah &&
+                  storage.getItem("surah") == surahNumber
+                ) {
+                  console.log("yes");
+
+                  p.innerHTML += `
+                    
+                    <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);" class = "mark marked"><i class="fa fa-bookmark"></i></button>
+                  `;
+                  document.getElementById("gomark").style.visibility =
+                    "visible";
+                  document.getElementById(
+                    "gomark"
+                  ).href = `#${ayah.numberInSurah}`;
+                } else {
+                  console.log("no");
+
+                  p.innerHTML += `
+                  
+                  <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);"  class = "mark unmark"><i class="fa fa-bookmark"></i></button>
+                `;
+                }
+                ayahsDiv.appendChild(p);
+              });
+            })
+            .catch((error) => {
+              console.error("خطأ أثناء تحميل السورة:", error);
+              surahNameElement.textContent =
+                "حدث خطأ. تأكد من اتصالك بالإنترنت";
+              ayahsDiv.textContent = "";
+            });
+       
+            if (storage.getItem("surah") == surahNumber){
+              window.location.hash = storage.getItem("ayah") || "";
+            }
+          }
+      });
+    </script>
+
+    <script>
+      var scrollInterval = null;
+      var lunchAutoScroll = false;
+      var scrollBtn = document.getElementById("scroll-btn")
+
+      function autoScroll() {
+        window.scrollBy(0, 0.5); // Scroll 1 pixel down
+      }
+
+      function lunch() {
+        lunchAutoScroll = !lunchAutoScroll;
+
+        if (lunchAutoScroll) {
+          scrollInterval = setInterval(autoScroll, 10);
+          scrollBtn.classList.add("marked")
+          scrollBtn.textContent = "إيقاف السحب التلقائي"
+
+        } else {
+          clearInterval(scrollInterval);
+          scrollBtn.classList.remove("marked")
+          scrollBtn.textContent = "تشغيل السحب التلقائي"
+
+        }
+      }
+    </script>
+
+    <script src="localstorage.js"></script>
+  </body>
+</html>

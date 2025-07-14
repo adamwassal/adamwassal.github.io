@@ -1,0 +1,20 @@
+fetch("header.html")
+  .then((res) => res.text())
+  .then((data) => {
+    const template = document.createElement("div");
+    template.innerHTML = data;
+    const content = template
+      .querySelector("#header-template")
+      .content.cloneNode(true);
+
+    // Change the page title here
+    const container = document.getElementById("header-container");
+    const newTitle = container.dataset.pageTitle; // 👈 put your new title here
+    const pageTitleElement = content.querySelector(".page-title");
+    if (pageTitleElement) {
+      pageTitleElement.textContent = newTitle;
+    }
+
+    document.getElementById("header-container").appendChild(content);
+  });
+
