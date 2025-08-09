@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>الإعدادات - التنبيهات</title>
+
+    <style>
+        /* استيراد الخطوط إذا موجودة */
+        @import url("lateef.css");
+        @import url("thabit.css");
+
+        :root {
+            --content-bg-color: #1976d2;
+            --header-bg-color: #0d1b4c;
+            --page-bg-color: #1e2a78;
+            --text-color: #ffffff;
+            --secondary-text-color: #222222;
+            --highlight-color: #ffd700;
+            --light-bg-color: #fdf6e3;
+            --hover-color: #e69b00;
+            --alt-bg-color: #eef5ff;
+        }
+
+
+        body {
+            font-family: "Lateef", serif;
+            background-color: var(--page-bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        h1 {
+            font-family: "thabit", serif;
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: var(--highlight-color);
+            text-align: center;
+        }
+
+        .settings-container {
+            background-color: var(--content-bg-color);
+            border-radius: 20px;
+            padding: 30px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        label {
+            font-size: 1.6em;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* زر التبديل */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider::before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--highlight-color);
+        }
+
+        input:checked+.slider::before {
+            transform: translateX(26px);
+        }
+
+        /* وصف أسفل الزر */
+        .description {
+            font-size: 1em;
+            color: var(--light-bg-color);
+            margin-top: -20px;
+            margin-bottom: 10px;
+            text-align: right;
+            font-family: "Lateef", serif;
+        }
+
+        /* زر حفظ */
+        button.save-btn {
+            background-color: var(--highlight-color);
+            color: var(--secondary-text-color);
+            font-size: 1.4em;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: center;
+            width: 200px;
+        }
+
+        button.save-btn:hover {
+            background-color: var(--hover-color);
+            color: var(--text-color);
+        }
+
+        /* إشعار صغير */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--highlight-color);
+            color: var(--secondary-text-color);
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .beta {
+            background-color: red;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>إعدادات</h1>
+
+    <div class="settings-container">
+        <div>
+            <label for="notifToggle">
+                تفعيل الإشعارات
+                <div class="switch">
+                    <input type="checkbox" id="notifToggle" />
+                    <span class="slider"></span>
+                </div>
+            </label>
+            <br>
+            <p class="description">
+                تفعيل هذا الخيار سيسمح للموقع بإرسال إشعارات إلى جهازك، مثل تذكير أوقات الصلاة.
+            </p>
+        </div>
+        <div>
+            <label for="modeToggle">
+                تبديل الوضع إلى نهاري
+                <div class="switch">
+                    <input type="checkbox" id="modeToggle" />
+                    <span class="slider"></span>
+                </div>
+            </label>
+            <div class="beta">BETA</div>
+            <br>
+            <p class="description">
+                هذا الخيار يمكنك من تبديل الوضع ليلي أو نهاري "الأساسي ليلي"
+            </p>
+        </div>
+
+        <button class="save-btn" id="saveBtn">حفظ الإعدادات</button>
+        <a href="index.html" class="button">العودة للصفحة الرئيسية</a>
+    </div>
+
+    <div class="toast" id="toastMsg">تم حفظ الإعدادات بنجاح!</div>
+
+    <script src="mode.js"></script>
+</body>
+
+</html>

@@ -1,64 +1,103 @@
 <html>
-  <head>
-    <title>Home</title>
-    <link rel="stylesheet" href="styles/style.css" />
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script
-      src="https://code.jquery.com/jquery-1.10.2.min.js"
-      type="text/javascript"></script>
-  </head>
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="styles/style.css" />
+  <meta charset="UTF-8" />
 
-  <body>
-    <div
-      id="header-container"
-      class="header"
-      data-page-title="الصفحة الرئيسية"></div>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="jquery-1.10.2.min.js" type="text/javascript"></script>
+</head>
 
-    <div class="content">
-      <h1>مرحبا بكم في رياض الجنة</h1>
-      <p>
-        قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ
-        اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ وَطَائِفَةٌ مِّنَ الَّذِينَ مَعَكَ ۚ
-        وَاللَّهُ يُقَدِّرُ اللَّيْلَ وَالنَّهَارَ ۚ عَلِمَ أَن لَّن تُحْصُوهُ
-        فَتَابَ عَلَيْكُمْ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنَ الْقُرْآنِ ۚ عَلِمَ
-        أَن سَيَكُونُ مِنكُم مَّرْضَىٰ ۙ وَآخَرُونَ يَضْرِبُونَ فِي الْأَرْضِ
-        يَبْتَغُونَ مِن فَضْلِ اللَّهِ ۙ وَآخَرُونَ يُقَاتِلُونَ فِي سَبِيلِ
-        اللَّهِ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنْهُ ۚ وَأَقِيمُوا الصَّلَاةَ
-        وَآتُوا الزَّكَاةَ وَأَقْرِضُوا اللَّهَ قَرْضًا حَسَنًا ۚ وَمَا
-        تُقَدِّمُوا لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ هُوَ
-        خَيْرًا وَأَعْظَمَ أَجْرًا ۚ وَاسْتَغْفِرُوا اللَّهَ ۖ إِنَّ اللَّهَ
-        غَفُورٌ رَّحِيمٌ )
-      </p>
-      <p style="margin-top: -20px">سورة المزمل الآية (20)</p>
-      <p></p>
-      <p>
-        و قال صلى الله عليه و سلم (🌱 إذا مررتُم برياضِ الجنةِ فارْتَعوا 🌱)
-      </p>
-    </div>
-  </body>
+<body>
+  <div id="header-container" class="header" data-page-title="الصفحة الرئيسية"></div>
 
-  <script src="header.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const today = new Date();
-      const day = String(today.getDate()).padStart(2, "0");
-      const month = String(today.getMonth() + 1).padStart(2, "0");
-      const year = today.getFullYear();
-      const hijriDate = `${day}-${month}-${year}`;
 
-      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
-        .then((response) => response.json())
-        .then((data) => {
-          const hijri = data.data.hijri;
-          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
-          const hijiryDiv = document.getElementById("hijiry");
-          if (hijiryDiv) hijiryDiv.innerHTML = display;
-        })
-        .catch((error) => {
-          console.error("Fetch Error:", error);
-        });
+
+  <div class="loading_container">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل الصفحة...</p>
+  </div>
+
+  <div class="content">
+    <h1>مرحبا بكم في رياض الجنة</h1>
+    <p>
+      قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ
+      اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ وَطَائِفَةٌ مِّنَ الَّذِينَ مَعَكَ ۚ
+      وَاللَّهُ يُقَدِّرُ اللَّيْلَ وَالنَّهَارَ ۚ عَلِمَ أَن لَّن تُحْصُوهُ
+      فَتَابَ عَلَيْكُمْ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنَ الْقُرْآنِ ۚ عَلِمَ
+      أَن سَيَكُونُ مِنكُم مَّرْضَىٰ ۙ وَآخَرُونَ يَضْرِبُونَ فِي الْأَرْضِ
+      يَبْتَغُونَ مِن فَضْلِ اللَّهِ ۙ وَآخَرُونَ يُقَاتِلُونَ فِي سَبِيلِ
+      اللَّهِ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنْهُ ۚ وَأَقِيمُوا الصَّلَاةَ
+      وَآتُوا الزَّكَاةَ وَأَقْرِضُوا اللَّهَ قَرْضًا حَسَنًا ۚ وَمَا
+      تُقَدِّمُوا لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ هُوَ
+      خَيْرًا وَأَعْظَمَ أَجْرًا ۚ وَاسْتَغْفِرُوا اللَّهَ ۖ إِنَّ اللَّهَ
+      غَفُورٌ رَّحِيمٌ )
+    </p>
+    <p style="margin-top: -20px">سورة المزمل الآية (20)</p>
+    <p></p>
+    <p>
+      و قال صلى الله عليه و سلم (🌱 إذا مررتُم برياضِ الجنةِ فارْتَعوا 🌱)
+    </p>
+  </div>
+</body>
+
+<script src="header.js"></script>
+<script src="notify.js"></script>
+<script src="notify.min.js"></script>
+<script src="toast_notification.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Hide the loading spinner after the page is fully loaded
+
+    window.addEventListener("load", () => {
+      const loadingContainer = document.querySelector(".loading_container");
+      if (loadingContainer) {
+        loadingContainer.classList.add("fade-out");
+        setTimeout(() => {
+          loadingContainer.style.display = "none";
+        }, 2000);
+      }
     });
-  </script>
+
+
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+    const hijriDate = `${day}-${month}-${year}`;
+
+    fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const hijri = data.data.hijri;
+        const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+        const hijiryDiv = document.getElementById("hijiry");
+        if (hijiryDiv) hijiryDiv.innerHTML = display;
+        console.log(hijri.day);
+        if (hijri.weekday.ar === "الجمعة" && localStorage.getItem("notificationsEnabled") == "true") {
+
+          toastNotification(
+            `لا تنسى قراءة سورة الكهف اليوم`,
+            "alkahf",
+            "surah.html?number=18",
+            "سورة الكهف"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+
+      });
+  });
+
+
+</script>
+
+<script src="mode.js"></script>
+<script>
+  applyMode(localStorage.getItem("dayModeEnabled") === "true");
+</script>
+
+
 </html>

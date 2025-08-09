@@ -1,11 +1,136 @@
 <!-- header.html -->
 <template id="header-template">
+  <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css">
+  <style>
+    .header-icons {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      display: flex;
+      gap: 30px;
+    }
+
+    .header-icons .icon {
+      position: relative;
+      font-size: 30px;
+      color: var(--highlight-color);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .header-icons .icon:hover:not(.notifications) {
+      transform: scale(1.1) rotate(50deg);
+      color: var(--hover-color);
+    }
+
+    /* البادج */
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background-color: red;
+      color: white;
+      border-radius: 50%;
+      padding: 2px;
+      font-size: 0.5em;
+      min-width: 18px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .notifications_list {
+      position: absolute;
+      top: 40px;
+      right: 0;
+      background-color: var(--content-bg-color);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      display: none;
+      z-index: 1000;
+      width: 250px;
+      max-height: 500px;
+    }
+
+    .notifications_list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .notifications_list li {
+      padding: 5px 10px;
+      border-bottom: 1px solid #ccc;
+      color: white;
+      /* بدل الأبيض */
+    }
+
+    .notifications_list li:last-child {
+      border-bottom: none;
+    }
+
+    .notifications_list {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+
+    .notifications_list.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Add these to your existing styles */
+    .notifications {
+      cursor: pointer;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .notifications>* {
+      pointer-events: none;
+      /* Make children non-clickable */
+    }
+
+    .notifications_list {
+      pointer-events: auto;
+      /* Allow clicks in dropdown */
+      z-index: 1000;
+    }
+
+    /* Fix for template isolation */
+    body {
+      position: relative;
+      z-index: 0;
+    }
+  </style>
+  <script src="fontawesome-free-6.6.0-web/js/all.min.js"></script>
   <div class="header">
     <div class="page-name">
       <h1 class="page-title" id="surah-name">الصفحة الرئيسية</h1>
     </div>
-    <div class="links">
+    <div class="links" style="position: relative;">
       <img src="imgs/logo.png" alt="" width="200">
+      <div class="header-icons">
+        <!-- أيقونة الإشعارات -->
+
+
+
+        <div class="icon notifications" id="notifications-icon" onclick="
+        let notificationsList = document.querySelector('.notifications_list');
+        notificationsList.classList.toggle('show');
+        ">
+          <i class="fas fa-bell"></i>
+          <span class="badge" id="notification-badge">0</span>
+          <div class="notifications_list" id="notifications_list"></div>
+        </div>
+
+
+        <!-- أيقونة الإعدادات -->
+        <a href="settings.html" class="icon gear">
+          <i class="fa-solid fa-gear"></i>
+        </a>
+      </div>
       <div class="quick-links">
         <ul>
           <li><a href="index.html">الصفحة الرئيسية</a></li>
@@ -13,6 +138,7 @@
           <li><a href="alathker.html">الأذكار</a></li>
           <li><a href="alahdes.html">الأحاديث النبوية</a></li>
           <li><a href="time_prays.html">أوقات الصلاة</a></li>
+
         </ul>
       </div>
       <div class="downloadable">
@@ -21,8 +147,8 @@
           <li><a href="moshaf.pdf">القرءان الكريم</a></li>
           <li><a href="hesn almoslim.PDF">حصن المسلم</a></li>
         </ul>
+      </div>
+      <span id="hijiry"></span>
     </div>
-    <span id="hijiry"></span>
-    </div>
-</div>
+  </div>
 </template>

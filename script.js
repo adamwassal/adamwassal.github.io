@@ -1,3 +1,6 @@
+
+
+
 function showa(faqElement) {
   const answerr = faqElement.querySelector(".a");
   const isAlreadyShown = answerr.classList.contains("show");
@@ -145,4 +148,8 @@ fetch(
     console.log("error")
      countdownElement.innerHTML = ` تحقق من إتصلاك بالإنترنت أو حاول مرة أخرى لاحقًا`;
   });
+  
+
+
+
   

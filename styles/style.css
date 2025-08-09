@@ -2,8 +2,8 @@
 @import url("thabit.css");
 
 @font-face {
-  font-family: 'Hafs';
-  src: url('Hafs.ttf') format('ttf');
+  font-family: "Hafs";
+  src: url("Hafs.ttf") format("ttf");
   font-weight: normal;
   font-style: normal;
 }
@@ -34,7 +34,6 @@ html {
   background-color: var(--page-bg-color);
 }
 
-
 ::-webkit-scrollbar-thumb {
   background-color: blue;
   border-radius: 20px;
@@ -59,7 +58,6 @@ body {
   overflow-x: hidden;
   padding-left: 30px;
   padding-top: 30px;
-
 }
 
 body::after {
@@ -91,10 +89,61 @@ a {
 .header .page-name {
   background-color: var(--page-bg-color);
   border-radius: 20px;
-  width: 100%;
   margin-top: -100px;
+  width: 100%;
   margin-bottom: 10px;
   font-size: 1.4em;
+}
+
+.page-title {
+  position: relative;
+  animation: pop 0.5s;
+}
+
+.page-title::after {
+  content: "";
+  background-color: #b4b4b4;
+  opacity: 0;
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  border-radius: 20px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.page-title:hover.page-title::after {
+  opacity: 0.3;
+  animation: swip 2s infinite;
+}
+
+@keyframes swip {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    right: 100%;
+    opacity: 0;
+  }
+  100% {
+    right: 0;
+    opacity: 0.3;
+  }
 }
 
 .header .links {
@@ -126,6 +175,7 @@ a {
   color: var(--text-color);
   font-size: 1.5em;
   margin: 10px;
+  transition: 0.3s;
 }
 
 .header .links .quick-links li a:hover,
@@ -186,7 +236,6 @@ a {
   text-align: right;
   font-family: "Hafs", serif;
   color: var(--secondary-text-color);
-  
 }
 
 .d1 p {
@@ -216,14 +265,13 @@ a {
 }
 
 .button {
-        text-align: center;
-        font-size: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-      }
-
+  text-align: center;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 
 .button:hover {
   background-color: var(--highlight-color);
@@ -233,6 +281,15 @@ a {
 .alahades p {
   margin: 20px;
   border-radius: 10px;
+  animation: pop_hades 1s;
+}
+@keyframes pop_hades {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .tasbeeh {
@@ -355,8 +412,6 @@ a {
   border-radius: 20px;
 }
 
-
-
 .mark {
   background-color: var(--highlight-color);
   color: var(--secondary-text-color);
@@ -369,18 +424,17 @@ a {
   background-color: red;
   color: white;
   animation: marked 1s;
- animation-iteration-count: infinite;
-
+  animation-iteration-count: infinite;
 }
 
 @keyframes marked {
-    0% {
+  0% {
     transform: scale(1);
   }
   50% {
     transform: scale(1.2);
   }
-    100% {
+  100% {
     transform: scale(1);
   }
 }
@@ -395,22 +449,54 @@ a {
   height: 70px;
   margin: 0;
   padding: 0;
-
 }
 
 iframe {
-   width: 200px;
+  width: 200px;
   height: 70px;
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: var(--highlight-color);
+  color: var(--secondary-text-color);
+  padding: 10px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: slideInRight 0.5s ease-out;
+}
+.notification p {
+  margin: 0;
+  font-size: 1.2em;
+}
+.notification .notification-icon img {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+.notification .notification-icon {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 /* Responsive media queries — لم يتم تعديل الألوان هنا لأنها مخصصة للحجم فقط */
@@ -493,4 +579,233 @@ iframe {
     right: 0.1px;
     width: 100%;
   }
+}
+
+/* ---------- OVERLAY EFFECT ---------- */
+.card-overlay {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.card-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(25, 118, 210, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.card-overlay:hover::before {
+  opacity: 1;
+}
+
+/* ---------- FADE-IN ANIMATION ON LOAD ---------- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- 3D BUTTON EFFECT ---------- */
+.button {
+  perspective: 1000px;
+}
+
+.button:hover {
+  transform: rotateX(10deg) rotateY(-5deg) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- 3D CARD EFFECT ---------- */
+.pray {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.pray:hover {
+  transform: rotateY(5deg) rotateX(5deg) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- PULSE EFFECT FOR NEXT PRAYER ---------- */
+.next-prayer {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
+/* ---------- SLIDE-IN ANIMATION ---------- */
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(100px);
+  animation: slideInRight 0.8s forwards;
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---------- ROTATING ICON ---------- */
+.rotating-icon {
+  animation: rotate360 6s linear infinite;
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.notifyjs-container > div {
+  background: linear-gradient(
+    135deg,
+    var(--highlight-color),
+    var(--content-bg-color)
+  );
+  color: var(--text-color);
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  font-family: "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideUp 0.4s ease-out, fadeIn 0.4s ease-in;
+  position: relative;
+  overflow: hidden;
+}
+
+.notifyjs-container > div:before {
+  content: "🔔";
+  font-size: 18px;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* رابط الإشعار */
+.notification-link {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 6px 12px;
+  background-color: #1976d2; /* أزرق جميل */
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 30px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.notification-link:hover {
+  background-color: #145a9e; /* أزرق أغمق عند المرور */
+  transform: translateY(-2px);
+}
+
+.notification-link:active {
+  transform: translateY(0);
+}
+
+.loading_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--page-bg-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.loading-spinner {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+.loading_container p {
+  margin-top: 20px;
+  color: var(--text-color);
+  font-size: 2.2em;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid var(--text-color);
+  animation: typing 3s steps(30, end);
+  
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 200px;
+  }
+}
+
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading_container.fade-out {
+  opacity: 0;
+  transition: opacity 2s ease;
+  pointer-events: none;
 }
