@@ -499,6 +499,29 @@ iframe {
   margin-right: 10px;
 }
 
+input[type="radio"] {
+  display: none;
+}
+
+label {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+label:hover {
+  background-color: var(--button-hover-bg-color);
+  color: var(--button-hover-text-color);
+}
+
+input[type="radio"]:checked + label {
+  background-color: white;
+  color: rgb(0, 0, 0);
+}
+
 /* Responsive media queries — لم يتم تعديل الألوان هنا لأنها مخصصة للحجم فقط */
 @media screen and (max-width: 1500px) {
   body {
@@ -781,7 +804,6 @@ iframe {
   overflow: hidden;
   border-right: 2px solid var(--text-color);
   animation: typing 3s steps(30, end);
-  
 }
 
 @keyframes typing {
@@ -792,8 +814,6 @@ iframe {
     width: 200px;
   }
 }
-
-
 
 @keyframes spin {
   0% {

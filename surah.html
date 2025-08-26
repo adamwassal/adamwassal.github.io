@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css" />
   <script src="fontawesome-free-6.6.0-web/js/all.min.js"></script>
 
-  <meta charset="UTF-8" />
-
   <style>
     .content {
       background-color: var(--content-bg-color);
@@ -25,7 +23,7 @@
 
     .content p {
       display: flex;
-      font-size: 1.8em;
+      font-size: 1.4em;
       text-align: center;
       background-color: var(--light-bg-color);
       padding: 20px;
@@ -34,7 +32,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      font-family: "Lateef";
+      font-family: "Hafs";
       position: relative;
     }
 
@@ -51,7 +49,7 @@
       align-items: center;
       cursor: pointer;
       position: absolute;
-      bottom: 4px;
+      bottom: 2px;
 
     }
 
@@ -74,7 +72,7 @@
       flex-direction: column;
       position: fixed;
       top: 25%;
-      max-height: 50%;
+      max-height: 100%;
       height: 50%;
       width: 40%;
       overflow-y: auto;
@@ -105,7 +103,7 @@
       font-size: 1.5em;
       text-align: center;
       margin-bottom: 10px;
-      font-family: "Lateef", serif;
+      font-family: "Hafs", serif;
     }
 
     .tafseer-content .tafsir {
@@ -134,11 +132,11 @@
 
     /* زر الإغلاق ثابت بالنسبة للشاشة */
     .tafseer-content .close_btn {
-      position: fixed;
+      position: absolute;
       /* بدل absolute */
-      top: calc(25% + 10px);
+      top: 20px;
       /* 25% بداية المودال + 10px */
-      right: calc(30% + 15px);
+      right: 20px;
       /* 30% بداية المودال + 15px */
       font-size: 1.7em;
       color: black;
@@ -173,28 +171,52 @@
       font-size: 1em;
     }
 
-    .tafaseer input[type="radio"] {
-      display: none;
+  
+
+    .tafseer-content .ayah {
+      font-family: "Hafs", serif;
     }
 
-    .tafaseer label {
+    .expand_btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.2em;
+      color: black;
       cursor: pointer;
-      padding: 5px 10px;
-      border-radius: 10px;
-      background-color: var(--button-bg-color);
-      color: var(--button-text-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    .tafaseer label:hover {
-      background-color: var(--button-hover-bg-color);
-      color: var(--button-hover-text-color);
-    }
-
-    .tafaseer input[type="radio"]:checked+label {
+      z-index: 1100;
       background-color: white;
-      color: rgb(0, 0, 0);
+      padding: 5px 10px;
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
+    .fullscreen {
+      animation: fullscreenAnim 0.3s ease-in-out forwards;
+    }
+
+    @keyframes fullscreenAnim {
+      0% {
+        top: 25%;
+        left: 30%;
+        width: 40%;
+        height: 50%;
+      }
+
+      100% {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0%;
+      }
+    }
+
+
 
 
     @keyframes scaleDown {
@@ -252,7 +274,10 @@
         <input type="radio" name="tafseer" id="tafseer2" onclick="updateTafsir()" />
         <label for="tafseer2">تفسير ابن كثير</label>
       </div>
-        <div class="details"></div>
+      <div class="close_btn" onclick="closeTafsir()">&times;</div>
+      <div class="expand_btn" onclick="expandTafsir()"><i class="fa-solid fa-expand"></i></div>
+
+      <div class="details"></div>
     </div>
   </div>
 
@@ -378,6 +403,11 @@
     async function tafsir(tafseerid, surahnumber, ayahnumber, ayahText) {
       const body = document.body;
       body.style.overflow = "hidden"; // Disable scrolling
+      const tafseerContent = document.getElementById("tafseer-content");
+      tafseerContent.style.display = "flex";
+      const detailstafseer = document.querySelector(".tafseer-content .details");
+      detailstafseer.innerHTML = `<div>جاري تحميل التفسير...</div>`;
+
       await fetch(
         `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/ar-tafsir-muyassar/${surahnumber}/${ayahnumber}.json`
       )
@@ -388,13 +418,10 @@
           return response.json();
         })
         .then((data) => {
-          const tafseerContent = document.getElementById("tafseer-content");
-          tafseerContent.style.display = "flex";
-          const detailstafseer = document.querySelector(".tafseer-content .details");
+
           detailstafseer.innerHTML = `
 
           
-        <div class="close_btn" onclick="closeTafsir()">&times;</div>
         <div class="ayah">${ayahText} (${ayahnumber})</div>
         التفسير:
         <div class="tafsir">${data.text}</div>
@@ -402,7 +429,7 @@
       `;
         })
         .catch((error) => {
-          console.error("خطأ أثناء تحميل السورة:", error);
+          console.error("خطأ أثناء تحميل التفسير:", error);
         });
     }
 
@@ -413,6 +440,7 @@
       const ayahText = ayahTextMatch ? ayahTextMatch[1] : "";
       const ayahNumberMatch = ayahElement.textContent.match(/\((\d+)\)$/);
       const ayahNumber = ayahNumberMatch ? parseInt(ayahNumberMatch[1]) : null;
+
 
       let tafseerId = "ar-tafsir-muyassar"; // Default to Tafseer Maysir
       if (document.getElementById("tafseer2").checked) {
@@ -425,6 +453,11 @@
       }
 
       if (surahNumber && ayahNumber) {
+        const tafsirDiv = document.querySelector(".tafsir");
+        const tafseerNameDiv = document.querySelector(".tafseer-name");
+        const detailstafseer = document.querySelector(".tafseer-content .details");
+        tafsirDiv.innerHTML = `<div>جاري تحميل التفسير...</div>`;
+
         fetch(`https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${tafseerId}/${surahNumber}/${ayahNumber}.json`)
           .then((response) => {
             if (!response.ok) {
@@ -433,10 +466,10 @@
             return response.json();
           })
           .then((data) => {
-            const tafsirDiv = document.querySelector(".tafsir");
-            const tafseerNameDiv = document.querySelector(".tafseer-name");
-            tafsirDiv.textContent = data.text;
-            tafseerNameDiv.textContent = `* ${tafaseers[tafseerId]} *`;
+
+            tafsirDiv.innerHTML = data.text;
+            tafseerNameDiv.innerHTML = `* ${tafaseers[tafseerId]} *`;
+
           })
           .catch((error) => {
             console.error("خطأ أثناء تحميل التفسير:", error);
@@ -448,6 +481,7 @@
       const body = document.body;
       body.style.overflow = "auto"; // Enable scrolling
       const tafseerContent = document.getElementById("tafseer-content");
+      tafseerContent.classList.remove("fullscreen");
       tafseerContent.classList.add("scale-down");
       setTimeout(() => {
         tafseerContent.style.display = "none";
@@ -455,6 +489,13 @@
       }, 300);
     }
 
+    let isExpanded = false;
+    function expandTafsir() {
+      const tafseerContent = document.getElementById("tafseer-content");
+      if (isExpanded) { tafseerContent.classList.remove("fullscreen"); isExpanded = false; return }; // Prevent multiple expansions  
+      isExpanded = true;
+      tafseerContent.classList.add("fullscreen");
+    }
   </script>
 
   <script>

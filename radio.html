@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>راديو</title>
+    <link rel="stylesheet" href="styles/style.css">
+
+    <style>
+        iframe {
+            background: transparent;
+        }
+
+        .content {
+            padding: 30px 10px;
+        }
+
+        .radios {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+
+        .image {
+            width: 300px;
+            border-radius: 20px;
+        }
+
+        .name {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        audio {
+            width: 100%;
+            background: transparent !important;
+            border-radius: 15px;
+            outline: none;
+        }
+
+        /* لو حابب تخلي البار بلونك */
+        audio::-webkit-media-controls-panel {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(8px);
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        audio::-webkit-media-controls-timeline {
+            display: none;
+        }
+
+        audio::-webkit-media-controls-play-button {
+            width: 500px;
+        }
+
+        /* تأثير تحميل عام */
+        .loading {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            border-radius: 12px;
+            color: transparent !important;
+        }
+
+        /* حركة الشيمر */
+        .loading::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150px;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* صورة وهمية */
+        .image.loading {
+            width: 300px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* اسم القارئ */
+        .name.loading {
+            height: 20px;
+            width: 150px;
+            margin: 10px auto;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="header-container" class="header" data-page-title="الراديو"></div>
+
+    <div class="content">
+        <div class="radios">
+
+        </div>
+        <div class="radio">
+            <br>
+            <img src="" alt="" class="image">
+            <div class="name"></div>
+            <div class="player">
+
+                <audio class="quranPlayer" controls style="width:100%; background: transparent;" autoplay>
+
+                </audio>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="header.js"></script>
+    <script src="notify.js"></script>
+    <script src="notify.min.js"></script>
+    <script src="toast_notification.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Hide the loading spinner after the page is fully loaded
+
+            window.addEventListener("load", () => {
+                const loadingContainer = document.querySelector(".loading_container");
+                if (loadingContainer) {
+                    loadingContainer.classList.add("fade-out");
+                    setTimeout(() => {
+                        loadingContainer.style.display = "none";
+                    }, 2000);
+                }
+            });
+
+
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, "0");
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const year = today.getFullYear();
+            const hijriDate = `${day}-${month}-${year}`;
+
+            fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    const hijri = data.data.hijri;
+                    const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+                    const hijiryDiv = document.getElementById("hijiry");
+                    if (hijiryDiv) hijiryDiv.innerHTML = display;
+                    console.log(hijri.day);
+                    if (hijri.weekday.ar === "الجمعة" && localStorage.getItem("notificationsEnabled") == "true") {
+
+                        toastNotification(
+                            `لا تنسى قراءة سورة الكهف اليوم`,
+                            "alkahf",
+                            "surah.html?number=18",
+                            "سورة الكهف"
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error("Fetch Error:", error);
+
+                });
+        });
+
+
+    </script>
+
+    <script>
+        // fetch data from https://data-rosy.vercel.app/radio.json
+
+        async function renderallradios() {
+            try {
+                const response = await fetch(`https://data-rosy.vercel.app/radio.json`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                const radioContainer = document.querySelector(".radios"); // مكان كل الراديوهات
+
+                radioContainer.innerHTML = ""; // فضي المكان قبل ما تضيف
+                data.radios.forEach((radio, index) => {
+                    // إنشاء عنصر لكل راديو
+
+                    const radioDiv = document.createElement("div");
+                    radioDiv.classList.add("radio");
+
+
+                    if (index == 0) {
+                        radioDiv.innerHTML = `
+                        <input type="radio" name="radio" id="${index}" onclick="radio(${radio.id})" checked/>
+                <label for="${index}"> ${radio.name}</label>
+          `;
+
+                    }
+                    else {
+                        radioDiv.innerHTML = `
+                        <input type="radio" name="radio" id="${index}" onclick="radio(${radio.id})"/>
+                <label for="${index}"> ${radio.name}</label>
+          `;
+                    }
+
+                    radioContainer.appendChild(radioDiv);
+                });
+
+            } catch (error) {
+                console.error("خطأ أثناء تحميل الراديو:", error);
+            }
+        }
+
+        renderallradios()
+
+        async function radio(id) {
+            const radio_image = document.querySelector(".radio .image")
+            const radio_name = document.querySelector(".radio .name")
+            const radio_audio = document.querySelector(".radio .player .quranPlayer")
+
+            radio_image.setAttribute("src", "")
+            // 🔹 أضف كلاس تحميل قبل جلب البيانات
+            radio_image.classList.add("loading");
+            radio_name.classList.add("loading");
+
+            await fetch(`https://data-rosy.vercel.app/radio.json`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    let reciter = data.radios[id - 1].name
+                    let url = data.radios[id - 1].url
+                    let image = data.radios[id - 1].img
+
+                    // ✅ تحديث المحتوى
+                    radio_image.setAttribute("src", image)
+                    radio_name.textContent = reciter
+                    radio_audio.pause()
+                    radio_audio.setAttribute("src", url)
+                    radio_audio.play()
+
+                    // 🔹 شيل كلاس التحميل بعد ما تجهز الداتا
+                    radio_image.classList.remove("loading");
+                    radio_name.classList.remove("loading");
+                })
+                .catch((error) => {
+                    console.error("خطأ أثناء تحميل الراديو:", error);
+                    radio_name.textContent = "تأكد من اتصالك بالانترنت";
+                    radio_image.classList.remove("loading");
+                    radio_name.classList.remove("loading");
+                });
+        }
+
+        radio(1)
+    </script>
+</body>
+
+</html>
