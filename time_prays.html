@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pray Times</title>
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body>
+  <div id="header-container" class="header" data-page-title="أوقات الصلاة"></div>
+
+  <div class="loading_container">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل الصفحة...</p>
+  </div>
+
+  <div class="content" style="margin-top: 14em">
+    <div id="countdown" style="margin-top: 20px; font-weight: bold"></div>
+
+    <div class="prays">
+      <div class="pray" data-prayer="الفجر">
+        <h1>صلاة الفجر</h1>
+        <div class="time" id="alfajr"></div>
+      </div>
+      <div class="pray" data-prayer="الظهر">
+        <h1>صلاة الظهر</h1>
+        <div class="time" id="alduhr"></div>
+      </div>
+      <div class="pray" data-prayer="العصر">
+        <h1>صلاة العصر</h1>
+        <div class="time" id="alasr"></div>
+      </div>
+      <div class="pray" data-prayer="المغرب">
+        <h1>صلاة المغرب</h1>
+        <div class="time" id="almaghreb"></div>
+      </div>
+      <div class="pray" data-prayer="العشاء">
+        <h1>صلاة العشاء</h1>
+        <div class="time" id="alisha"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="header.js"></script>
+  <script src="toast_notification.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      
+      window.addEventListener("load", () => {
+        const loadingContainer = document.querySelector(".loading_container");
+        if (loadingContainer) {
+          loadingContainer.classList.add("fade-out");
+          setTimeout(() => {
+            loadingContainer.style.display = "none";
+          }, 2000);
+        }
+      });
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+      const hijriDate = `${day}-${month}-${year}`;
+
+      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const hijri = data.data.hijri;
+          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+          const hijiryDiv = document.getElementById("hijiry");
+          if (hijiryDiv) hijiryDiv.innerHTML = display;
+        })
+        .catch((error) => {
+          console.error("Fetch Error:", error);
+        });
+    });
+
+  </script>
+
+  <script src="script.js"></script>
+  <script src="mode.js"></script>
+  <script>
+    applyMode(localStorage.getItem("dayModeEnabled") === "true");
+  </script>
+
+
+</body>
+
+</html>

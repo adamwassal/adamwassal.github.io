@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Surah Page</title>
+  <link rel="stylesheet" href="../../styles/style.css" />
+  <link rel="stylesheet" href="fontawesome-free-6.6.0-web/css/all.min.css" />
+  <script src="fontawesome-free-6.6.0-web/js/all.min.js"></script>
+
+  <meta charset="UTF-8" />
+
+  <style>
+    .content {
+      background-color: var(--content-bg-color);
+      width: calc(100% - 40%);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      direction: rtl;
+      font-size: 1.4em;
+      color: var(--text-color);
+    }
+
+    .content p {
+      display: flex;
+      font-size: 1.8em;
+      text-align: center;
+      background-color: var(--light-bg-color);
+      padding: 20px;
+      color: var(--secondary-text-color);
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: "Lateef";
+      position: relative;
+    }
+
+    .tafseer {
+      font-size: 0.5em;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: absolute;
+      bottom: 4px;
+
+    }
+
+    .tafseer:hover {
+      transform: rotate(20deg);
+    }
+
+
+    a.button {
+      text-align: center;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tafseer-content {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 25%;
+      max-height: 50%;
+      height: 50%;
+      width: 40%;
+      overflow-y: auto;
+      background-color: rgba(0, 0, 0, 0.541);
+      padding: 10px;
+      flex-direction: column;
+      direction: rtl;
+      z-index: 1000;
+      border-radius: 20px;
+      gap: 30px;
+      text-align: center;
+      left: 30%;
+      padding-top: 60px;
+      animation: scaleUp 0.3s ease-in-out;
+    }
+
+    @keyframes scaleUp {
+      0% {
+        transform: scale(0);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .tafseer-content .ayah {
+      font-size: 1.5em;
+      text-align: center;
+      margin-bottom: 10px;
+      font-family: "Lateef", serif;
+    }
+
+    .tafseer-content .tafsir {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    .tafseer-content .tafseer-name {
+      font-size: 1em;
+
+    }
+
+    .tafseer-content::before {
+      content: "";
+      background-color: black;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 10px;
+      opacity: 0.7;
+      z-index: -1;
+    }
+
+    /* زر الإغلاق ثابت بالنسبة للشاشة */
+    .tafseer-content .close_btn {
+      position: fixed;
+      /* بدل absolute */
+      top: calc(25% + 10px);
+      /* 25% بداية المودال + 10px */
+      right: calc(30% + 15px);
+      /* 30% بداية المودال + 15px */
+      font-size: 1.7em;
+      color: black;
+      cursor: pointer;
+      z-index: 1100;
+      background-color: white;
+      padding: 5px 10px;
+      border-radius: 50%;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* أعلى من المودال */
+    }
+
+    .scale-down {
+      animation: scaleDown 0.3s ease-in-out;
+    }
+
+    .tafaseer {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1100;
+      background-color: var(--content-bg-color);
+      padding: 5px 10px;
+      border-radius: 20px;
+      display: flex;
+      gap: 20px;
+      font-size: 1em;
+    }
+
+    .tafaseer input[type="radio"] {
+      display: none;
+    }
+
+    .tafaseer label {
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 10px;
+      background-color: var(--button-bg-color);
+      color: var(--button-text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .tafaseer label:hover {
+      background-color: var(--button-hover-bg-color);
+      color: var(--button-hover-text-color);
+    }
+
+    .tafaseer input[type="radio"]:checked+label {
+      background-color: white;
+      color: rgb(0, 0, 0);
+    }
+
+
+    @keyframes scaleDown {
+      0% {
+        transform: scale(1);
+      }
+
+      100% {
+        transform: scale(0);
+      }
+    }
+
+    @media screen and (max-width: 1500px) {
+      .content {
+        width: 100%;
+
+      }
+
+      .tafseer-content {
+        width: 90%;
+        left: 2%;
+      }
+    }
+  </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <div id="header-container" class="header" data-page-title="جاري تحميل السورة"></div>
+
+  <div class="loading_container">
+    <div class="loading-spinner"></div>
+    <p>جاري تحميل الصفحة...</p>
+  </div>
+
+  <div class="content">
+    <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
+
+
+    <div class="d1" id="surah-ayahs"></div>
+
+    <a href="" class="button" id="nextsurah">السورة التالية</i></a>
+    <a href="" class="button" id="prevsurah">السورة السابقة</i></a>
+
+
+    <div class="fixed-container">
+      <a class="button" onclick="lunch()" id="scroll-btn">تشغيل السحب التلقائي</a>
+
+    </div>
+    <div class="tafseer-content" id="tafseer-content">
+      <div class="tafaseer">
+        <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked />
+        <label for="tafseer1">التفسير الميسر</label>
+        <input type="radio" name="tafseer" id="tafseer2" onclick="updateTafsir()" />
+        <label for="tafseer2">تفسير ابن كثير</label>
+      </div>
+        <div class="details"></div>
+    </div>
+  </div>
+
+
+
+  <script src="../../header.js"></script>
+  <script src="toast_notification.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      window.addEventListener("load", () => {
+        const loadingContainer = document.querySelector(".loading_container");
+        if (loadingContainer) {
+          loadingContainer.classList.add("fade-out");
+          setTimeout(() => {
+            loadingContainer.style.display = "none";
+          }, 2000);
+        }
+      });
+      // دالة الانتظار
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      // ننتظر 2 ثانية قبل البدء
+      await sleep(200);
+
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+      const hijriDate = `${day}-${month}-${year}`;
+
+      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const hijri = data.data.hijri;
+          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+          const hijiryDiv = document.getElementById("hijiry");
+          if (hijiryDiv) hijiryDiv.innerHTML = display;
+        })
+        .catch((error) => {
+          console.error("Fetch Error:", error);
+        });
+
+      const params = new URLSearchParams(window.location.search);
+      const surahNumber = params.get("number");
+
+      const surahNameElement = document.getElementById("surah-name");
+      const ayahsDiv = document.getElementById("surah-ayahs");
+      const storage = localStorage;
+
+
+      if (!surahNumber) {
+        surahNameElement.textContent = "لم يتم اختيار سورة.";
+      } else {
+        document.getElementById("nextsurah").href = `surah.html?number=${Number(surahNumber) + 1}`
+        document.getElementById("prevsurah").href = `surah.html?number=${Number(surahNumber) - 1}`
+        surahNameElement.textContent = "جاري التحميل...";
+        ayahsDiv.textContent = "جاري تحميل الآيات...";
+
+        await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            surahNameElement.textContent = `${data.data.name}`;
+            ayahsDiv.innerHTML = "";
+
+            data.data.ayahs.forEach((ayah) => {
+              const p = document.createElement("p");
+              p.textContent = `${ayah.text} (${ayah.numberInSurah})`;
+              p.innerHTML += `
+                <button onclick='tafsir(1, ${surahNumber}, ${ayah.numberInSurah}, ${JSON.stringify(ayah.text)})' class="tafseer"><i class="fa-solid fa-circle-info"></i></button>
+              `
+              p.id = ayah.numberInSurah;
+
+              if (
+                storage.getItem("ayah") == ayah.numberInSurah &&
+                storage.getItem("surah") == surahNumber
+              ) {
+                p.innerHTML += `
+                    
+                    <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);" class = "mark marked"><i class="fa fa-bookmark"></i></button>
+                  `;
+                document.getElementById("gomark").style.visibility =
+                  "visible";
+                document.getElementById(
+                  "gomark"
+                ).href = `#${ayah.numberInSurah}`;
+              } else {
+                p.innerHTML += `
+                  
+                  <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);"  class = "mark unmark"><i class="fa fa-bookmark"></i></button>
+                `;
+              }
+              ayahsDiv.appendChild(p);
+            });
+          })
+          .catch((error) => {
+            console.error("خطأ أثناء تحميل السورة:", error);
+            surahNameElement.textContent =
+              "حدث خطأ. تأكد من اتصالك بالإنترنت";
+            ayahsDiv.textContent = "";
+          });
+
+        if (storage.getItem("surah") == surahNumber) {
+          window.location.hash = storage.getItem("ayah") || "";
+        }
+      }
+
+
+
+
+    });
+  </script>
+
+  <script>
+    async function tafsir(tafseerid, surahnumber, ayahnumber, ayahText) {
+      const body = document.body;
+      body.style.overflow = "hidden"; // Disable scrolling
+      await fetch(
+        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/ar-tafsir-muyassar/${surahnumber}/${ayahnumber}.json`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const tafseerContent = document.getElementById("tafseer-content");
+          tafseerContent.style.display = "flex";
+          const detailstafseer = document.querySelector(".tafseer-content .details");
+          detailstafseer.innerHTML = `
+
+          
+        <div class="close_btn" onclick="closeTafsir()">&times;</div>
+        <div class="ayah">${ayahText} (${ayahnumber})</div>
+        التفسير:
+        <div class="tafsir">${data.text}</div>
+        <div class="tafseer-name">* التفسير الميسًّر *</div>
+      `;
+        })
+        .catch((error) => {
+          console.error("خطأ أثناء تحميل السورة:", error);
+        });
+    }
+
+    function updateTafsir() {
+      const surahNumber = new URLSearchParams(window.location.search).get("number");
+      const ayahElement = document.querySelector(".ayah");
+      const ayahTextMatch = ayahElement.textContent.match(/^(.*) \(\d+\)$/);
+      const ayahText = ayahTextMatch ? ayahTextMatch[1] : "";
+      const ayahNumberMatch = ayahElement.textContent.match(/\((\d+)\)$/);
+      const ayahNumber = ayahNumberMatch ? parseInt(ayahNumberMatch[1]) : null;
+
+      let tafseerId = "ar-tafsir-muyassar"; // Default to Tafseer Maysir
+      if (document.getElementById("tafseer2").checked) {
+        tafseerId = "ar-tafsir-ibn-kathir"; // Jalalayn
+      }
+
+      const tafaseers = {
+        "ar-tafsir-muyassar": "التفسير الميسًّر",
+        "ar-tafsir-ibn-kathir": "تفسير ابن كثير"
+      }
+
+      if (surahNumber && ayahNumber) {
+        fetch(`https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${tafseerId}/${surahNumber}/${ayahNumber}.json`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const tafsirDiv = document.querySelector(".tafsir");
+            const tafseerNameDiv = document.querySelector(".tafseer-name");
+            tafsirDiv.textContent = data.text;
+            tafseerNameDiv.textContent = `* ${tafaseers[tafseerId]} *`;
+          })
+          .catch((error) => {
+            console.error("خطأ أثناء تحميل التفسير:", error);
+          });
+      }
+    }
+
+    function closeTafsir() {
+      const body = document.body;
+      body.style.overflow = "auto"; // Enable scrolling
+      const tafseerContent = document.getElementById("tafseer-content");
+      tafseerContent.classList.add("scale-down");
+      setTimeout(() => {
+        tafseerContent.style.display = "none";
+        tafseerContent.classList.remove("scale-down");
+      }, 300);
+    }
+
+  </script>
+
+  <script>
+    var scrollInterval = null;
+    var lunchAutoScroll = false;
+    var scrollBtn = document.getElementById("scroll-btn")
+
+    function autoScroll() {
+      window.scrollBy(0, 0.5); // Scroll 1 pixel down
+    }
+
+    function lunch() {
+      lunchAutoScroll = !lunchAutoScroll;
+
+      if (lunchAutoScroll) {
+        scrollInterval = setInterval(autoScroll, 10);
+        scrollBtn.classList.add("marked")
+        scrollBtn.textContent = "إيقاف السحب التلقائي"
+
+      } else {
+        clearInterval(scrollInterval);
+        scrollBtn.classList.remove("marked")
+        scrollBtn.textContent = "تشغيل السحب التلقائي"
+
+      }
+    }
+  </script>
+
+  <script src="localstorage.js"></script>
+  <script src="mode.js"></script>
+  <script>
+    applyMode(localStorage.getItem("dayModeEnabled") === "true");
+  </script>
+
+
+</body>
+
+</html>
