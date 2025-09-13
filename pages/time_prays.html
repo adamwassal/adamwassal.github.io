@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أوقات الصلاة</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
+  <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+  <style>
+    /* Loading Dots */
+    .loading {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loading span {
+      width: 8px;
+      height: 8px;
+      background: var(--color-primary, #000);
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 0.6s infinite;
+    }
+
+    .loading span:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    .loading span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loading span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header-container" class="header" data-page-title="أوقات الصلاة"></div>
+
+  <div class="main">
+    <br>
+    <div class="section">
+      <div class="title">أوقات الصلاة</div>
+      <div id="countdown" style="margin-top: 20px; font-weight: bold">جاري الحساب...</div>
+
+      <div class="prays">
+        <div class="pray" data-prayer="الفجر">
+          <h1>صلاة الفجر</h1>
+          <div class="time" id="alfajr"></div>
+        </div>
+        <div class="pray" data-prayer="الظهر">
+          <h1>صلاة الظهر</h1>
+          <div class="time" id="alduhr"></div>
+        </div>
+        <div class="pray" data-prayer="العصر">
+          <h1>صلاة العصر</h1>
+          <div class="time" id="alasr"></div>
+        </div>
+        <div class="pray" data-prayer="المغرب">
+          <h1>صلاة المغرب</h1>
+          <div class="time" id="almaghreb"></div>
+        </div>
+        <div class="pray" data-prayer="العشاء">
+          <h1>صلاة العشاء</h1>
+          <div class="time" id="alisha"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../components/header.js"></script>
+  <script src="../assets/js/notify.js"></script>
+  <script src="../libs/notify.min.js"></script>
+  <script src="../assets/js/toast_notification.js"></script>
+  <script src="../assets/js/global.js"></script>
+
+  
+
+</body>
+
+</html>

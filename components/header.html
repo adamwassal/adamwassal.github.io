@@ -1,0 +1,66 @@
+<!-- header.html -->
+<template id="header-template">
+  <!-- FontAwesome is loaded in the main pages, no need to load here -->
+  <div class="header">
+    <div class="btn-icon menu">
+      <i class="fa fa-bars" onclick="
+        
+                const nav = document.querySelector('.links');
+
+                nav.classList.toggle('active')
+
+        "></i>
+    </div>
+    <div class="logo">
+      <img src="../assets/images/logo.png" alt="">
+    </div>
+    <div class="links">
+      <div class="btn-icon menu">
+        <i class="fa fa-xmark" onclick="
+        
+                const nave = document.querySelector('.links');
+
+                nave.classList.toggle('active')
+
+        "></i>
+      </div>
+      <ul>
+        <li><a href="../index.html">الرئيسية</a></li>
+        <li><a href="../pages/quran.html">المصحف</a></li>
+        <li><a href="../pages/alathker.html">الأذكار</a></li>
+        <li><a href="../pages/time_prays.html">مواقيت الصلاة</a></li>
+        <li><a href="../pages/radio.html">الراديو</a></li>
+        <div id="hijiry">جاري تحميل التاريخ الهجري</div>
+      </ul>
+    </div>
+
+    <div class="left">
+      <div class="notification-badge">4</div>
+      <button class="btn-icon" onclick="
+        const notificationsList = document.querySelector('.notifications');
+
+        notificationsList.classList.toggle('hidden')
+      "><i class="fa fa-bell"></i></button>
+      <div class="notifications hidden">
+        <div class="notification-header">
+
+          <h2 class="white-color">الإشعارات</h2>
+          <button class="btn-icon" onclick="clearNotifications()"><i class="fa fa-trash red-color"></i></button>
+        </div>
+        <ul>
+
+        </ul>
+      </div>
+
+    </div>
+    <a href="#" class="btn-icon topbtn hidden"><i class="fa-solid fa-arrow-up yellow-color"></i></a>
+
+    <div class="footer">
+      <h2>❤️ صلي على النبي ❤️</h2>
+      <a href="https://github.com/adamwassal/adamwassal.github.io" target="_blank" class="github"><i class="fa-brands fa-github"></i></a>
+    </div>
+
+
+
+  </div>
+</template>

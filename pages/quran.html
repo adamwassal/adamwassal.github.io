@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>سور القرآن الكريم</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+
+  <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
+  <script src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
+    <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+
+</head>
+
+<body>
+  <div id="header-container" class="header" data-page-title="القرآن الكريم"></div>
+
+  <div class="main">
+    <div class="section">
+      <br>
+      <br>
+      <div class="title">المصحف</div>
+      <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
+      <div class="quranlist" id="quranList"></div>
+    </div>
+  </div>
+
+  <script src="../components/header.js"></script>
+   <script src="../assets/js/notify.js"></script>
+  <script src="../libs/notify.min.js"></script>
+  <script src="../assets/js/toast_notification.js"></script>
+  <script src="../assets/js/global.js"></script>
+  <script>
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = today.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+
+    const hijriDate = `${day}-${month}-${year}`;
+
+    fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const hijri = data.data.hijri;
+        const display = ` ${hijri["weekday"]["ar"]} ${hijri["day"]} ${hijri["month"]["ar"]} ${hijri["year"]}`;
+        document.getElementById("hijiry").innerHTML = display;
+        console.log(display);
+      })
+      .catch((error) => {
+        document.getElementById("hijiry").innerHTML = "Fetch Error: " + error;
+        console.error("Fetch Error:", error);
+      });
+  </script>
+
+  <script>
+    // مصفوفة أسماء السور بالترتيب من 1 إلى 114
+    const surahNames = [
+      "الفاتحة",
+      "البقرة",
+      "آل عمران",
+      "النساء",
+      "المائدة",
+      "الأنعام",
+      "الأعراف",
+      "الأنفال",
+      "التوبة",
+      "يونس",
+      "هود",
+      "يوسف",
+      "الرعد",
+      "إبراهيم",
+      "الحجر",
+      "النحل",
+      "الإسراء",
+      "الكهف",
+      "مريم",
+      "طه",
+      "الأنبياء",
+      "الحج",
+      "المؤمنون",
+      "النور",
+      "الفرقان",
+      "الشعراء",
+      "النمل",
+      "القصص",
+      "العنكبوت",
+      "الروم",
+      "لقمان",
+      "السجدة",
+      "الأحزاب",
+      "سبأ",
+      "فاطر",
+      "يس",
+      "الصافات",
+      "ص",
+      "الزمر",
+      "غافر",
+      "فصلت",
+      "الشورى",
+      "الزخرف",
+      "الدخان",
+      "الجاثية",
+      "الأحقاف",
+      "محمد",
+      "الفتح",
+      "الحجرات",
+      "ق",
+      "الذاريات",
+      "الطور",
+      "النجم",
+      "القمر",
+      "الرحمن",
+      "الواقعة",
+      "الحديد",
+      "المجادلة",
+      "الحشر",
+      "الممتحنة",
+      "الصف",
+      "الجمعة",
+      "المنافقون",
+      "التغابن",
+      "الطلاق",
+      "التحريم",
+      "الملك",
+      "القلم",
+      "الحاقة",
+      "المعارج",
+      "نوح",
+      "الجن",
+      "المزمل",
+      "المدثر",
+      "القيامة",
+      "الإنسان",
+      "المرسلات",
+      "النبأ",
+      "النازعات",
+      "عبس",
+      "التكوير",
+      "الإنفطار",
+      "المطففين",
+      "الانشقاق",
+      "البروج",
+      "الطارق",
+      "الأعلى",
+      "الغاشية",
+      "الفجر",
+      "البلد",
+      "الشمس",
+      "الليل",
+      "الضحى",
+      "الشرح",
+      "التين",
+      "العلق",
+      "القدر",
+      "البينة",
+      "الزلزلة",
+      "العاديات",
+      "القارعة",
+      "التكاثر",
+      "العصر",
+      "الهمزة",
+      "الفيل",
+      "قريش",
+      "الماعون",
+      "الكوثر",
+      "الكافرون",
+      "النصر",
+      "المسد",
+      "الإخلاص",
+      "الفلق",
+      "الناس",
+    ];
+
+    const quranParts = {
+      1: ["الفاتحة", "البقرة"],
+      3: ["آل عمران"],
+      4: ["النساء"],
+      6: ["المائدة"],
+      7: ["الأنعام"],
+      8: ["الأعراف"],
+      9: ["الأنفال"],
+      10: ["التوبة"],
+      11: ["يونس", "هود"],
+      12: ["يوسف"],
+      13: ["الرعد", "إبراهيم"],
+      14: ["الحجر", "النحل"],
+      15: ["الإسراء", "الكهف"],
+      16: ["مريم", "طه"],
+      17: ["الأنبياء", "الحج"],
+      18: ["المؤمنون", "النور", "الفرقان"],
+      19: ["الشعراء", "النمل",],
+      20: ["القصص", "العنكبوت"],
+      21: ["الروم", "لقمان", "السجدة", "الأحزاب",],
+      22: ["سبأ", "فاطر", "يس"],
+      23: ["الصافات", "ص", "الزمر"],
+      24: ["غافر", "فصلت"],
+      25: ["الشورى", "الزخرف", "الدخان", "الجاثية"],
+      26: ["الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات"],
+      27: ["الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد"],
+      28: [
+        "المجادلة",
+        "الحشر",
+        "الممتحنة",
+        "الصف",
+        "الجمعة",
+        "المنافقون",
+        "التغابن",
+        "الطلاق",
+        "التحريم",
+      ],
+      29: [
+        "الملك",
+        "القلم",
+        "الحاقة",
+        "المعارج",
+        "نوح",
+        "الجن",
+        "المزمل",
+        "المدثر",
+        "القيامة",
+        "الإنسان",
+        "المرسلات",
+
+      ],
+      30: [
+        "النبأ",
+        "النازعات",
+        "عبس",
+        "التكوير",
+        "الإنفطار",
+        "المطففين",
+        "الانشقاق",
+        "البروج",
+        "الطارق",
+        "الأعلى",
+        "الغاشية",
+        "الفجر",
+        "البلد",
+        "الشمس",
+        "الليل",
+        "الضحى",
+        "الشرح",
+        "التين",
+        "العلق",
+        "القدر",
+        "البينة",
+        "الزلزلة",
+        "العاديات",
+        "القارعة",
+        "التكاثر",
+        "العصر",
+        "الهمزة",
+        "الفيل",
+        "قريش",
+        "الماعون",
+        "الكوثر",
+        "الكافرون",
+        "النصر",
+        "المسد",
+        "الإخلاص",
+        "الفلق",
+        "الناس",
+      ],
+    };
+
+    const listContainer = document.getElementById("quranList");
+    const storage = localStorage;
+
+    for (const [juz, surahs] of Object.entries(quranParts)) {
+      const div = document.createElement("div");
+      div.className = "d1";
+
+      const h3 = document.createElement("h3");
+      h3.innerText = `الجزء ${juz}`;
+      div.appendChild(h3);
+
+      const surahsContainer = document.createElement("div");
+      surahsContainer.classList.add("surahs")
+
+
+      surahs.forEach((surah) => {
+        const a = document.createElement("a");
+
+        // Get surah number
+        const surahNumber =
+          surahNames.findIndex((name) => name === surah) + 1;
+        a.href = `surah.html?number=${surahNumber}`;
+        a.id = surahNumber;
+        a.className = "button";
+        a.innerText = `سورة ${surah}`;
+        if (storage.getItem("surah") == surahNumber) {
+          console.log("yes");
+
+          a.innerHTML += `
+                   <i class="fa fa-bookmark marked mark"></i>
+                   `;
+          document.getElementById("gomark").style.visibility = "visible";
+          document.getElementById("gomark").href = `#${surahNumber}`;
+          a.href = `surah.html?number=${surahNumber}`;
+        }
+        surahsContainer.appendChild(a);
+      });
+
+      div.appendChild(surahsContainer);
+      listContainer.appendChild(div);
+    }
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      window.addEventListener("load", () => {
+        const loadingContainer = document.querySelector(".loading_container");
+        if (loadingContainer) {
+          loadingContainer.classList.add("fade-out");
+          setTimeout(() => {
+            loadingContainer.style.display = "none";
+          }, 2000);
+        }
+      });
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+      const hijriDate = `${day}-${month}-${year}`;
+
+      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const hijri = data.data.hijri;
+          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+          const hijiryDiv = document.getElementById("hijiry");
+          if (hijiryDiv) hijiryDiv.innerHTML = display;
+        })
+        .catch((error) => {
+          console.error("Fetch Error:", error);
+        });
+    });
+  </script>
+  <script src="../assets/js/mode.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Surah Page</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
+  <script src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      padding-bottom: 0;
+    }
+
+    .fontsized {
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+
+    }
+
+    .fontsized h3 {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .fontsized h3 i {
+      font-size: 1.2rem;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      flex-grow: 1;
+      height: 8px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #2ecc71, #3498db);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #3498db;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    .size-value {
+      background-color: #2c3e50;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      min-width: 50px;
+      text-align: center;
+      color: white;
+    }
+
+    .size-presets {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    .size-btn {
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .size-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .size-btn.active {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .footer {
+      display: none;
+    }
+
+    /* الـ Popup Overlay */
+    .info-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      backdrop-filter: blur(3px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* الـ Popup Box */
+    .info {
+      background: var(--surface, #fff);
+      color: var(--text, #333);
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      transform: scale(0.8);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .info.show {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .info h2 {
+      margin: 10px 0;
+      font-weight: 600;
+    }
+
+    .info .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #888;
+      transition: 0.2s;
+    }
+
+    .info .close-btn:hover {
+      color: var(--color-primary, #f6c201);
+      transform: rotate(90deg);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+
+
+    @media (max-width: 768px) {
+      .fontsized {
+        display: none;
+      }
+
+
+
+    }
+  </style>
+</head>
+
+<body>
+  <div id="header-container" class="header" data-page-title="جاري تحميل السورة"></div>
+
+  <div class="main">
+
+    <div class="section">
+      <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
+      <div class="title" id="surah-name"></div>
+      <div class="title basmala"> بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+      <div id="surah-ayahs"></div>
+      <div class="fixedleft">
+
+        <a href="" class="button" id="nextsurah">السورة التالية <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="" class="button" id="prevsurah">السورة السابقة <i class="fa-solid fa-arrow-left"></i></a>
+      </div>
+
+      <div class="fixedright">
+
+        <a class="button" onclick="lunch()" id="scroll-btn"><i class="fa-solid fa-arrow-down"></i> السحب التلقائي</a>
+      </div>
+
+    </div>
+
+    <!-- مشغل واحد ثابت -->
+    <audio id="ayah-player" style="width:100%;margin:10px 0;"></audio>
+
+  </div>
+
+
+
+  <div class="tafseer-content" id="tafseer-content">
+    <div class="tafaseer">
+      <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked />
+      <label for="tafseer1">التفسير الميسر</label>
+      <input type="radio" name="tafseer" id="tafseer2" onclick="updateTafsir()" />
+      <label for="tafseer2">تفسير ابن كثير</label>
+
+      <input type="radio" name="tafseer" id="tafseer3" onclick="updateTafsir()" />
+      <label for="tafseer3">تفسير السعدي</label>
+
+    </div>
+    <div class="close_btn" onclick="closeTafsir()">&times;</div>
+
+    <div class="details"></div>
+    <div class="fontsized">
+      <h3><i class="fas fa-text-height"></i> تغيير حجم الخط</h3>
+      <div class="slider-container">
+        <input type="range" id="fontSizeSlider" min="14" max="32" value="20" step="1">
+        <div class="size-value" id="sizeValue">20px</div>
+      </div>
+      <div class="size-presets">
+        <button class="size-btn" data-size="14">صغير</button>
+        <button class="size-btn active" data-size="20">متوسط</button>
+        <button class="size-btn" data-size="27">كبير</button>
+        <button class="size-btn" data-size="32">كبير جداً</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="info-overlay" id="infoOverlay">
+    <div class="info" id="infoBox">
+      <div class="close-btn" onclick="closeInfoPopup()">&times;</div>
+      <h2 class="name"></h2>
+      <h2 class="ayahcount"></h2>
+      <h2 class="revelation"></h2>
+    </div>
+  </div>
+
+
+
+  <script src="../components/header.js"></script>
+  <script src="../assets/js/toast_notification.js"></script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      window.addEventListener("load", () => {
+        const loadingContainer = document.querySelector(".loading_container");
+        if (loadingContainer) {
+          loadingContainer.classList.add("fade-out");
+          setTimeout(() => {
+            loadingContainer.style.display = "none";
+          }, 2000);
+        }
+      });
+      // دالة الانتظار
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      // ننتظر 2 ثانية قبل البدء
+      await sleep(200);
+
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+      const hijriDate = `${day}-${month}-${year}`;
+
+      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
+        .then((response) => response.json())
+        .then((data) => {
+          const hijri = data.data.hijri;
+          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+          const hijiryDiv = document.getElementById("hijiry");
+          if (hijiryDiv) hijiryDiv.innerHTML = display;
+        })
+        .catch((error) => {
+          console.error("Fetch Error:", error);
+        });
+
+      const params = new URLSearchParams(window.location.search);
+      const surahNumber = params.get("number");
+
+      const surahNameElement = document.getElementById("surah-name");
+      const ayahsDiv = document.getElementById("surah-ayahs");
+      const storage = localStorage;
+
+
+
+      if (!surahNumber) {
+        surahNameElement.textContent = "لم يتم اختيار سورة.";
+      } else {
+        document.getElementById("nextsurah").href = `surah.html?number=${Number(surahNumber) + 1}`
+        document.getElementById("prevsurah").href = `surah.html?number=${Number(surahNumber) - 1}`
+        surahNameElement.textContent = "جاري التحميل...";
+        ayahsDiv.textContent = "جاري تحميل الآيات...";
+
+        await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`)
+
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (surahNumber == 1) {
+              document.querySelector(".basmala").style.display = "none"
+            }
+            surahNameElement.textContent = `${data.data.name}`;
+            document.querySelector(".name").textContent = `${data.data.name}`;
+            document.querySelector(".ayahcount").textContent = `عدد الآيات: ${data.data.numberOfAyahs}`;
+            if (data.data.revelationType == "Meccan") {
+              document.querySelector(".revelation").textContent = `مكان النزول: مكة المكرمة`;
+            } else {
+              document.querySelector(".revelation").textContent = `مكان النزول: المدينة المنورة`;
+            }
+            surahNameElement.style.position = "relative";
+            surahNameElement.innerHTML += ` <button class="tafseer" style="position: absolute;right:0; background: var(--color-secondary);" onclick="showInfoPopup()"><i class="fa-solid fa-info"></i></button>`
+            ayahsDiv.innerHTML = "";
+
+            data.data.ayahs.forEach((ayah) => {
+              const p = document.createElement("p");
+              let ayahtext = ayah.text
+              if (ayah.numberInSurah == 1 && surahNumber != 1) {
+                console.log("hi")
+                ayahtext = ayahtext.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "");
+              }
+              p.textContent = ayahtext;
+              const audioUrl = ayah.audio || (ayah.audio?.secondary ? ayah.audio.secondary[0] : null);
+
+
+              console.log(`audio-${ayah.numberInSurah}`)
+              p.innerHTML += `
+                <div class="controls audio-${ayah.numberInSurah}" data-audio="${audioUrl || ''}">
+      <button onclick="playAyah(${ayah.numberInSurah})" class="playbtn play-${ayah.numberInSurah}">
+        <i class="fa-solid fa-play"></i>
+      </button>
+    </div>
+              `;
+              p.innerHTML += `
+                  <div class="ayahnumber"> (${ayah.numberInSurah}) الآيه</div>
+                `
+
+              p.id = ayah.numberInSurah;
+              if (
+                storage.getItem("ayah") == ayah.numberInSurah &&
+                storage.getItem("surah") == surahNumber
+              ) {
+                p.innerHTML += `
+                    
+                    <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);" class = "mark marked"><i class="fa fa-bookmark"></i></button>
+                  `;
+                document.getElementById("gomark").style.visibility =
+                  "visible";
+                document.getElementById(
+                  "gomark"
+                ).href = `#${ayah.numberInSurah}`;
+              } else {
+                p.innerHTML += `
+                  
+                  <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);"  class = "mark unmark"><i class="fa fa-bookmark"></i></button>
+                `;
+              }
+
+              p.innerHTML += `
+                <button onclick='tafsir(1, ${surahNumber}, ${ayah.numberInSurah}, ${JSON.stringify(ayah.text)})' class="tafseer"><i class="fa-solid fa-circle-info"></i></button>
+              `
+              ayahsDiv.appendChild(p);
+            });
+          })
+          .catch((error) => {
+            console.error("خطأ أثناء تحميل السورة:", error);
+            surahNameElement.textContent =
+              "حدث خطأ. تأكد من اتصالك بالإنترنت";
+            ayahsDiv.textContent = "";
+          });
+
+        if (storage.getItem("surah") == surahNumber) {
+          window.location.hash = storage.getItem("ayah") || "";
+        }
+      }
+
+
+
+
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const fontSizeSlider = document.getElementById('fontSizeSlider');
+      const sizeValue = document.getElementById('sizeValue');
+      const resetBtn = document.getElementById('resetBtn');
+      const applyBtn = document.getElementById('applyBtn');
+      const sizeButtons = document.querySelectorAll('.size-btn');
+
+      const STORAGE_KEY = 'tafseerFontSize';
+      const defaultSize = 20;
+
+      function getTafsirEl() {
+        return document.querySelector('.tafseer-content .tafsir');
+      }
+
+      function setSizeButtonsActive(size) {
+        sizeButtons.forEach(btn => {
+          if (parseInt(btn.dataset.size) === size) btn.classList.add('active');
+          else btn.classList.remove('active');
+        });
+      }
+
+      function updateFontSize(size) {
+        size = parseInt(size);
+        const el = getTafsirEl();
+        if (el) el.style.fontSize = size + 'px';
+        sizeValue.textContent = size + 'px';
+        fontSizeSlider.value = size;
+        setSizeButtonsActive(size);
+      }
+
+      // تحميل القيمة المحفوظة
+      const saved = parseInt(localStorage.getItem(STORAGE_KEY) || defaultSize, 10);
+      updateFontSize(saved);
+
+      // تغيير بالسلايدر
+      fontSizeSlider.addEventListener('input', function () {
+        updateFontSize(this.value);
+      });
+
+      // أزرار مسبقة
+      sizeButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          updateFontSize(parseInt(this.dataset.size));
+        });
+      });
+
+      // إعادة الضبط
+      resetBtn.addEventListener('click', function () {
+        updateFontSize(defaultSize);
+        localStorage.removeItem(STORAGE_KEY);
+      });
+
+      // تطبيق (يحفظ القيمة)
+      applyBtn.addEventListener('click', function () {
+        const selectedSize = parseInt(fontSizeSlider.value, 10);
+        localStorage.setItem(STORAGE_KEY, selectedSize);
+        alert(`تم تطبيق وحفظ حجم الخط: ${selectedSize}px`);
+      });
+
+    });
+    let currentAyah = null;
+    let currentSurah = null;
+
+    async function playAyah(ayahNumber) {
+
+
+      const audioEl = document.getElementById("ayah-player");
+      const controlDiv = document.querySelector(`.audio-${ayahNumber}`);
+
+      if (!controlDiv) {
+        console.warn("Audio not found for ayah:", ayahNumber);
+        return;
+      }
+
+
+      if (!audioEl.paused) {
+        document.querySelectorAll("#surah-ayahs p").forEach(p => {
+          p.style.color = "";
+          console.log(p)
+        });
+
+        document.querySelectorAll(".playbtn").forEach(btn => {
+          btn.innerHTML = "<i class='fa-solid fa-play'></i>"
+        });
+        document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-play'></i>"
+
+        audioEl.pause()
+
+
+        audioEl.currentTime = 0;
+        return
+      }
+      document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-stop'></i>"
+
+      const audioSrc = controlDiv.getAttribute("data-audio");
+      if (!audioSrc) {
+        console.error("❌ مفيش لينك صوت للآية:", ayahNumber);
+        return;
+      }
+
+      // نشغل الصوت
+      window.location.hash = controlDiv.parentElement.id
+      audioEl.src = audioSrc;
+      controlDiv.parentElement.style.color = "var(--color-primary)";
+      audioEl.currentTime = 0;
+      await audioEl.play();
+
+      // نجهز اللي بعدها
+      audioEl.onended = () => {
+        controlDiv.parentElement.style.color = "";
+        document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-play'></i>"
+
+        const nextEl = document.getElementById(ayahNumber)?.nextElementSibling;
+        if (nextEl) {
+          const nextAyah = parseInt(nextEl.id);
+          playAyah(nextAyah);
+        }
+      };
+    }
+
+
+    async function tafsir(tafseerid, surahnumber, ayahnumber, ayahText) {
+      const body = document.body;
+      body.style.overflow = "hidden"; // Disable scrolling
+      const tafseerContent = document.getElementById("tafseer-content");
+      tafseerContent.style.display = "flex";
+      const detailstafseer = document.querySelector(".tafseer-content .details");
+      detailstafseer.innerHTML = `<div>جاري تحميل التفسير...</div>`;
+
+      await fetch(
+        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/ar-tafsir-muyassar/${surahnumber}/${ayahnumber}.json`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+
+          detailstafseer.innerHTML = `
+
+          
+        <div class="ayah">${ayahText} (${ayahnumber})</div>
+                <br>
+
+        التفسير:
+        <div class="tafsir">${data.text}</div>
+        <br>
+        <div class="tafseer-name">* التفسير الميسًّر *</div>
+      `;
+        })
+        .catch((error) => {
+          console.error("خطأ أثناء تحميل التفسير:", error);
+        });
+    }
+
+    function updateTafsir() {
+      const surahNumber = new URLSearchParams(window.location.search).get("number");
+      const ayahElement = document.querySelector(".ayah");
+      const ayahTextMatch = ayahElement.textContent.match(/^(.*) \(\d+\)$/);
+      const ayahText = ayahTextMatch ? ayahTextMatch[1] : "";
+      const ayahNumberMatch = ayahElement.textContent.match(/\((\d+)\)$/);
+      const ayahNumber = ayahNumberMatch ? parseInt(ayahNumberMatch[1]) : null;
+
+
+      let tafseerId = "ar-tafsir-muyassar";
+      if (document.getElementById("tafseer2").checked) {
+        tafseerId = "ar-tafsir-ibn-kathir";
+      }
+      if (document.getElementById("tafseer3").checked) {
+        tafseerId = "ar-tafseer-al-saddi";
+      }
+
+      const tafaseers = {
+        "ar-tafsir-muyassar": "التفسير الميسًّر",
+        "ar-tafsir-ibn-kathir": "تفسير ابن كثير",
+        "ar-tafseer-al-saddi": "تفسير السعدي"
+      }
+
+      if (surahNumber && ayahNumber) {
+        const tafsirDiv = document.querySelector(".tafsir");
+        const tafseerNameDiv = document.querySelector(".tafseer-name");
+        const detailstafseer = document.querySelector(".tafseer-content .details");
+        tafsirDiv.innerHTML = `<div>جاري تحميل التفسير...</div>`;
+
+        fetch(`https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${tafseerId}/${surahNumber}/${ayahNumber}.json`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+
+            tafsirDiv.innerHTML = data.text;
+            tafseerNameDiv.innerHTML = `* ${tafaseers[tafseerId]} *`;
+
+          })
+          .catch((error) => {
+            console.error("خطأ أثناء تحميل التفسير:", error);
+          });
+      }
+    }
+
+    function closeTafsir() {
+      const body = document.body;
+      body.style.overflow = "auto"; // Enable scrolling
+      const tafseerContent = document.getElementById("tafseer-content");
+      tafseerContent.classList.remove("fullscreen");
+      tafseerContent.classList.add("scale-down");
+      setTimeout(() => {
+        tafseerContent.style.display = "none";
+        tafseerContent.classList.remove("scale-down");
+      }, 300);
+    }
+
+    function showInfoPopup() {
+      const overlay = document.getElementById("infoOverlay");
+      const box = document.getElementById("infoBox");
+      overlay.style.display = "flex";
+      setTimeout(() => box.classList.add("show"), 50); // للانيميشن
+    }
+
+    function closeInfoPopup() {
+      const overlay = document.getElementById("infoOverlay");
+      const box = document.getElementById("infoBox");
+      box.classList.remove("show");
+      setTimeout(() => (overlay.style.display = "none"), 300);
+    }
+  </script>
+
+  <script>
+    var scrollInterval = null;
+    var lunchAutoScroll = false;
+    var scrollBtn = document.getElementById("scroll-btn")
+
+    function autoScroll() {
+      window.scrollBy(0, 0.5); // Scroll 1 pixel down
+    }
+
+    function lunch() {
+      lunchAutoScroll = !lunchAutoScroll;
+
+      if (lunchAutoScroll) {
+        scrollInterval = setInterval(autoScroll, 10);
+        scrollBtn.classList.add("lunchscroll")
+      } else {
+        clearInterval(scrollInterval);
+        scrollBtn.classList.remove("lunchscroll")
+
+      }
+    }
+  </script>
+
+  <script src="../assets/js/localstorage.js"></script>
+  <script src="../assets/js/mode.js"></script>
+
+
+
+</body>
+
+</html>
