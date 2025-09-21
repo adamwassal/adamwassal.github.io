@@ -41,6 +41,30 @@ window.addEventListener("scroll", async () => {
     "conic-gradient(var(--color-secondary) " +
       scrollPercent +
       "%, transparent 0)"
-        );
+  );
 });
 
+function toggleTheme() {
+  const html = document.documentElement;
+  const button = document.querySelector(".togglemode");
+
+  if (html.getAttribute("data-theme") === "dark") {
+    html.removeAttribute("data-theme");
+    localStorage.setItem("theme", "light");
+    button.innerHTML = "<i class='fa fa-moon'></i>";
+  } else {
+    html.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+    button.innerHTML = "<i class='fa fa-sun'></i>";
+  }
+}
+(function () {
+  const savedTheme = localStorage.getItem("theme");
+  const button = document.querySelector(".togglemode");
+  if (savedTheme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+    button.innerHTML = "<i class='fa fa-sun'></i>";
+  } else {
+    button.innerHTML = "<i class='fa fa-moon'></i>";
+  }
+})();

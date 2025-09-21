@@ -180,3 +180,4 @@ function detectLocationAndFetch() {
 
 // تشغيل في أي صفحة
 detectLocationAndFetch();
+
