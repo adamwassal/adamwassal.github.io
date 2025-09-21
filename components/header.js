@@ -9,7 +9,7 @@ fetch("../components/header.html")
 
     // Change the page title here
     const container = document.getElementById("header-container");
-    const newTitle = container.dataset.pageTitle; // 👈 put your new title here
+    const newTitle = container.dataset.pageTitle;
     const pageTitleElement = content.querySelector(".page-title");
     if (pageTitleElement) {
       pageTitleElement.textContent = newTitle;
