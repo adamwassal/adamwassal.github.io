@@ -58,7 +58,12 @@ function toggleTheme() {
     button.innerHTML = "<i class='fa fa-sun'></i>";
   }
 }
-(function () {
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+(async function () {
+  await delay(100);
   const savedTheme = localStorage.getItem("theme");
   const button = document.querySelector(".togglemode");
   if (savedTheme === "dark") {

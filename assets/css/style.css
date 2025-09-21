@@ -815,6 +815,7 @@ label {
 .countDone {
   color: var(--color-primary);
   border: 2px solid green;
+  background-color: #00800088;
 }
 
 .count-btn {

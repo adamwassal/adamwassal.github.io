@@ -103,6 +103,7 @@
         counterEl.textContent = current;
 
         if (current == max) {
+          counterEl.parentElement.parentElement.classList.add("countDone")
           counterEl.parentElement.classList.add("countDone")
         }
       }
@@ -481,7 +482,7 @@
           ${(talks[talk][i]["link"]) ? `<a href="${talks[talk][i]["link"]}" class="button"> ${talks[talk][i]["text"]}</a>` : `${talks[talk][i]["text"]}`}
           </div>
 
-        ${(talks[talk][i]["cancount"] === true) ? `
+        
           <div class="counter" >
             <span class="max">${talks[talk][i]["count"]}</span>
             /
@@ -489,12 +490,8 @@
             <button class="count-btn">+</button>
           </div>
         </div>
-        ` : `
-         <div class="counter reversedcounter">
-            <span class="max">${(talks[talk][i]["count"] === 1) ? "مره واحده" : (talks[talk][i]["count"] === 2) ? "مرتان" : talks[talk][i]["count"] + " مرات"}</span>
-          </div>
-        </div>
-        `}
+
+        }
         `
       }
     }
