@@ -3,176 +3,166 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>سور القرآن الكريم</title>
+  <title>المصحف — سور القرآن الكريم</title>
+
+  <!-- أساسي (احتفظت بروابطك الخارجية) -->
   <link rel="stylesheet" href="../assets/css/style.css" />
-
   <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
-  <script src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
-    <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 
+  <script defer src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
+  <script defer src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 
+  <style>
+    /* ==== تحسينات صغيرة على الـ search results و layout داخل هذه الصفحة ==== */
+
+    .search {
+      position: relative;
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 40px;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 1.05rem;
+      background: var(--bg);
+      color: var(--text-body);
+      outline: none;
+      box-shadow: none;
+      transition: box-shadow 0.15s;
+    }
+    #searchInput:focus {
+      box-shadow: 0 6px 18px rgba(184, 124, 12, 0.925);
+      
+    }
+
+    .search-filters {
+      display: none;
+      gap: 14px;
+      align-items: center;
+      font-size: 0.95rem;
+      color: var(--text-body);
+    }
+
+    .search-results {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: none;
+      max-height: 260px;
+      overflow-y: auto;
+      position: absolute;
+      width: 100%;
+      z-index: 1200;
+      padding: 6px;
+      box-shadow: var(--shadow);
+      margin-top: 40px;
+    }
+
+    .search-results .result-item {
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      color: var(--text-body);
+    }
+
+    .search-results .result-item + .result-item {
+      margin-top: 4px;
+    }
+
+    .search-results .result-item:hover,
+    .search-results .result-item.highlight {
+      background: rgba(0,0,0,0.04);
+    }
+
+    .search-results small {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .loading-inline {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      animation: loadingDots 1s linear infinite;
+    }
+
+    @keyframes loadingDots {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-6px); opacity: 0.7; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    /* تحسين عرض القوائم داخل الصفحة */
+    .quranlist { max-width: 1100px; margin: 20px auto; }
+    .d1 { margin-bottom: 18px; }
+    .surahs { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .surahs .button { min-width: 180px; text-align:center; padding: 12px 10px; }
+
+    /* responsive adjustments for search results on small screens */
+    @media (max-width: 480px) {
+      .search-results { max-height: 180px; }
+      #searchInput { font-size: 0.95rem; }
+    }
+  </style>
 </head>
 
 <body>
-  <div id="header-container" class="header" data-page-title="القرآن الكريم"></div>
+  <!-- header component placeholder -->
+  <div id="header-container" class="header" data-page-title="المصحف"></div>
 
   <div class="main">
     <div class="section">
-      <br>
-      <br>
-      <div class="title">المصحف</div>
+
+      <div class="title" style="margin-top:18px;">المصحف</div>
+
+      <div class="search" aria-label="بحث المصحف">
+        <input id="searchInput" type="text" placeholder="ابحث عن سورة" aria-label="حقل البحث" autocomplete="off">
+
+        <div class="search-filters" role="radiogroup" aria-label="نوع البحث">
+          <label>
+            <input type="radio" name="searchType" value="surah" checked>
+            البحث في السور
+          </label>
+        </div>
+
+        <!-- قائمة النتائج -->
+        <div id="searchResults" class="search-results" role="listbox" aria-label="نتائج البحث"></div>
+      </div>
+
       <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
-      <div class="quranlist" id="quranList"></div>
+      
+      <div class="quranlist" id="quranList" aria-live="polite"></div>
     </div>
   </div>
 
-  <script src="../components/header.js"></script>
-   <script src="../assets/js/notify.js"></script>
-  <script src="../libs/notify.min.js"></script>
-  <script src="../assets/js/toast_notification.js"></script>
-  <script src="../assets/js/global.js"></script>
+  <!-- original project scripts (kept) -->
+  <script src="../components/header.js" defer></script>
+  <script src="../assets/js/notify.js" defer></script>
+  <script src="../libs/notify.min.js" defer></script>
+  <script src="../assets/js/toast_notification.js" defer></script>
+  <script src="../assets/js/global.js" defer></script>
+
+  <!-- Page-specific JS -->
   <script>
-    const today = new Date();
-    const day = String(today.getDate()).padStart(2, "0");
-    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-    const year = today.getFullYear();
-    const formattedDate = `${day}-${month}-${year}`;
-
-    const hijriDate = `${day}-${month}-${year}`;
-
-    fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
-      .then((response) => response.json())
-      .then((data) => {
-        const hijri = data.data.hijri;
-        const display = ` ${hijri["weekday"]["ar"]} ${hijri["day"]} ${hijri["month"]["ar"]} ${hijri["year"]}`;
-        document.getElementById("hijiry").innerHTML = display;
-        console.log(display);
-      })
-      .catch((error) => {
-        document.getElementById("hijiry").innerHTML = "Fetch Error: " + error;
-        console.error("Fetch Error:", error);
-      });
-  </script>
-
-  <script>
-    // مصفوفة أسماء السور بالترتيب من 1 إلى 114
+    /******************************
+     * Data & helpers
+     ******************************/
     const surahNames = [
-      "الفاتحة",
-      "البقرة",
-      "آل عمران",
-      "النساء",
-      "المائدة",
-      "الأنعام",
-      "الأعراف",
-      "الأنفال",
-      "التوبة",
-      "يونس",
-      "هود",
-      "يوسف",
-      "الرعد",
-      "إبراهيم",
-      "الحجر",
-      "النحل",
-      "الإسراء",
-      "الكهف",
-      "مريم",
-      "طه",
-      "الأنبياء",
-      "الحج",
-      "المؤمنون",
-      "النور",
-      "الفرقان",
-      "الشعراء",
-      "النمل",
-      "القصص",
-      "العنكبوت",
-      "الروم",
-      "لقمان",
-      "السجدة",
-      "الأحزاب",
-      "سبأ",
-      "فاطر",
-      "يس",
-      "الصافات",
-      "ص",
-      "الزمر",
-      "غافر",
-      "فصلت",
-      "الشورى",
-      "الزخرف",
-      "الدخان",
-      "الجاثية",
-      "الأحقاف",
-      "محمد",
-      "الفتح",
-      "الحجرات",
-      "ق",
-      "الذاريات",
-      "الطور",
-      "النجم",
-      "القمر",
-      "الرحمن",
-      "الواقعة",
-      "الحديد",
-      "المجادلة",
-      "الحشر",
-      "الممتحنة",
-      "الصف",
-      "الجمعة",
-      "المنافقون",
-      "التغابن",
-      "الطلاق",
-      "التحريم",
-      "الملك",
-      "القلم",
-      "الحاقة",
-      "المعارج",
-      "نوح",
-      "الجن",
-      "المزمل",
-      "المدثر",
-      "القيامة",
-      "الإنسان",
-      "المرسلات",
-      "النبأ",
-      "النازعات",
-      "عبس",
-      "التكوير",
-      "الإنفطار",
-      "المطففين",
-      "الانشقاق",
-      "البروج",
-      "الطارق",
-      "الأعلى",
-      "الغاشية",
-      "الفجر",
-      "البلد",
-      "الشمس",
-      "الليل",
-      "الضحى",
-      "الشرح",
-      "التين",
-      "العلق",
-      "القدر",
-      "البينة",
-      "الزلزلة",
-      "العاديات",
-      "القارعة",
-      "التكاثر",
-      "العصر",
-      "الهمزة",
-      "الفيل",
-      "قريش",
-      "الماعون",
-      "الكوثر",
-      "الكافرون",
-      "النصر",
-      "المسد",
-      "الإخلاص",
-      "الفلق",
-      "الناس",
+      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الإنفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
     ];
 
+    // quranParts: استعملت نفس الخريطة من ملفك الأصلي
     const quranParts = {
       1: ["الفاتحة", "البقرة"],
       3: ["آل عمران"],
@@ -190,158 +180,340 @@
       16: ["مريم", "طه"],
       17: ["الأنبياء", "الحج"],
       18: ["المؤمنون", "النور", "الفرقان"],
-      19: ["الشعراء", "النمل",],
+      19: ["الشعراء", "النمل"],
       20: ["القصص", "العنكبوت"],
-      21: ["الروم", "لقمان", "السجدة", "الأحزاب",],
+      21: ["الروم", "لقمان", "السجدة", "الأحزاب"],
       22: ["سبأ", "فاطر", "يس"],
       23: ["الصافات", "ص", "الزمر"],
       24: ["غافر", "فصلت"],
       25: ["الشورى", "الزخرف", "الدخان", "الجاثية"],
       26: ["الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات"],
       27: ["الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد"],
-      28: [
-        "المجادلة",
-        "الحشر",
-        "الممتحنة",
-        "الصف",
-        "الجمعة",
-        "المنافقون",
-        "التغابن",
-        "الطلاق",
-        "التحريم",
-      ],
-      29: [
-        "الملك",
-        "القلم",
-        "الحاقة",
-        "المعارج",
-        "نوح",
-        "الجن",
-        "المزمل",
-        "المدثر",
-        "القيامة",
-        "الإنسان",
-        "المرسلات",
-
-      ],
+      28: ["المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم"],
+      29: ["الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات"],
       30: [
-        "النبأ",
-        "النازعات",
-        "عبس",
-        "التكوير",
-        "الإنفطار",
-        "المطففين",
-        "الانشقاق",
-        "البروج",
-        "الطارق",
-        "الأعلى",
-        "الغاشية",
-        "الفجر",
-        "البلد",
-        "الشمس",
-        "الليل",
-        "الضحى",
-        "الشرح",
-        "التين",
-        "العلق",
-        "القدر",
-        "البينة",
-        "الزلزلة",
-        "العاديات",
-        "القارعة",
-        "التكاثر",
-        "العصر",
-        "الهمزة",
-        "الفيل",
-        "قريش",
-        "الماعون",
-        "الكوثر",
-        "الكافرون",
-        "النصر",
-        "المسد",
-        "الإخلاص",
-        "الفلق",
-        "الناس",
-      ],
+        "النبأ","النازعات","عبس","التكوير","الإنفطار","المطففين","الانشقاق",
+        "البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل",
+        "الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
+        "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر",
+        "الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
+      ]
     };
 
+    // Cache لـ JSON لكل سورة: {1: ArrayOfAyahs, 2: ...}
+    const surahCache = new Map();
+
+    // AbortController لتلغي الطلبات القديمة إذا لزم
+    let currentAbortController = null;
+
+    // عناصر DOM
     const listContainer = document.getElementById("quranList");
-    const storage = localStorage;
+    const storage = window.localStorage;
+    const searchInput = document.getElementById("searchInput");
+    const searchResults = document.getElementById("searchResults");
+    const radios = document.getElementsByName("searchType");
+    const gomarkBtn = document.getElementById("gomark");
 
-    for (const [juz, surahs] of Object.entries(quranParts)) {
-      const div = document.createElement("div");
-      div.className = "d1";
-
-      const h3 = document.createElement("h3");
-      h3.innerText = `الجزء ${juz}`;
-      div.appendChild(h3);
-
-      const surahsContainer = document.createElement("div");
-      surahsContainer.classList.add("surahs")
-
-
-      surahs.forEach((surah) => {
-        const a = document.createElement("a");
-
-        // Get surah number
-        const surahNumber =
-          surahNames.findIndex((name) => name === surah) + 1;
-        a.href = `surah.html?number=${surahNumber}`;
-        a.id = surahNumber;
-        a.className = "button";
-        a.innerText = `سورة ${surah}`;
-        if (storage.getItem("surah") == surahNumber) {
-          console.log("yes");
-
-          a.innerHTML += `
-                   <i class="fa fa-bookmark marked mark"></i>
-                   `;
-          document.getElementById("gomark").style.visibility = "visible";
-          document.getElementById("gomark").href = `#${surahNumber}`;
-          a.href = `surah.html?number=${surahNumber}`;
-        }
-        surahsContainer.appendChild(a);
+    /******************************
+     * Utility functions
+     ******************************/
+    function escapeHtml(str) {
+      return str.replace(/[&<>"'`=\/]/g, function (s) {
+        return ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+          '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;'
+        })[s];
       });
-
-      div.appendChild(surahsContainer);
-      listContainer.appendChild(div);
     }
-  </script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      window.addEventListener("load", () => {
-        const loadingContainer = document.querySelector(".loading_container");
-        if (loadingContainer) {
-          loadingContainer.classList.add("fade-out");
-          setTimeout(() => {
-            loadingContainer.style.display = "none";
-          }, 2000);
-        }
-      });
-      const today = new Date();
-      const day = String(today.getDate()).padStart(2, "0");
-      const month = String(today.getMonth() + 1).padStart(2, "0");
-      const year = today.getFullYear();
-      const hijriDate = `${day}-${month}-${year}`;
 
-      fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`)
-        .then((response) => response.json())
-        .then((data) => {
-          const hijri = data.data.hijri;
-          const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
-          const hijiryDiv = document.getElementById("hijiry");
-          if (hijiryDiv) hijiryDiv.innerHTML = display;
-        })
-        .catch((error) => {
-          console.error("Fetch Error:", error);
+    function getCheckedSearchType() {
+      return [...radios].find(r => r.checked).value;
+    }
+
+    /******************************
+     * Build surah list (opt)
+     ******************************/
+    function buildQuranList() {
+      const frag = document.createDocumentFragment();
+
+      Object.entries(quranParts).forEach(([juz, surahs]) => {
+        const div = document.createElement("div");
+        div.className = "d1";
+
+        const h3 = document.createElement("h3");
+        h3.innerText = `الجزء ${juz}`;
+        div.appendChild(h3);
+
+        const surahsContainer = document.createElement("div");
+        surahsContainer.className = "surahs";
+
+        surahs.forEach((surah) => {
+          const surahNumber = surahNames.indexOf(surah) + 1;
+          const a = document.createElement("a");
+          a.href = `surah.html?number=${surahNumber}`;
+          a.id = `surah-${surahNumber}`;
+          a.className = "button";
+          a.setAttribute("role", "link");
+          a.innerText = `سورة ${surah}`;
+
+          // bookmark state
+          const bookmarked = storage.getItem("surah");
+          if (bookmarked && Number(bookmarked) === surahNumber) {
+            a.innerHTML += ` <i class="fa fa-bookmark marked mark" aria-hidden="true"></i>`;
+            gomarkBtn.style.visibility = "visible";
+            gomarkBtn.href = `#surah-${surahNumber}`;
+            gomarkBtn.style.display = "inline-block";
+          }
+
+          // allow bookmarking by ctrl+click or context action (example)
+          a.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            storage.setItem("surah", surahNumber);
+            // update UI: add bookmark icon (simple refresh)
+            document.querySelectorAll(".surahs .button").forEach(btn => {
+              btn.querySelector(".fa-bookmark")?.remove();
+            });
+            a.innerHTML += ` <i class="fa fa-bookmark marked mark" aria-hidden="true"></i>`;
+            gomarkBtn.style.visibility = "visible";
+            gomarkBtn.href = `#surah-${surahNumber}`;
+            gomarkBtn.style.display = "inline-block";
+            setTimeout(() => notify("تم وضع علامة", "success"), 300);
+          });
+
+          surahsContainer.appendChild(a);
         });
+
+        div.appendChild(surahsContainer);
+        frag.appendChild(div);
+      });
+
+      listContainer.appendChild(frag);
+    }
+
+    /******************************
+     * Hijri date (fetch once)
+     ******************************/
+    async function loadHijriDate() {
+      try {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, "0");
+        const month = String(today.getMonth() + 1).padStart(2, "0");
+        const year = today.getFullYear();
+        const hijriDate = `${day}-${month}-${year}`;
+
+        const res = await fetch(`https://api.aladhan.com/v1/gToH/${hijriDate}`);
+        if (!res.ok) throw new Error("شبكة");
+        const data = await res.json();
+        const hijri = data.data.hijri;
+        const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
+        const hijiryDiv = document.getElementById("hijiry");
+        if (hijiryDiv) hijiryDiv.innerHTML = display;
+      } catch (err) {
+        console.warn("Hijri fetch failed:", err);
+      }
+    }
+
+    /******************************
+     * Search logic (debounced)
+     ******************************/
+    let debounceTimer = null;
+    const DEBOUNCE_MS = 300;
+    const MAX_AYAH_RESULTS = 30; // limit number of ayah results shown overall
+
+    function debounceSearch(fn) {
+      return function (...args) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => fn.apply(this, args), DEBOUNCE_MS);
+      };
+    }
+
+    // fetch surah JSON (cached)
+    async function fetchSurahJson(num, signal) {
+      if (surahCache.has(num)) return surahCache.get(num);
+      const url = `../assets/data/quran/${num}.json`;
+      const res = await fetch(url, { signal });
+      if (!res.ok) throw new Error("لم يتم العثور على السورة");
+      const data = await res.json();
+      surahCache.set(num, data);
+      return data;
+    }
+
+    // search in surahs by name
+    function showSurahResults(list) {
+      searchResults.innerHTML = "";
+      if (!list.length) {
+        searchResults.style.display = "none";
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      list.forEach(name => {
+        const surahNumber = surahNames.indexOf(name) + 1;
+        const div = document.createElement("div");
+        div.className = "result-item";
+        div.textContent = `سورة ${name}`;
+        div.setAttribute("role", "option");
+        div.addEventListener("click", () => {
+          window.location.href = `surah.html?number=${surahNumber}`;
+        });
+        frag.appendChild(div);
+      });
+      searchResults.appendChild(frag);
+      searchResults.style.display = "block";
+    }
+
+
+    // main search function
+    const handleSearch = debounceSearch(async function () {
+      const query = searchInput.value.trim();
+      if (!query) {
+        searchResults.style.display = "none";
+        return;
+      }
+
+      const type = getCheckedSearchType();
+
+      // cancel previous fetches
+      if (currentAbortController) currentAbortController.abort();
+      currentAbortController = new AbortController();
+      const signal = currentAbortController.signal;
+
+      try {
+        if (type === "surah") {
+          // search in surah names (case-insensitive)
+          const filtered = surahNames.filter(s => s.includes(query));
+          showSurahResults(filtered);
+        } else {
+          // ayah search: iterate surah files but stop early if enough
+          const matches = [];
+          for (let i = 1; i <= 114; i++) {
+            if (signal.aborted) break;
+            try {
+              const data = await fetchSurahJson(i, signal);
+              // data assumed array of ayah objects with fields {text, chapter, verse}
+              // do a case-insensitive include check — Arabic: exact substring
+              for (const ay of data) {
+                if (typeof ay.text === "string" && ay.text.includes(query)) {
+                  matches.push({ text: ay.text, surah: ay.chapter, ayah: ay.verse });
+                  if (matches.length >= MAX_AYAH_RESULTS) break;
+                }
+              }
+            } catch (err) {
+              // ignore single file errors, continue
+              if (err.name === 'AbortError') throw err;
+            }
+            if (matches.length >= MAX_AYAH_RESULTS) break;
+          }
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error("Search error:", err);
+        }
+      } finally {
+        searchLoader.style.display = "none";
+      }
     });
+
+    /******************************
+     * Interaction: click outside to close, keyboard nav
+     ******************************/
+    // close search results on outside click
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search")) {
+        searchResults.style.display = "none";
+      }
+    });
+
+    // keyboard navigation for results
+    let highlightedIndex = -1;
+    searchInput.addEventListener("keydown", (e) => {
+      const items = Array.from(searchResults.querySelectorAll(".result-item"));
+      if (!items.length || searchResults.style.display === "none") return;
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        highlightedIndex = Math.min(highlightedIndex + 1, items.length - 1);
+        items.forEach((it, idx) => it.classList.toggle("highlight", idx === highlightedIndex));
+        items[highlightedIndex]?.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        highlightedIndex = Math.max(highlightedIndex - 1, 0);
+        items.forEach((it, idx) => it.classList.toggle("highlight", idx === highlightedIndex));
+        items[highlightedIndex]?.scrollIntoView({ block: "nearest" });
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (highlightedIndex >= 0 && items[highlightedIndex]) {
+          items[highlightedIndex].click();
+        } else {
+          // fallback: trigger search immediately
+          handleSearch();
+        }
+      } else {
+        // reset highlight on other keys
+        highlightedIndex = -1;
+      }
+    });
+
+    /******************************
+     * Small helpers: notify wrapper (uses your notify lib if available)
+     ******************************/
+    function notify(message, type = "info") {
+      try {
+        if (typeof $.notify === "function") {
+          // if notify.js API exists in your project
+          $.notify(message, { className: type });
+        } else if (typeof Notify === "function") {
+          new Notify({ text: message });
+        } else {
+          // fallback: small toast using alert (minimal)
+          console.log("notify:", message);
+        }
+      } catch (e) {
+        console.log("notify error:", e);
+      }
+    }
+
+    /******************************
+     * Init
+     ******************************/
+    document.addEventListener("DOMContentLoaded", () => {
+      buildQuranList();
+      loadHijriDate();
+
+      // wire search input
+      searchInput.addEventListener("input", () => {
+        highlightedIndex = -1;
+        handleSearch();
+      });
+
+      // wire search type radio change: immediate search
+      [...radios].forEach(r => r.addEventListener("change", () => {
+        handleSearch();
+      }));
+
+      // preserve last scroll position (optional)
+      const lastScroll = sessionStorage.getItem("quran-scroll");
+      if (lastScroll) window.scrollTo(0, Number(lastScroll));
+      window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("quran-scroll", window.scrollY || 0);
+      });
+
+      // show bookmark button if storage present
+      const bookmarked = storage.getItem("surah");
+      if (bookmarked) {
+        const id = Number(bookmarked);
+        const el = document.getElementById(`surah-${id}`);
+        if (el) {
+          gomarkBtn.style.visibility = "visible";
+          gomarkBtn.href = `#surah-${id}`;
+        }
+      }
+    });
+
   </script>
-  <script src="../assets/js/mode.js"></script>
 
-
-
+  <!-- وضعت mode.js في آخر الصفحة كي يعمل بعد تحميل الـ DOM -->
+  <script src="../assets/js/mode.js" defer></script>
 </body>
 
 </html>

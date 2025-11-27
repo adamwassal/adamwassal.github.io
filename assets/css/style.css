@@ -154,7 +154,7 @@ li {
 }
 
 .header .logo img {
-  width: 100px;
+  width: 150px;
 }
 
 .header .links ul {
@@ -204,21 +204,18 @@ li {
   text-align: center;
   padding: 5px 2px;
   z-index: 1000;
-  animation: shownotifications 1s;
+  animation: shownotifications 0.5s;
   color: var(--text-body);
 }
 
 @keyframes shownotifications {
   0% {
-    left: 0;
-    top: 0;
-    transform: scale(0);
+    transform: translateY(-30px);
+    opacity: 0;
   }
 
   100% {
-    left: 40px;
-    top: 40px;
-    transform: scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -382,9 +379,25 @@ li {
 }
 
 .welcome {
+  position: relative;
   font-size: 2em;
   text-align: center;
   width: 740px;
+}
+.welcome::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  background-color: rgba(161, 160, 160, 0.397);
+  top: 0;
+  left: 220px;
+  border-radius: 50%; /* لو عايز شكل دائري */
+  opacity: 0;
+  transition: 0.4s ease;
+  width: 300px;
+  height: 300px;
+  opacity: 0.4;
 }
 
 .section-white {
@@ -439,6 +452,13 @@ li {
   100% {
     transform: rotateZ(-50deg) translateX(-20px);
   }
+}
+
+.android {
+  background-color: white;
+  height: fit-content;
+  width: fit-content;
+  border-radius: 30px;
 }
 
 /* Features */
@@ -538,9 +558,9 @@ li {
   font-size: 2.4em;
   padding-bottom: 40px;
   font-family: "Hafs", sans-serif;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 
-    color: var(--text-body);
+  color: var(--text-body);
 }
 
 .ayahtext {
@@ -644,7 +664,6 @@ li {
   font-weight: bold;
   align-items: center;
   background-color: var(--surface);
-  
 }
 
 /* ستايل للراديو مع الليبل */
@@ -1400,5 +1419,105 @@ label {
 @media screen and (max-width: 640px) {
   #surah-ayahs p {
     width: 300px;
+  }
+}
+
+
+
+
+
+
+/* تأثير التلاشي */
+.fade-effect {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-effect.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* تأثير الانزلاق */
+.slide-effect {
+  position: absolute;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: translateX(100px);
+}
+
+.slide-effect.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* تأثير التكبير */
+.zoom-effect {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.zoom-effect.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* تأثير الكتابة */
+.typewriter-effect {
+  overflow: hidden;
+  border-right: 3px solid var(--color-primary);
+  white-space: nowrap;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: var(--color-primary) }
+}
+
+/* تأثير الإضاءة */
+.glow-effect {
+  text-shadow: 0 0 10px rgba(246, 194, 1, 0.5),
+               0 0 20px rgba(246, 194, 1, 0.3),
+               0 0 30px rgba(246, 194, 1, 0.1);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px rgba(246, 194, 1, 0.5),
+                 0 0 20px rgba(246, 194, 1, 0.3),
+                 0 0 30px rgba(246, 194, 1, 0.1);
+  }
+  to {
+    text-shadow: 0 0 15px rgba(246, 194, 1, 0.7),
+                 0 0 25px rgba(246, 194, 1, 0.5),
+                 0 0 35px rgba(246, 194, 1, 0.3);
+  }
+}
+
+/* تأثير الموجة */
+.wave-effect {
+  display: inline-block;
+  animation: wave 3s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(2deg); }
+  75% { transform: translateY(-5px) rotate(-2deg); }
+}
+
+@media (max-width: 768px) {
+  .textt {
+    font-size: 1.6rem;
+    min-height: 60px;
   }
 }

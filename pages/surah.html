@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Surah Page</title>
+  <title>سورة</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
   <script src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
@@ -22,7 +22,6 @@
       margin-top: 30px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       height: fit-content;
-
     }
 
     .fontsized h3 {
@@ -183,15 +182,63 @@
       }
     }
 
+    .search-box {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+    }
 
+    .search-box input {
+      flex: 1;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 2px solid var(--color-primary);
+      outline: none;
+    }
 
-    @media (max-width: 1268px) {
-      .fontsized {
-        display: none;
-      }
+    .search-box button {
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
+    .highlight {
+      background: yellow;
+      padding: 0 3px;
+    }
 
+    .search-results {
+      margin-top: 10px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 5px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
 
+    .search-results div {
+      padding: 10px;
+      border-bottom: 1px solid #ddd2;
+      cursor: pointer;
+    }
+
+    .search-results div:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    #ayahSearch:focus {
+      box-shadow: 0 6px 18px rgba(184, 124, 12, 0.925);
+
+    }
+
+    #ayahSearch {
+      text-align: end;
     }
   </style>
 </head>
@@ -202,9 +249,15 @@
   <div class="main">
 
     <div class="section">
+
       <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
       <div class="title" id="surah-name"></div>
       <div class="title basmala"> بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+      <div class="search-box">
+        <button id="clearSearch" onclick="clearSearch()" style="display:none;">مسح</button>
+        <input type="text" id="ayahSearch" placeholder="...ابحث عن آية" oninput="searchAyah()">
+      </div>
+      <div id="searchResults" class="search-results"></div>
       <div id="surah-ayahs"></div>
       <div class="fixedleft">
 
@@ -215,7 +268,9 @@
       <div class="fixedright">
 
         <a class="button" onclick="lunch()" id="scroll-btn"><i class="fa-solid fa-arrow-down"></i> السحب التلقائي</a>
+
       </div>
+
 
     </div>
 
@@ -224,37 +279,25 @@
 
   </div>
 
-
-
   <div class="tafseer-content" id="tafseer-content">
-    <div class="tafaseer">
-      <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked />
-      <label for="tafseer1">التفسير الميسر</label>
-      <input type="radio" name="tafseer" id="tafseer2" onclick="updateTafsir()" />
-      <label for="tafseer2">تفسير ابن كثير</label>
-
-      <input type="radio" name="tafseer" id="tafseer3" onclick="updateTafsir()" />
-      <label for="tafseer3">تفسير السعدي</label>
-
-    </div>
+    <div class="tafaseer"> <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked /> <label
+        for="tafseer1">التفسير الميسر</label> <input type="radio" name="tafseer" id="tafseer2"
+        onclick="updateTafsir()" /> <label for="tafseer2">تفسير ابن كثير</label> <input type="radio" name="tafseer"
+        id="tafseer3" onclick="updateTafsir()" /> <label for="tafseer3">تفسير السعدي</label> </div>
     <div class="close_btn" onclick="closeTafsir()">&times;</div>
-
     <div class="details"></div>
     <div class="fontsized">
       <h3 class="primary-color"><i class="fas fa-text-height "></i> تغيير حجم الخط</h3>
-      <div class="slider-container">
-        <input type="range" id="fontSizeSlider" min="20" max="32" value="20" step="1">
+      <div class="slider-container"> <input type="range" id="fontSizeSlider" min="20" max="32" value="20" step="1">
         <div class="size-value" id="sizeValue">20px</div>
       </div>
-      <div class="size-presets">
-        <button class="size-btn" data-size="20">صغير</button>
-        <button class="size-btn active" data-size="24">متوسط</button>
-        <button class="size-btn" data-size="28">كبير</button>
-        <button class="size-btn" data-size="32">كبير جداً</button>
-      </div>
-
+      <div class="size-presets"> <button class="size-btn" data-size="20">صغير</button> <button class="size-btn active"
+          data-size="24">متوسط</button> <button class="size-btn" data-size="28">كبير</button> <button class="size-btn"
+          data-size="32">كبير جداً</button> </div>
     </div>
   </div>
+
+
 
   <div class="info-overlay" id="infoOverlay">
     <div class="info" id="infoBox">
@@ -264,7 +307,6 @@
       <h2 class="revelation"></h2>
     </div>
   </div>
-
 
 
   <script src="../components/header.js"></script>
@@ -648,6 +690,185 @@
       setTimeout(() => (overlay.style.display = "none"), 300);
     }
   </script>
+  <!-- تحسينات التسميع مع حل مشكلة التعرف على الكلام -->
+  <script>
+    /* ---------- إعدادات عامة ---------- */
+    let surahAyahs = [];
+    let currentAyahIndex = 0;
+    let totalAyahs = 0;
+    const THRESHOLD = 0.82;
+    let speechSupported = false;
+    let manualMode = false;
+
+    /* ---------- التحقق من دعم المتصفح للتعرف على الصوت ---------- */
+    function checkSpeechSupport() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        console.warn("المتصفح لا يدعم SpeechRecognition API");
+        document.getElementById('browserSupportWarning').style.display = 'block';
+        speechSupported = false;
+        return null;
+      }
+
+      speechSupported = true;
+      const recognition = new SpeechRecognition();
+      recognition.lang = "ar-SA";
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 5;
+
+      return recognition;
+    }
+
+    /* ---------- تهيئة التعرف على الصوت ---------- */
+    const recognition = checkSpeechSupport();
+
+    /* ---------- دوال المساعدة المحسنة ---------- */
+    function normalizeArabic(text) {
+      if (!text) return "";
+
+      // إزالة التشكيل والحركات
+      text = text.replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED\u0670]/g, '');
+
+      // إزالة التطويل
+      text = text.replace(/\u0640/g, '');
+
+      // توحيد أشكال الحروف
+      text = text.replace(/[أإآٱٰ]/g, 'ا');
+      text = text.replace(/ى/g, 'ي');
+      text = text.replace(/ؤ/g, 'و');
+      text = text.replace(/ئ/g, 'ي');
+      text = text.replace(/ة/g, 'ه');
+
+      // إزالة علامات الترقيم والمسافات الزائدة
+      text = text.replace(/[^\u0600-\u06FF]/g, '');
+      text = text.replace(/\s+/g, ' ').trim();
+
+      return text;
+    }
+
+    function enhancedSimilarity(a, b) {
+      if (a === b) return 1;
+
+      const aWords = a.split(' ');
+      const bWords = b.split(' ');
+
+      let matches = 0;
+      let totalWords = Math.max(aWords.length, bWords.length);
+
+      for (let i = 0; i < aWords.length; i++) {
+        let bestMatch = 0;
+        for (let j = Math.max(0, i - 2); j < Math.min(bWords.length, i + 3); j++) {
+          const wordSimilarity = wordLevelSimilarity(aWords[i], bWords[j]);
+          if (wordSimilarity > bestMatch) {
+            bestMatch = wordSimilarity;
+          }
+        }
+        matches += bestMatch;
+      }
+
+      return matches / totalWords;
+    }
+
+    function wordLevelSimilarity(word1, word2) {
+      if (!word1 || !word2) return 0;
+      if (word1 === word2) return 1;
+
+      const dist = levenshtein(word1, word2);
+      const maxLen = Math.max(word1.length, word2.length);
+      return 1 - (dist / maxLen);
+    }
+
+    function levenshtein(a, b) {
+      if (a === b) return 0;
+      const la = a.length, lb = b.length;
+      if (la === 0) return lb;
+      if (lb === 0) return la;
+
+      const matrix = [];
+      for (let i = 0; i <= la; i++) {
+        matrix[i] = [i];
+      }
+      for (let j = 0; j <= lb; j++) {
+        matrix[0][j] = j;
+      }
+
+      for (let i = 1; i <= la; i++) {
+        for (let j = 1; j <= lb; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j - 1] + cost
+          );
+        }
+      }
+
+      return matrix[la][lb];
+    }
+
+    /* ---------- جمع الآيات بعد تحميل الصفحة ---------- */
+    function collectAyahs() {
+      const ayahEls = document.querySelectorAll("#surah-ayahs p");
+      surahAyahs = Array.from(ayahEls).map(el => {
+        const raw = el.textContent.replace(/\(\d+\) الآيه.*/g, "").trim();
+        const controlDiv = el.querySelector('.controls');
+        const audio = controlDiv ? controlDiv.getAttribute('data-audio') : '';
+        return {
+          raw: raw,
+          normalized: normalizeArabic(raw),
+          audio: audio,
+          el: el
+        };
+      });
+      totalAyahs = surahAyahs.length;
+    }
+
+
+    /* ---------- دوال التحكم في popup التسميع ---------- */
+    function nextAyah() {
+      currentAyahIndex++;
+      nextAyahTasmee3();
+    }
+
+    function repeatAyah() {
+      const ayah = surahAyahs[currentAyahIndex];
+      playAyahAudioOrTTS(ayah);
+
+      if (speechSupported && !manualMode) {
+        setTimeout(() => {
+          startListening();
+        }, 2000);
+      }
+    }
+
+    /* ---------- تشغيل صوت الآية ---------- */
+    function playAyahAudioOrTTS(ayah) {
+      if (!ayah) return;
+
+      const player = document.getElementById('ayah-player');
+      if (ayah.audio) {
+        player.src = ayah.audio;
+        player.currentTime = 0;
+        player.play().catch(e => {
+          console.warn("خطأ تشغيل صوت القارئ:", e);
+          playTTS(ayah.raw);
+        });
+      } else {
+        playTTS(ayah.raw);
+      }
+    }
+
+    function playTTS(text) {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    }
+  </script>
 
   <script>
     var scrollInterval = null;
@@ -670,7 +891,86 @@
 
       }
     }
+
   </script>
+
+  <script>
+    function removeTashkeel(text) {
+      return text.replace(/[\u064B-\u0652]/g, "");
+    }
+
+    function searchAyah() {
+      const term = document.getElementById("ayahSearch").value.trim();
+      const clearBtn = document.getElementById("clearSearch");
+      const ayahs = document.querySelectorAll("#surah-ayahs p");
+      const resultsBox = document.getElementById("searchResults");
+
+      resultsBox.innerHTML = "";
+      resultsBox.style.display = "none";
+
+      if (term === "") {
+        clearSearch();
+        return;
+      }
+
+      clearBtn.style.display = "block";
+
+      // إزالة الهايلايت القديم
+      ayahs.forEach(p => {
+        p.innerHTML = p.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, "$1");
+      });
+
+      let firstMatch = null;
+      const regex = new RegExp(term, "gi");
+
+      ayahs.forEach((p, index) => {
+        const originalText = p.textContent;
+        const cleanText = removeTashkeel(originalText);
+        const cleanTerm = removeTashkeel(term);
+
+
+        if (cleanText.includes(cleanTerm)) {
+          // دا أول ماتش ننزل عليه
+          if (!firstMatch) firstMatch = p;
+
+
+          // إضافة الآية للقائمة
+          const item = document.createElement("div");
+          item.innerHTML = originalText.replace(regex, m => `<span class="highlight">${m}</span>`);
+
+          item.addEventListener("click", () => {
+            p.scrollIntoView({ behavior: "smooth" });
+          });
+
+          resultsBox.appendChild(item);
+        }
+      });
+
+      // إظهار القائمة لو فيها عناصر
+      if (resultsBox.children.length > 0) {
+        resultsBox.style.display = "block";
+
+
+      }
+    }
+
+    function clearSearch() {
+      const ayahs = document.querySelectorAll("#surah-ayahs p");
+
+      ayahs.forEach(p => {
+        p.innerHTML = p.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, "$1");
+      });
+
+      document.getElementById("ayahSearch").value = "";
+      document.getElementById("clearSearch").style.display = "none";
+
+      const resultsBox = document.getElementById("searchResults");
+      resultsBox.innerHTML = "";
+      resultsBox.style.display = "none";
+    }
+
+  </script>
+
 
   <script src="../assets/js/localstorage.js"></script>
   <script src="../assets/js/mode.js"></script>

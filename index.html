@@ -21,7 +21,7 @@
 
         <div class="welcome">
           <h1 style="color: var(--text-body);"> مرحبًا بك في موقع</h1>
-          <h1 class="yellow-color">رياض الجنه</h1>
+          <h1 class="yellow-color textt">رياض الجنه</h1>
         </div>
         <div class="section-white quote">
           <div class="icon right">
@@ -38,7 +38,8 @@
 
         <div class="section-white">
 
-          <h2 style="color: var(--text-body);">قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ
+          <h2 style="color: var(--text-body);">قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ
+            اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ
             وَطَائِفَةٌ مِّنَ الَّذِينَ مَعَكَ ۚ وَاللَّهُ يُقَدِّرُ اللَّيْلَ وَالنَّهَارَ ۚ عَلِمَ أَن لَّن تُحْصُوهُ
             فَتَابَ عَلَيْكُمْ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنَ الْقُرْآنِ ۚ عَلِمَ أَن سَيَكُونُ مِنكُم مَّرْضَىٰ ۙ
             وَآخَرُونَ يَضْرِبُونَ فِي الْأَرْضِ يَبْتَغُونَ مِن فَضْلِ اللَّهِ ۙ وَآخَرُونَ يُقَاتِلُونَ فِي سَبِيلِ
@@ -50,8 +51,10 @@
 
         <div class="section-white">
           <h2 class="primary-color" style="color: var(--text-body);">تنزيل التطبيق</h2>
-          <a href="https://drive.google.com/file/d/1dMeXnMD9xosuFiUSeKay56YRSDInto2h/view?usp=drive_link" target="_blank"><img src="assets/images/download_app.png" alt="Downlaod app" width="300" height="300"></a>
-          <h3  class="primary-color">هذا التطبيق يحتاج الانترنت ل(الاستماع للسورة و الراديو و التفسير)</h3>
+          <a href="https://drive.google.com/file/d/1dMeXnMD9xosuFiUSeKay56YRSDInto2h/view?usp=drive_link"
+            target="_blank"><img src="assets/images/download_app.png" alt="Downlaod app" width="300" height="300"
+              class="android"></a>
+          <h3 class="primary-color">هذا التطبيق يحتاج الانترنت ل(الاستماع للسورة و الراديو و التفسير)</h3>
         </div>
       </div>
 
@@ -81,11 +84,68 @@
       <div class="row">
         <div class="feature">
           <img src="assets/images/smile.png" class="img" alt="">
-          <h2  style="color: var(--text-body);">و أكثر ان شاء الله</h2>
+          <h2 style="color: var(--text-body);">و أكثر ان شاء الله</h2>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    const textEl = document.querySelector(".textt");
+
+const texts = [
+  "رياض الجنة",
+  "لقراءة القرآن",
+  "للاستماع للقرآن",
+  "لذكر الله",
+  "لمعرفة مواقيت الصلوات"
+];
+
+let idx = 0;
+
+const gradients = [
+  "linear-gradient(135deg, #f6c201, #f1a300)",
+  "linear-gradient(135deg, #4facfe, #00f2fe)",
+  "linear-gradient(135deg, #43e97b, #38f9d7)",
+  "linear-gradient(135deg, #fa709a, #fee140)",
+  "linear-gradient(135deg, #667eea, #764ba2)"
+];
+
+function animateText() {
+  // مرحلة الإخفاء
+  textEl.style.opacity = 0;
+  textEl.style.transform = "translateY(20px) scale(0.9) rotateX(15deg)";
+  textEl.style.textShadow = "none";
+
+  setTimeout(() => {
+    // تحديث النص والـ gradient
+    textEl.textContent = texts[idx];
+    textEl.style.background = gradients[idx];
+    textEl.style.webkitBackgroundClip = "text";
+    textEl.style.backgroundClip = "text";
+    textEl.style.webkitTextFillColor = "transparent";
+    textEl.style.color = "transparent";
+
+    // ظهور النص مع تأثيرات كوكتيل
+    textEl.style.opacity = 1;
+    textEl.style.transform = "translateY(0) scale(1) rotateX(0deg)";
+    textEl.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+
+    // تأثير Glow خفيف بعد الظهور
+    setTimeout(() => {
+      textEl.style.textShadow = "0 0 15px rgba(246, 194, 1, 0.5)";
+      setTimeout(() => textEl.style.textShadow = "0 0 5px rgba(0,0,0,0.1)", 600);
+    }, 200);
+
+    // تحديث الفهرس للنص التالي
+    idx = (idx + 1) % texts.length;
+  }, 500);
+}
+
+// البداية
+animateText();
+setInterval(animateText, 3000);
+
+  </script>
 </body>
 
 <script src="components/header.js"></script>
