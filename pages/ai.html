@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ذكاء اصطناعي الخاص بـــ رياض الجنه</title>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
+    <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
+
+    <style>
+        /* Container العام */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            font-family: 'Arial', sans-serif;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+
+        /* textarea */
+        #question {
+            width: 90%;
+            min-height: 80px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--bg);
+            font-size: 16px;
+            resize: vertical;
+            text-align: end;
+            color: var(--text-body);
+            background-color: var(--bg);
+        }
+
+        /* زر الاسأل */
+        button[type="submit"] {
+            margin-top: 12px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #4CAF50;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background: #45a049;
+        }
+
+        /* div الرد */
+        #answer {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--bg);
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            line-height: 1.6;
+            font-size: 16px;
+            color: var(--text-body);
+            white-space: pre-wrap;
+            text-align: end;
+            /* يحافظ على المسافات والسطر الجديد */
+        }
+
+        /* قوائم */
+        #answer ol {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        #answer ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        /* النص الغامق */
+        #answer strong,
+        #answer b {
+            font-weight: bold;
+        }
+
+        /* الخط المائل */
+        #answer em,
+        #answer i {
+            font-style: italic;
+        }
+
+        /* روابط لو موجودة */
+        #answer a {
+            color: #1a73e8;
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="header-container" class="header" data-page-title="ذكاء اصطناعي الخاص بـــ رياض الجنه"></div>
+
+
+
+    <div class="container">
+        <h1 style="text-align: center; display: flex; align-items: center; gap:10px; color:var(--text-body)">ذكاء اصطناعي الخاص بـــ رياض الجنه <img src="../assets/images/icons8-ai.gif" alt=""></h1>
+
+        <textarea id="question" placeholder="اكتب سؤالك الديني هنا..."></textarea>
+
+        <button onclick="askGemini()" type="submit">اسأل</button>
+
+        <div id="answer"></div>
+    </div>
+    <script>
+        function formatResponse(text) {
+            // bold **text**
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // italic *text*
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // فصل أي نص قبل أول عنصر قائمة
+            let firstListIndex = text.search(/^(\d+\.|- )/m);
+            let intro = "";
+            if (firstListIndex > 0) {
+                intro = text.slice(0, firstListIndex).trim();
+                text = text.slice(firstListIndex).trim();
+                intro = "<p>" + intro + "</p>";
+            }
+
+            // numbered lists
+            text = text.replace(/^(\d+)\.\s+(.*)$/gm, '<li>$2</li>');
+            if (text.includes("<li>") && !text.startsWith("<ol>")) {
+                text = '<ol>' + text + '</ol>';
+            }
+
+            // bullet lists
+            text = text.replace(/^- (.*)$/gm, '<li>$1</li>');
+            if (text.includes("<li>") && !text.startsWith("<ol>") && !text.startsWith("<ul>")) {
+                text = '<ul>' + text + '</ul>';
+            }
+
+            return intro + text;
+        }
+
+
+        async function askGemini() {
+            const question = document.getElementById("question").value.trim();
+            const answerDiv = document.getElementById("answer");
+
+            if (!question) {
+                answerDiv.innerText = "من فضلك اكتب سؤالًا.";
+                return;
+            }
+
+            answerDiv.innerText = "⏳ جاري التفكير...";
+
+            try {
+                const res = await fetch("https://riyadaljannah.adamwassal2.workers.dev/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question })
+                });
+
+                if (!res.ok) {
+                    throw new Error("HTTP Error: " + res.status);
+                }
+
+                const data = await res.json();
+
+                if (data.candidates?.length > 0 && data.candidates[0].content?.parts?.length > 0) {
+                    const rawText = data.candidates[0].content.parts[0].text;
+                    answerDiv.innerHTML = formatResponse(rawText);
+
+                } else if (data.error) {
+                    answerDiv.innerText = "❌ خطأ من الخادم: " + data.error.message;
+                } else {
+                    answerDiv.innerText = "❌ لم يتم الحصول على رد.";
+                }
+
+
+
+            } catch (err) {
+                answerDiv.innerText = "❌ حدث خطأ في الاتصال";
+                console.error(err);
+            }
+        }
+    </script>
+
+
+    <script src="../components/header.js"></script>
+    <script src="../assets/js/notify.js"></script>
+    <script src="../libs/notify.min.js"></script>
+    <script src="../assets/js/toast_notification.js"></script>
+    <script src="../assets/js/global.js"></script>
+</body>
+
+</html>
