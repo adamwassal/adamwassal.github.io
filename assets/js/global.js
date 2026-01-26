@@ -49,7 +49,7 @@ function highlightNextPrayer(nextPrayerName) {
     .querySelectorAll(".pray")
     .forEach((el) => el.classList.remove("next-prayer"));
   const nextPrayerElement = document.querySelector(
-    `[data-prayer="${nextPrayerName}"]`
+    `[data-prayer="${nextPrayerName}"]`,
   );
   if (nextPrayerElement) nextPrayerElement.classList.add("next-prayer");
 }
@@ -79,8 +79,8 @@ function fetchPrayerTimesByCoords(lat, lon) {
 
   fetch(
     `https://api.aladhan.com/v1/timings/${Math.floor(
-      Date.now() / 1000
-    )}?latitude=${lat}&longitude=${lon}&method=5`
+      Date.now() / 1000,
+    )}?latitude=${lat}&longitude=${lon}&method=5`,
   )
     .then((response) => {
       if (!response.ok) throw new Error("Network response was not ok");
@@ -93,7 +93,7 @@ function fetchPrayerTimesByCoords(lat, lon) {
       document.getElementById("alduhr").innerHTML = convertToAmPm(times.Dhuhr);
       document.getElementById("alasr").innerHTML = convertToAmPm(times.Asr);
       document.getElementById("almaghreb").innerHTML = convertToAmPm(
-        times.Maghrib
+        times.Maghrib,
       );
       document.getElementById("alisha").innerHTML = convertToAmPm(times.Isha);
 
@@ -147,11 +147,10 @@ function fetchPrayerTimesByCoords(lat, lon) {
               `لا تنسى قراءة سورة الكهف اليوم`,
               "alkahf",
               "pages/surah.html?number=18",
-              "سورة الكهف"
+              "سورة الكهف",
             );
             window.kahfNotified = true;
           }
-          
         }
       }, 1000);
     })
@@ -170,7 +169,7 @@ function detectLocationAndFetch() {
         console.error("Location error:", error);
         // fallback للقاهرة
         fetchPrayerTimesByCoords(30.0444, 31.2357);
-      }
+      },
     );
   } else {
     // fallback للقاهرة
@@ -181,3 +180,26 @@ function detectLocationAndFetch() {
 // تشغيل في أي صفحة
 detectLocationAndFetch();
 
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const animation = el.dataset.animate;
+
+        el.classList.add("animate__animated", animation);
+        el.style.opacity = 1;
+
+        observer.unobserve(el); // يشغّل الأنيميشن مرة واحدة فقط
+        
+      }
+    });
+  },
+  {
+    threshold: 0.2,
+  },
+);
+
+document.querySelectorAll(".animate-on-scroll").forEach((el) => {
+  observer.observe(el);
+});

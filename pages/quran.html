@@ -4,16 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <title>المصحف — سور القرآن الكريم</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 
   <!-- أساسي (احتفظت بروابطك الخارجية) -->
   <link rel="stylesheet" href="../assets/css/style.css" />
   <link rel="stylesheet" href="../assets/fonts/fontawesome-free-6.6.0-web/css/all.min.css" />
-   <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
+  <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 
   <script defer src="../assets/fonts/fontawesome-free-6.6.0-web/js/all.min.js"></script>
   <script defer src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="../assets/css/animate.min.css">
+
 
   <style>
     /* ==== تحسينات صغيرة على الـ search results و layout داخل هذه الصفحة ==== */
@@ -40,9 +42,10 @@
       box-shadow: none;
       transition: box-shadow 0.15s;
     }
+
     #searchInput:focus {
       box-shadow: 0 6px 18px rgba(184, 124, 12, 0.925);
-      
+
     }
 
     .search-filters {
@@ -75,13 +78,13 @@
       color: var(--text-body);
     }
 
-    .search-results .result-item + .result-item {
+    .search-results .result-item+.result-item {
       margin-top: 4px;
     }
 
     .search-results .result-item:hover,
     .search-results .result-item.highlight {
-      background: rgba(0,0,0,0.04);
+      background: rgba(0, 0, 0, 0.04);
     }
 
     .search-results small {
@@ -101,21 +104,54 @@
     }
 
     @keyframes loadingDots {
-      0% { transform: translateY(0); opacity: 1; }
-      50% { transform: translateY(-6px); opacity: 0.7; }
-      100% { transform: translateY(0); opacity: 1; }
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      50% {
+        transform: translateY(-6px);
+        opacity: 0.7;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     /* تحسين عرض القوائم داخل الصفحة */
-    .quranlist { max-width: 1100px; margin: 20px auto; }
-    .d1 { margin-bottom: 18px; }
-    .surahs { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .surahs .button { min-width: 180px; text-align:center; padding: 12px 10px; }
+    .quranlist {
+      max-width: 1100px;
+      margin: 20px auto;
+    }
+
+    .d1 {
+      margin-bottom: 18px;
+    }
+
+    .surahs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .surahs .button {
+      min-width: 180px;
+      text-align: center;
+      padding: 12px 10px;
+    }
 
     /* responsive adjustments for search results on small screens */
     @media (max-width: 480px) {
-      .search-results { max-height: 180px; }
-      #searchInput { font-size: 0.95rem; }
+      .search-results {
+        max-height: 180px;
+      }
+
+      #searchInput {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
@@ -125,14 +161,14 @@
   <div id="header-container" class="header" data-page-title="المصحف"></div>
 
   <div class="main">
-    <div class="section">
+    <div class="section ">
 
       <div class="title" style="margin-top:18px;">المصحف</div>
 
       <div class="search" aria-label="بحث المصحف">
         <input id="searchInput" type="text" placeholder="ابحث عن سورة" aria-label="حقل البحث" autocomplete="off">
 
-        <div class="search-filters" role="radiogroup" aria-label="نوع البحث">
+        <div class="search-filters  animate__animated animate__fadeInRight" role="radiogroup" aria-label="نوع البحث">
           <label>
             <input type="radio" name="searchType" value="surah" checked>
             البحث في السور
@@ -144,7 +180,7 @@
       </div>
 
       <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
-      
+
       <div class="quranlist" id="quranList" aria-live="polite"></div>
     </div>
   </div>
@@ -162,7 +198,7 @@
      * Data & helpers
      ******************************/
     const surahNames = [
-      "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الإنفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
+      "الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الإنفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"
     ];
 
     // quranParts: استعملت نفس الخريطة من ملفك الأصلي
@@ -192,14 +228,14 @@
       25: ["الشورى", "الزخرف", "الدخان", "الجاثية"],
       26: ["الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات"],
       27: ["الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد"],
-      28: ["المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم"],
-      29: ["الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات"],
+      28: ["المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم"],
+      29: ["الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات"],
       30: [
-        "النبأ","النازعات","عبس","التكوير","الإنفطار","المطففين","الانشقاق",
-        "البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل",
-        "الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
-        "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر",
-        "الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
+        "النبأ", "النازعات", "عبس", "التكوير", "الإنفطار", "المطففين", "الانشقاق",
+        "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل",
+        "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات",
+        "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر",
+        "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"
       ]
     };
 
@@ -234,6 +270,8 @@
       return [...radios].find(r => r.checked).value;
     }
 
+
+
     /******************************
      * Build surah list (opt)
      ******************************/
@@ -242,7 +280,9 @@
 
       Object.entries(quranParts).forEach(([juz, surahs]) => {
         const div = document.createElement("div");
-        div.className = "d1";
+        div.className = "animate-on-scroll d1";
+        div.dataset.animate = "animate__fadeIn";
+
 
         const h3 = document.createElement("h3");
         h3.innerText = `الجزء ${juz}`;
@@ -515,8 +555,38 @@
 
   </script>
 
+  <script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const animation = el.dataset.animate || "animate__fadeInUp";
+
+        el.classList.add("animate__animated", animation);
+        el.style.opacity = 1;
+
+        observer.unobserve(el); // شغّل مرة واحدة
+      }
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  function observeAnimations() {
+    document.querySelectorAll(".animate-on-scroll").forEach(el => {
+      el.style.opacity = 0;
+      observer.observe(el);
+    });
+  }
+
+  // أول تحميل
+  document.addEventListener("DOMContentLoaded", observeAnimations);
+</script>
+
+
   <!-- وضعت mode.js في آخر الصفحة كي يعمل بعد تحميل الـ DOM -->
   <script src="../assets/js/mode.js" defer></script>
+  <script src="../assets/js/global.js"></script>
 </body>
 
 </html>

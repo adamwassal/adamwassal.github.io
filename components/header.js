@@ -24,7 +24,6 @@ window.addEventListener("scroll", async () => {
   let docHeight = document.documentElement.scrollHeight - window.innerHeight;
   let scrollPercent = (scrollTop / docHeight) * 100;
 
-  console.log(scrollUpBtn);
   if (scrollTop > 0) {
     scrollUpBtn.classList.add("show");
     scrollUpBtn.classList.remove("hidden");

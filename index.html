@@ -9,9 +9,506 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="libs/jquery-1.10.2.min.js" type="text/javascript"></script>
-     <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
+  <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="assets/css/animate.min.css">
 
+  <style>
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
 
+    .popup-overlay.active {
+      display: flex;
+    }
+
+    .new-features-popup {
+      background-color: var(--bg);
+      width: 90%;
+      max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: slideUp 0.4s ease-out;
+      border: 1px solid var(--border);
+    }
+
+    .popup-header {
+      background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-hover));
+      color: white;
+      padding: 25px 30px;
+      position: relative;
+      text-align: center;
+    }
+
+    .popup-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .popup-header h2::before {
+      content: "✨";
+      font-size: 1.8rem;
+    }
+
+    .popup-header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+
+    .popup-content {
+      padding: 30px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .features-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      color: var(--text-heading);
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: "🚀";
+      font-size: 1.3rem;
+    }
+
+    .fixes-title {
+      border-bottom: 2px solid var(--color-secondary);
+    }
+
+    .fixes-title::before {
+      content: "🔧";
+    }
+
+    .popup-footer {
+      padding: 20px 30px;
+      background-color: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .version-info {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .action-btn {
+      background-color: var(--color-primary);
+      color: var(--text-heading);
+      border: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--color-primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(246, 194, 1, 0.3);
+    }
+
+    .show-popup-btn {
+      background-color: var(--color-secondary);
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(33, 91, 164, 0.3);
+    }
+
+    .show-popup-btn:hover {
+      background-color: var(--color-secondary-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(33, 91, 164, 0.4);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .new-features-popup {
+        width: 95%;
+        max-height: 85vh;
+      }
+
+      .popup-content {
+        max-height: 50vh;
+        padding: 20px;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .popup-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .popup-footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .popup-header {
+        padding: 20px 25px;
+      }
+
+      .popup-content {
+        padding: 15px;
+      }
+    }
+
+    .features-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .headerpop {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid var(--color-primary);
+    }
+
+    .headerpop h1 {
+      color: var(--text-heading);
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .headerpop h1::before {
+      content: "✨";
+      font-size: 2rem;
+    }
+
+    .headerpop p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .platform-section {
+      margin-bottom: 40px;
+      background-color: var(--surface);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .platform-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .platform-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .mobile .platform-icon {
+      background-color: rgba(33, 91, 164, 0.1);
+      color: var(--color-secondary);
+    }
+
+    .website .platform-icon {
+      background-color: rgba(246, 194, 1, 0.1);
+      color: var(--color-primary);
+    }
+
+    .platform-title {
+      color: var(--text-heading);
+      font-size: 1.6rem;
+      margin: 0;
+    }
+
+    .platform-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 5px;
+    }
+
+    .features-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-item {
+      background-color: var(--bg);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border-color: var(--color-primary);
+    }
+
+    .feature-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .feature-type {
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .new-feature .feature-type {
+      background-color: rgba(246, 194, 1, 0.15);
+      color: var(--color-primary);
+    }
+
+    .improvement-feature .feature-type {
+      background-color: rgba(33, 91, 164, 0.15);
+      color: var(--color-secondary);
+    }
+
+    .fix-feature .feature-type {
+      background-color: rgba(220, 53, 69, 0.15);
+      color: #dc3545;
+    }
+
+    .feature-title {
+      color: var(--text-heading);
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .feature-desc {
+      color: var(--text-body);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 15px;
+    }
+
+    .feature-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .badge-new {
+      background-color: var(--color-primary);
+      color: var(--text-heading);
+    }
+
+    .badge-improvement {
+      background-color: var(--color-secondary);
+      color: white;
+    }
+
+    .badge-fix {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .status-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+    }
+
+    .new-feature .status-indicator {
+      background-color: var(--color-primary);
+    }
+
+    .improvement-feature .status-indicator {
+      background-color: var(--color-secondary);
+    }
+
+    .fix-feature .status-indicator {
+      background-color: #dc3545;
+    }
+
+    .coming-soon {
+      text-align: center;
+      padding: 40px;
+      background-color: rgba(33, 91, 164, 0.05);
+      border-radius: 12px;
+      border: 2px dashed var(--border);
+      margin-top: 20px;
+    }
+
+    .coming-soon .icon {
+      font-size: 2.5rem;
+      color: var(--color-secondary);
+      margin-bottom: 15px;
+    }
+
+    .coming-soon h3 {
+      color: var(--text-heading);
+      margin-bottom: 10px;
+    }
+
+    .coming-soon p {
+      color: var(--text-muted);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .features-list {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+      }
+
+      .platform-title {
+        font-size: 1.4rem;
+      }
+
+      .features-container {
+        padding: 10px;
+      }
+
+      .platform-section {
+        padding: 20px 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .platform-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+    }
+
+    .prayer-times {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -21,11 +518,11 @@
     <div class="hero section">
       <div class="row">
 
-        <div class="welcome">
+        <div class="welcome animate__animated animate__fadeIn">
           <h1 style="color: var(--text-body);"> مرحبًا بك في موقع</h1>
           <h1 class="yellow-color textt">رياض الجنه</h1>
         </div>
-        <div class="section-white quote">
+        <div class="section-white quote animate__animated animate__fadeInLeft">
           <div class="icon right">
             🌱
           </div>
@@ -38,7 +535,7 @@
       </div>
       <div class="row">
 
-        <div class="section-white">
+        <div class="section-white animate__animated animate__fadeInRight">
 
           <h2 style="color: var(--text-body);">قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ
             اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ
@@ -51,7 +548,7 @@
             أَجْرًا ۚ وَاسْتَغْفِرُوا اللَّهَ ۖ إِنَّ اللَّهَ غَفُورٌ رَّحِيمٌ )</h2>
         </div>
 
-        <div class="section-white">
+        <div class="section-white animate__animated animate__fadeInUp">
           <h2 class="primary-color" style="color: var(--text-body);">تنزيل التطبيق</h2>
           <a href="https://drive.google.com/file/d/1dMeXnMD9xosuFiUSeKay56YRSDInto2h/view?usp=drive_link"
             target="_blank"><img src="assets/images/download_app.png" alt="Downlaod app" width="300" height="300"
@@ -65,89 +562,283 @@
       <h1 style="color: var(--text-body);">مميزات الموقع (بفضل الله)</h1>
       <br>
       <div class="row">
-        <div class="feature">
+        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
           <img src="assets/images/quran.png" alt="" class="img">
           <h2 style="color: var(--text-body);">القرءان كامل مع التفسير
             و تسهيل القراءة</h2>
         </div>
-        <div class="feature">
+        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
           <i class="fa-solid fa-radio img"></i>
           <h2 style="color: var(--text-body);">الإستماع الى الراديو
             لأشهر الشيوخ و الإذاعات</h2>
         </div>
-        <div class="feature">
+        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
           <i class="fa-solid fa-clock img"></i>
           <h2 style="color: var(--text-body);">معرفة أوقات الصلاة
             بكل سهوله!</h2>
         </div>
 
       </div>
+
       <br>
       <div class="row">
-        <div class="feature">
+        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
           <img src="assets/images/smile.png" class="img" alt="">
           <h2 style="color: var(--text-body);">و أكثر ان شاء الله</h2>
         </div>
       </div>
     </div>
+    <div class="section" style="height: 700px;">
+
+      <iframe src="pages/time_prays.html" frameborder="0" width="100%" height="100%"></iframe>
+      <br>
+    </div>
   </div>
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="new-features-popup">
+      <div class="popup-header">
+        <button class="close-btn" id="closePopupBtn">×</button>
+        <h2>ميزات جديدة وإصلاحات</h2>
+        <p>الإصدار 2.5.0 - تم التحديث في ١٢ مارس ٢٠٢٤</p>
+      </div>
+
+      <div class="popup-content">
+        <div class="features-container">
+          <div class="headerpop">
+            <h1>المميزات الجديدة والتحديثات</h1>
+            <p>آخر التحديثات والإصلاحات التي تمت على تطبيق الهاتف والموقع الإلكتروني</p>
+          </div>
+
+          <!-- تطبيق الهاتف -->
+          <div class="platform-section mobile">
+            <div class="platform-header">
+              <div class="platform-icon">📱</div>
+              <div>
+                <h2 class="platform-title">تطبيق الهاتف</h2>
+                <p class="platform-subtitle">تحديثات وتحسينات على تطبيق الهاتف المحمول</p>
+              </div>
+            </div>
+
+            <ul class="features-list">
+              <!-- ميزة جديدة -->
+              <li class="feature-item new-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type">➕</div>
+                  <h3 class="feature-title">إضافة المزيد من القراء</h3>
+                </div>
+                <p class="feature-desc">تمت إضافة مجموعة جديدة من القراء المشهورين لتحسين تجربة الاستماع إلى القرآن
+                  الكريم. يمكنك الآن الاختيار من بين أكثر من 30 قارئاً مختلفاً.</p>
+                <span class="feature-badge badge-new">ميزة جديدة</span>
+              </li>
+
+              <!-- تحسين -->
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type">🎨</div>
+                  <h3 class="feature-title">تحسين الشكل والمظهر</h3>
+                </div>
+                <p class="feature-desc">إعادة تصميم واجهة المستخدم بألوان جديدة وخطوط محسنة وتجربة استخدام أكثر سلاسة.
+                  تحسين في تنظيم القوائم والعناصر.</p>
+                <span class="feature-badge badge-improvement">تحسين</span>
+              </li>
+
+              <!-- إصلاح -->
+              <li class="feature-item fix-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type">🔧</div>
+                  <h3 class="feature-title">إصلاحات للراديو والمصحف</h3>
+                </div>
+                <p class="feature-desc">إصلاح مشاكل التشغيل في راديو القرآن، وتحسين استقرار المصحف الإلكتروني، وإصلاح
+                  مشاكل التحميل في الأجزاء الثقيلة.</p>
+                <span class="feature-badge badge-fix">إصلاح</span>
+              </li>
+
+              <!-- تعديل -->
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type">🕋</div>
+                  <h3 class="feature-title">تعديل ميزة مواقيت الصلاة</h3>
+                </div>
+                <p class="feature-desc">تحسين دقة مواقيت الصلاة.</p>
+                <span class="feature-badge badge-improvement">تحديث</span>
+              </li>
+
+              <!-- ميزة جديدة -->
+              <li class="feature-item new-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type">👆</div>
+                  <h3 class="feature-title">إمكانية الضغط على الآية المقترحة</h3>
+                </div>
+                <p class="feature-desc">يمكنك الآن الضغط على الآية المقترحة في الصفحة الرئيسية للانتقال مباشرة إلى
+                  تفسيرها أو الاستماع إليها من المصحف.</p>
+                <span class="feature-badge badge-new">تفاعل جديد</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- الموقع الإلكتروني -->
+          <div class="platform-section website">
+            <div class="platform-header">
+              <div class="platform-icon">🌐</div>
+              <div>
+                <h2 class="platform-title">الموقع الإلكتروني</h2>
+                <p class="platform-subtitle">تحديثات وتحسينات على النسخة الإلكترونية</p>
+              </div>
+            </div>
+
+            <div class="coming-soon">
+              <div class="icon">⏳</div>
+              <h3>قريباً جداً</h3>
+              <p>نعمل حالياً على تحديثات كبيرة للموقع الإلكتروني. سيتم الإعلان عن المميزات الجديدة قريباً.</p>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            <p>آخر تحديث: يناير 2026 | الإصدار 2.0.0</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <button class="btn-icon show-popup-btn" id="showPopupBtn"
+    style="left:0; width:fit-content; bottom:80px; margin:10px;position:fixed"><i class="fa-solid fa-star yellow-color"></i></button>
+
   <script>
     const textEl = document.querySelector(".textt");
 
-const texts = [
-  "رياض الجنة",
-  "لقراءة القرآن",
-  "للاستماع للقرآن",
-  "لذكر الله",
-  "لمعرفة مواقيت الصلوات"
-];
+    const texts = [
+      "رياض الجنة",
+      "لقراءة القرآن",
+      "للاستماع للقرآن",
+      "لذكر الله",
+      "لمعرفة مواقيت الصلوات"
+    ];
 
-let idx = 0;
+    let idx = 0;
 
-const gradients = [
-  "linear-gradient(135deg, #f6c201, #f1a300)",
-  "linear-gradient(135deg, #4facfe, #00f2fe)",
-  "linear-gradient(135deg, #43e97b, #38f9d7)",
-  "linear-gradient(135deg, #fa709a, #fee140)",
-  "linear-gradient(135deg, #667eea, #764ba2)"
-];
+    const gradients = [
+      "linear-gradient(135deg, #f6c201, #f1a300)",
+      "linear-gradient(135deg, #4facfe, #00f2fe)",
+      "linear-gradient(135deg, #43e97b, #38f9d7)",
+      "linear-gradient(135deg, #fa709a, #fee140)",
+      "linear-gradient(135deg, #667eea, #764ba2)"
+    ];
 
-function animateText() {
-  // مرحلة الإخفاء
-  textEl.style.opacity = 0;
-  textEl.style.transform = "translateY(20px) scale(0.9) rotateX(15deg)";
-  textEl.style.textShadow = "none";
+    function animateText() {
+      // مرحلة الإخفاء
+      textEl.style.opacity = 0;
+      textEl.style.transform = "translateY(20px) scale(0.9) rotateX(15deg)";
+      textEl.style.textShadow = "none";
 
-  setTimeout(() => {
-    // تحديث النص والـ gradient
-    textEl.textContent = texts[idx];
-    textEl.style.background = gradients[idx];
-    textEl.style.webkitBackgroundClip = "text";
-    textEl.style.backgroundClip = "text";
-    textEl.style.webkitTextFillColor = "transparent";
-    textEl.style.color = "transparent";
+      setTimeout(() => {
+        // تحديث النص والـ gradient
+        textEl.textContent = texts[idx];
+        textEl.style.background = gradients[idx];
+        textEl.style.webkitBackgroundClip = "text";
+        textEl.style.backgroundClip = "text";
+        textEl.style.webkitTextFillColor = "transparent";
+        textEl.style.color = "transparent";
 
-    // ظهور النص مع تأثيرات كوكتيل
-    textEl.style.opacity = 1;
-    textEl.style.transform = "translateY(0) scale(1) rotateX(0deg)";
-    textEl.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+        // ظهور النص مع تأثيرات كوكتيل
+        textEl.style.opacity = 1;
+        textEl.style.transform = "translateY(0) scale(1) rotateX(0deg)";
+        textEl.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
 
-    // تأثير Glow خفيف بعد الظهور
-    setTimeout(() => {
-      textEl.style.textShadow = "0 0 15px rgba(246, 194, 1, 0.5)";
-      setTimeout(() => textEl.style.textShadow = "0 0 5px rgba(0,0,0,0.1)", 600);
-    }, 200);
+        // تأثير Glow خفيف بعد الظهور
+        setTimeout(() => {
+          textEl.style.textShadow = "0 0 15px rgba(246, 194, 1, 0.5)";
+          setTimeout(() => textEl.style.textShadow = "0 0 5px rgba(0,0,0,0.1)", 600);
+        }, 200);
 
-    // تحديث الفهرس للنص التالي
-    idx = (idx + 1) % texts.length;
-  }, 500);
-}
+        // تحديث الفهرس للنص التالي
+        idx = (idx + 1) % texts.length;
+      }, 500);
+    }
 
-// البداية
-animateText();
-setInterval(animateText, 3000);
+    // البداية
+    animateText();
+    setInterval(animateText, 3000);
 
   </script>
+
+  <script>
+    // عناصر DOM
+    const showPopupBtn = document.getElementById('showPopupBtn');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const closePopupBtn = document.getElementById('closePopupBtn');
+    const gotItBtn = document.getElementById('gotItBtn');
+
+    // فتح البوب أب
+    showPopupBtn.addEventListener('click', () => {
+      popupOverlay.classList.add('active');
+    });
+
+    // إغلاق البوب أب
+    function closePopup() {
+      popupOverlay.classList.remove('active');
+    }
+
+    closePopupBtn.addEventListener('click', closePopup);
+    gotItBtn.addEventListener('click', closePopup);
+
+    // إغلاق البوب أب عند النقر خارج المحتوى
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        closePopup();
+      }
+    });
+
+    // إغلاق البوب أب بالزر Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+        closePopup();
+      }
+    });
+
+    // افتح البوب أب تلقائياً بعد تحميل الصفحة (اختياري)
+    // setTimeout(() => {
+    //     popupOverlay.classList.add('active');
+    // }, 1000);
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const iframe = document.querySelector('iframe');
+
+      iframe.onload = function () {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+          // إخفاء العناصر المحددة
+          const elementsToHide = iframeDoc.querySelectorAll('.prayer-times');
+          elementsToHide.forEach(element => {
+            element.style.display = 'none';
+          });
+
+          // أو باستخدام CSS داخل الـ iframe
+          const style = iframeDoc.createElement('style');
+          style.textContent = `
+                .hide-in-iframe {
+                    display: none !important;
+                }
+                header, .ad-banner {
+                    display: none !important;
+                }
+            `;
+          iframeDoc.head.appendChild(style);
+        } catch (error) {
+          console.log('Cannot access iframe content (cross-origin)');
+        }
+      };
+    });
+  </script>
+
 </body>
 
 <script src="components/header.js"></script>
