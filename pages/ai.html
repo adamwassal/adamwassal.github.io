@@ -125,8 +125,6 @@
         .copy:hover {
             transform: scale(1.1);
         }
-
-
     </style>
 
     <link rel="stylesheet" href="../assets/css/hint.css-2.7.0/hint.css" />
@@ -148,8 +146,7 @@
             </div>
             <button class="hint--right copy" onclick="copy()" id="copybtn" aria-label="نسخ الإجابه" style="position: absolute;
             left: 0;
-            bottom: -10px;"><i
-                    class="far fa-copy"></i></button>
+            bottom: -10px;"><i class="far fa-copy"></i></button>
             <div id="answer">في إنتظار السؤال</div>
         </div>
         <br>
@@ -168,9 +165,22 @@
     <script src="../assets/js/toast_notification.js"></script>
     <script src="../assets/js/global.js"></script>
     <script>
-        const question = document.getElementById("question").value.trim();
+
+        const questionInput = document.getElementById("question");
+
         const answerDiv = document.getElementById("answer");
         const copyBtn = document.getElementById("copybtn");
+        questionInput.addEventListener("keydown", function (event) {
+            // Check if the key pressed is "Enter"
+            if (event.key === "Enter") {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Execute your function or trigger a button click
+                askGemini()
+            }
+        });
+
+
 
         function correct() {
             copyBtn.innerHTML = `
@@ -240,7 +250,7 @@
         }
 
         async function askGemini() {
-
+            const question = document.getElementById("question").value.trim();
             if (!question) {
                 answerDiv.innerText = "من فضلك اكتب سؤالًا.";
                 return;
@@ -260,6 +270,7 @@
                 }
 
                 const data = await res.json();
+                questionInput.value = ""
 
                 // استخراج الرد من الـ Worker الجديد
                 const rawText = data["reply"] || "❌ لم يتم الحصول على رد.";
