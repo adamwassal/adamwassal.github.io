@@ -53,9 +53,6 @@ function toastNotification(
            </div>`,
   });
 
-  // Play sound
-  const audio = new Audio("notification.mp3");
-  audio.play().catch((err) => console.log(err));
 
   // Show toast
   $.notify(

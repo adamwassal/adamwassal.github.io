@@ -1,3 +1,14 @@
+function setupAIButton() {
+  const fab = document.getElementById("ai-fab");
+  const aiBox = document.getElementById("ai-box");
+
+  if (!fab || !aiBox) return;
+
+  fab.addEventListener("click", () => {
+    aiBox.classList.toggle("hidden");
+  });
+}
+
 fetch("../components/header.html")
   .then((res) => res.text())
   .then((data) => {
@@ -16,6 +27,8 @@ fetch("../components/header.html")
     }
 
     document.getElementById("header-container").appendChild(content);
+    setupAIButton();
+
   });
 
 window.addEventListener("scroll", async () => {
@@ -39,7 +52,7 @@ window.addEventListener("scroll", async () => {
     "background",
     "conic-gradient(var(--color-secondary) " +
       scrollPercent +
-      "%, transparent 0)"
+      "%, transparent 0)",
   );
 });
 
@@ -72,3 +85,4 @@ function delay(ms) {
     button.innerHTML = "<i class='fa fa-moon'></i>";
   }
 })();
+

@@ -90,6 +90,7 @@ function fetchPrayerTimesByCoords(lat, lon) {
       const times = data.data.timings;
 
       document.getElementById("alfajr").innerHTML = convertToAmPm(times.Fajr);
+      document.getElementById("alfajr").style.background = "url('../images/fajr.png')";
       document.getElementById("alduhr").innerHTML = convertToAmPm(times.Dhuhr);
       document.getElementById("alasr").innerHTML = convertToAmPm(times.Asr);
       document.getElementById("almaghreb").innerHTML = convertToAmPm(
@@ -191,7 +192,6 @@ const observer = new IntersectionObserver(
         el.style.opacity = 1;
 
         observer.unobserve(el); // يشغّل الأنيميشن مرة واحدة فقط
-        
       }
     });
   },
@@ -203,3 +203,4 @@ const observer = new IntersectionObserver(
 document.querySelectorAll(".animate-on-scroll").forEach((el) => {
   observer.observe(el);
 });
+
