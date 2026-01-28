@@ -242,8 +242,6 @@
     #ayahSearch {
       text-align: end;
     }
-
-
   </style>
 </head>
 
@@ -371,7 +369,9 @@
         surahNameElement.textContent = "جاري التحميل...";
         ayahsDiv.textContent = "جاري تحميل الآيات...";
 
-        await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.alafasy`)
+        var reciter = localStorage.getItem("reciter")
+
+        await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${reciter}`)
 
           .then((response) => {
             if (!response.ok) {
@@ -403,10 +403,13 @@
                 ayahtext = ayahtext.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "");
               }
               p.textContent = ayahtext;
-              const audioUrl = ayah.audio || (ayah.audio?.secondary ? ayah.audio.secondary[0] : null);
+              const audioUrl =
+                ayah.audio ??
+                (Array.isArray(ayah.audio?.secondary)
+                  ? ayah.audio.secondary[0]
+                  : null);
 
 
-              console.log(`audio-${ayah.numberInSurah}`)
               p.innerHTML += `
                 <div class="controls audio-${ayah.numberInSurah}" data-audio="${audioUrl || ''}">
       <button onclick="playAyah(${ayah.numberInSurah})" class="playbtn play-${ayah.numberInSurah}">

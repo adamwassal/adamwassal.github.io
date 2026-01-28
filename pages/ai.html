@@ -168,7 +168,7 @@
 
         const questionInput = document.getElementById("questioninput");
 
-        const answerDiv = document.getElementById("answer");
+        const answerDiv = document.getElementById("answerdiv");
         const copyBtn = document.getElementById("copybtn");
         questionInput.addEventListener("keydown", function (event) {
             // Check if the key pressed is "Enter"
@@ -189,7 +189,7 @@
             `
 
         }
-        function copy() {
+        async function copy() {
             const text = answerDiv.innerText || answerDiv.textContent;
 
             navigator.clipboard.writeText(text).then(() => {

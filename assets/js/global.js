@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function convertToAmPm(time24) {
   const [hours, minutes] = time24.split(":").map(Number);
-  const amPm = hours >= 12 ? "PM" : "AM";
+  const amPm = hours >= 12 ? "مساءً" : "صباحًا";
   const hours12 = hours % 12 || 12;
   return `${hours12}:${minutes.toString().padStart(2, "0")} ${amPm}`;
 }
@@ -60,10 +60,10 @@ let notifiedPrayers = new Set(); // لتفادي تكرار التنبيه
 
 function updateCountdown(nextPrayerName, nextPrayerTime, image) {
   const { hours, minutes, seconds } = calculateTimeDifference(nextPrayerTime);
-  countdownElement.style.background = `url(${image})`
-  countdownElement.style.backgroundRepeat = "no-repeat"
-  countdownElement.style.backgroundSize = "cover"
-  countdownElement.innerHTML = ` تبقى على <span class="pray-name-time">${nextPrayerName}</span><br> <span class="hours">${hours >= 10?hours:"0"+hours}</span> ساعة <span class="mins">${minutes >= 10?minutes:"0"+minutes}</span> دقيقة <span class="secs">${seconds >= 10?seconds:"0"+seconds}</span> ثانية`;
+  countdownElement.style.background = `url(${image})`;
+  countdownElement.style.backgroundRepeat = "no-repeat";
+  countdownElement.style.backgroundSize = "cover";
+  countdownElement.innerHTML = ` تبقى على <span class="pray-name-time">${nextPrayerName}</span><br> <span class="hours">${hours >= 10 ? hours : "0" + hours}</span>:<span class="mins">${minutes >= 10 ? minutes : "0" + minutes}</span>:<span class="secs">${seconds >= 10 ? seconds : "0" + seconds}</span>`;
   highlightNextPrayer(nextPrayerName);
 }
 
@@ -101,11 +101,36 @@ function fetchPrayerTimesByCoords(lat, lon) {
       document.getElementById("alisha").innerHTML = convertToAmPm(times.Isha);
 
       const prayerTimes = [
-        { name: "الفجر", key: "Fajr", time: times.Fajr, image:"../assets/images/fajr.png" },
-        { name: "الظهر", key: "Dhuhr", time: times.Dhuhr, image:"../assets/images/duhr.png"  },
-        { name: "العصر", key: "Asr", time: times.Asr, image:"../assets/images/asr.png"  },
-        { name: "المغرب", key: "Maghrib", time: times.Maghrib, image:"../assets/images/maghrib.png"  },
-        { name: "العشاء", key: "Isha", time: times.Isha, image:".../assets/images/isha.png"  },
+        {
+          name: "الفجر",
+          key: "Fajr",
+          time: times.Fajr,
+          image: "../assets/images/fajr.png",
+        },
+        {
+          name: "الظهر",
+          key: "Dhuhr",
+          time: times.Dhuhr,
+          image: "../assets/images/duhr.png",
+        },
+        {
+          name: "العصر",
+          key: "Asr",
+          time: times.Asr,
+          image: "../assets/images/asr.png",
+        },
+        {
+          name: "المغرب",
+          key: "Maghrib",
+          time: times.Maghrib,
+          image: "../assets/images/maghrib.png",
+        },
+        {
+          name: "العشاء",
+          key: "Isha",
+          time: times.Isha,
+          image: ".../assets/images/isha.png",
+        },
       ];
 
       notifiedPrayers.clear();
@@ -205,3 +230,4 @@ const observer = new IntersectionObserver(
 document.querySelectorAll(".animate-on-scroll").forEach((el) => {
   observer.observe(el);
 });
+

@@ -155,9 +155,58 @@ async function askGemini() {
     // استخراج الرد من الـ Worker الجديد
     const rawText = data["reply"] || "❌ لم يتم الحصول على رد.";
 
+    
     answerDiv.innerHTML = formatResponse(rawText);
+    if(rawText == "تغيير الوضع") {
+      toggleTheme()
+    }
   } catch (err) {
     answerDiv.innerText = "❌ حدث خطأ في الاتصال";
     console.error(err);
   }
+}
+
+
+let ricitationers = [];
+
+async function loadReciters() {
+  const res = await fetch(
+    "https://api.alquran.cloud/v1/edition/format/audio"
+  );
+  const data = await res.json();
+
+  // نفلتر التلاوة آية آية
+  ricitationers = data.data.filter(
+    r => r.type === "versebyverse"
+  );
+
+  const select = document.getElementById("reciters-select");
+  select.innerHTML = "";
+
+  ricitationers.forEach(reciter => {
+    const option = document.createElement("option");
+    option.value = reciter.identifier;
+    option.textContent = reciter.name;
+    select.appendChild(option);
+  });
+
+  // لو في قارئ محفوظ
+  const saved = localStorage.getItem("reciter");
+  if (saved) select.value = saved;
+}
+
+function openRecitersPopup() {
+  document.getElementById("reciters-popup").classList.remove("hidden");
+  loadReciters();
+}
+
+function closeRecitersPopup() {
+  document.getElementById("reciters-popup").classList.add("hidden");
+}
+
+function saveReciter() {
+  const select = document.getElementById("reciters-select");
+  localStorage.setItem("reciter", select.value);
+  closeRecitersPopup();
+  window.location.reload()
 }
