@@ -28,7 +28,6 @@ fetch("../components/header.html")
 
     document.getElementById("header-container").appendChild(content);
     setupAIButton();
-
   });
 
 window.addEventListener("scroll", async () => {
@@ -86,3 +85,79 @@ function delay(ms) {
   }
 })();
 
+function formatResponse(text) {
+  // 1️⃣ Markdown links [text](url)
+  text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      url = "https://" + url;
+    }
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">رابط</a>`;
+  });
+
+  // 2️⃣ روابط مباشرة (بس لو مش جوه HTML)
+  text = text.replace(
+    /(^|[\s>])((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s<]*)/g,
+    (match, prefix, url) => {
+      if (url.startsWith("<")) return match;
+
+      let fixedUrl = url.startsWith("http") ? url : "https://" + url;
+      return `${prefix}<a href="${fixedUrl}" target="_blank" rel="noopener noreferrer">رابط</a>`;
+    },
+  );
+
+  // bold
+  text = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+  // italic
+  text = text.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+  // القوائم
+  let firstListIndex = text.search(/^(\d+\.|- )/m);
+  let intro = "";
+  if (firstListIndex > 0) {
+    intro = "<p>" + text.slice(0, firstListIndex).trim() + "</p>";
+    text = text.slice(firstListIndex).trim();
+  }
+
+  text = text.replace(/^(\d+)\.\s+(.*)$/gm, "<li>$2</li>");
+  if (text.includes("<li>") && !text.startsWith("<ol>")) {
+    text = "<ol>" + text + "</ol>";
+  }
+
+  return intro + text;
+}
+
+async function askGemini() {
+  const answerDiv = document.getElementById("answer");
+  const question = document.getElementById("question").value.trim();
+  const questionInput = document.getElementById("question");
+  if (!question) {
+    answerDiv.innerText = "من فضلك اكتب سؤالًا.";
+    return;
+  }
+
+  answerDiv.innerText = "⏳ جاري التفكير...";
+
+  try {
+    const res = await fetch("https://riyadaljannah.adamwassal2.workers.dev/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question }),
+    });
+
+    if (!res.ok) {
+      throw new Error("HTTP Error: " + res.status);
+    }
+
+    const data = await res.json();
+    questionInput.value = "";
+
+    // استخراج الرد من الـ Worker الجديد
+    const rawText = data["reply"] || "❌ لم يتم الحصول على رد.";
+
+    answerDiv.innerHTML = formatResponse(rawText);
+  } catch (err) {
+    answerDiv.innerText = "❌ حدث خطأ في الاتصال";
+    console.error(err);
+  }
+}

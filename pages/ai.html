@@ -28,7 +28,7 @@
 
 
         /* textarea */
-        #question {
+        #questioninput {
             width: 90%;
             min-height: 80px;
             padding: 12px;
@@ -60,7 +60,7 @@
         }
 
         /* div الرد */
-        #answer {
+        #answerdiv {
             margin-top: 20px;
             padding: 15px;
             background: var(--bg);
@@ -75,35 +75,35 @@
         }
 
         /* قوائم */
-        #answer ol {
+        #answerdiv ol {
             padding-left: 20px;
             margin: 10px 0;
         }
 
-        #answer ul {
+        #answerdiv ul {
             padding-left: 20px;
             margin: 10px 0;
         }
 
         /* النص الغامق */
-        #answer strong,
-        #answer b {
+        #answerdiv strong,
+        #answerdiv b {
             font-weight: bold;
         }
 
         /* الخط المائل */
-        #answer em,
-        #answer i {
+        #answerdiv em,
+        #answerdiv i {
             font-style: italic;
         }
 
         /* روابط لو موجودة */
-        #answer a {
+        #answerdiv a {
             color: #1a73e8;
             text-decoration: underline;
         }
 
-        #answer a {
+        #answerdiv a {
             pointer-events: auto;
             color: #1a73e8;
             text-decoration: underline;
@@ -147,14 +147,14 @@
             <button class="hint--right copy" onclick="copy()" id="copybtn" aria-label="نسخ الإجابه" style="position: absolute;
             left: 0;
             bottom: -10px;"><i class="far fa-copy"></i></button>
-            <div id="answer">في إنتظار السؤال</div>
+            <div id="answerdiv">في إنتظار السؤال</div>
         </div>
         <br>
         <div style="display: flex; width: 100%; align-items: center; gap: 10px">
 
-            <textarea id="question" placeholder="...اكتب سؤالك الديني هنا"></textarea>
+            <textarea id="questioninput" placeholder="...اكتب سؤالك الديني هنا"></textarea>
 
-            <button onclick="askGemini()" type="submit"><i class="fas fa-paper-plane"></i></button>
+            <button onclick="askGeminiPage()" type="submit"><i class="fas fa-paper-plane"></i></button>
         </div>
 
     </div>
@@ -166,7 +166,7 @@
     <script src="../assets/js/global.js"></script>
     <script>
 
-        const questionInput = document.getElementById("question");
+        const questionInput = document.getElementById("questioninput");
 
         const answerDiv = document.getElementById("answer");
         const copyBtn = document.getElementById("copybtn");
@@ -176,7 +176,7 @@
                 // Cancel the default action, if needed
                 event.preventDefault();
                 // Execute your function or trigger a button click
-                askGemini()
+                askGeminiPage()
             }
         });
 
@@ -205,52 +205,11 @@
             });
 
         }
-        function formatResponse(text) {
 
-            // Markdown links [text](url) حتى بدون https
-            text = text.replace(
-                /\[([^\]]+)\]\(([^)]+)\)/g,
-                (match, label, url) => {
-                    if (!url.startsWith("http")) {
-                        url = "https://" + url;
-                    }
-                    return `<a href="${url}" target="_blank" rel="noopener noreferrer">رابط</a>`;
-                }
-            );
-
-            // روابط مباشرة بدون https
-            text = text.replace(
-                /(?<!href=")(\b(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g,
-                (url) => {
-                    let fixedUrl = url.startsWith("http") ? url : "https://" + url;
-                    return `<a href="${fixedUrl}" target="_blank" rel="noopener noreferrer">رابط</a>`;
-                }
-            );
-
-            // bold **text**
-            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            // italic *text*
-            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-            // القوائم
-            let firstListIndex = text.search(/^(\d+\.|- )/m);
-            let intro = "";
-            if (firstListIndex > 0) {
-                intro = "<p>" + text.slice(0, firstListIndex).trim() + "</p>";
-                text = text.slice(firstListIndex).trim();
-            }
-
-            text = text.replace(/^(\d+)\.\s+(.*)$/gm, '<li>$2</li>');
-            if (text.includes("<li>") && !text.startsWith("<ol>")) {
-                text = '<ol>' + text + '</ol>';
-            }
-
-            return intro + text;
-        }
-
-        async function askGemini() {
-            const question = document.getElementById("question").value.trim();
+        async function askGeminiPage() {
+            const answerDiv = document.getElementById("answerdiv");
+            const question = document.getElementById("questioninput").value.trim();
+            const questionInput = document.getElementById("questioninput");
             if (!question) {
                 answerDiv.innerText = "من فضلك اكتب سؤالًا.";
                 return;
@@ -270,18 +229,18 @@
                 }
 
                 const data = await res.json();
-                questionInput.value = ""
+                questionInput.value = "";
 
                 // استخراج الرد من الـ Worker الجديد
                 const rawText = data["reply"] || "❌ لم يتم الحصول على رد.";
 
                 answerDiv.innerHTML = formatResponse(rawText);
-
             } catch (err) {
                 answerDiv.innerText = "❌ حدث خطأ في الاتصال";
                 console.error(err);
             }
         }
+
 
     </script>
 

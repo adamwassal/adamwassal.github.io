@@ -58,9 +58,12 @@ const countdownElement = document.getElementById("countdown");
 let timerInterval;
 let notifiedPrayers = new Set(); // لتفادي تكرار التنبيه
 
-function updateCountdown(nextPrayerName, nextPrayerTime) {
+function updateCountdown(nextPrayerName, nextPrayerTime, image) {
   const { hours, minutes, seconds } = calculateTimeDifference(nextPrayerTime);
-  countdownElement.innerHTML = ` تبقى على <span class="pray-name-time">${nextPrayerName}</span>: <span class="hours">${hours}</span> ساعة <span class="mins">${minutes}</span> دقيقة <span class="secs">${seconds}</span> ثانية`;
+  countdownElement.style.background = `url(${image})`
+  countdownElement.style.backgroundRepeat = "no-repeat"
+  countdownElement.style.backgroundSize = "cover"
+  countdownElement.innerHTML = ` تبقى على <span class="pray-name-time">${nextPrayerName}</span><br> <span class="hours">${hours >= 10?hours:"0"+hours}</span> ساعة <span class="mins">${minutes >= 10?minutes:"0"+minutes}</span> دقيقة <span class="secs">${seconds >= 10?seconds:"0"+seconds}</span> ثانية`;
   highlightNextPrayer(nextPrayerName);
 }
 
@@ -90,7 +93,6 @@ function fetchPrayerTimesByCoords(lat, lon) {
       const times = data.data.timings;
 
       document.getElementById("alfajr").innerHTML = convertToAmPm(times.Fajr);
-      document.getElementById("alfajr").style.background = "url('../images/fajr.png')";
       document.getElementById("alduhr").innerHTML = convertToAmPm(times.Dhuhr);
       document.getElementById("alasr").innerHTML = convertToAmPm(times.Asr);
       document.getElementById("almaghreb").innerHTML = convertToAmPm(
@@ -99,11 +101,11 @@ function fetchPrayerTimesByCoords(lat, lon) {
       document.getElementById("alisha").innerHTML = convertToAmPm(times.Isha);
 
       const prayerTimes = [
-        { name: "الفجر", key: "Fajr", time: times.Fajr },
-        { name: "الظهر", key: "Dhuhr", time: times.Dhuhr },
-        { name: "العصر", key: "Asr", time: times.Asr },
-        { name: "المغرب", key: "Maghrib", time: times.Maghrib },
-        { name: "العشاء", key: "Isha", time: times.Isha },
+        { name: "الفجر", key: "Fajr", time: times.Fajr, image:"../assets/images/fajr.png" },
+        { name: "الظهر", key: "Dhuhr", time: times.Dhuhr, image:"../assets/images/duhr.png"  },
+        { name: "العصر", key: "Asr", time: times.Asr, image:"../assets/images/asr.png"  },
+        { name: "المغرب", key: "Maghrib", time: times.Maghrib, image:"../assets/images/maghrib.png"  },
+        { name: "العشاء", key: "Isha", time: times.Isha, image:".../assets/images/isha.png"  },
       ];
 
       notifiedPrayers.clear();
@@ -135,7 +137,7 @@ function fetchPrayerTimesByCoords(lat, lon) {
         }
 
         if (!nextPrayer) nextPrayer = prayerTimes[0];
-        updateCountdown(nextPrayer.name, nextPrayer.time);
+        updateCountdown(nextPrayer.name, nextPrayer.time, nextPrayer.image);
 
         // تنبيه سورة الكهف لو جمعة وقبل المغرب
         if (window.isFriday) {
@@ -203,4 +205,3 @@ const observer = new IntersectionObserver(
 document.querySelectorAll(".animate-on-scroll").forEach((el) => {
   observer.observe(el);
 });
-

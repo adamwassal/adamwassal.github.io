@@ -533,6 +533,11 @@ li {
   align-items: center;
 }
 
+@font-face {
+  font-family: AmiriQuran;
+  src: url(../fonts/AmiriQuran-Regular.ttf);
+}
+
 #surah-ayahs p {
   position: relative;
   background-color: var(--surface);
@@ -542,9 +547,8 @@ li {
   border-radius: 20px;
   font-size: 2.4em;
   padding-bottom: 40px;
-  font-family: "Hafs", sans-serif;
+  font-family: "AmiriQuran", sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-
   color: var(--text-body);
 }
 
@@ -887,6 +891,9 @@ label {
   -moz-box-shadow: 6px 7px 40px -15px rgba(0, 0, 0, 1);
   animation: showcountdown 1s;
   transition: 0.3s;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
 }
 
 #countdown:hover {
@@ -913,7 +920,7 @@ label {
 }
 .pray {
   background-color: var(--surface);
-  padding: 30px;
+  padding: 70px;
   font-size: 20px;
   border-radius: 30px;
   box-shadow: 6px 7px 40px -15px rgba(0, 0, 0, 1);
@@ -922,7 +929,7 @@ label {
   transition: 0.3s;
   animation: slideup 1s forwards;
   opacity: 0; /* start hidden */
-  color: var(--text-body);
+  color: black;
 }
 
 /* Delay each one */
@@ -953,15 +960,11 @@ label {
   }
 }
 
-.pray:hover {
-  transform: translateY(-10px);
-  background-color: var(--surface);
-  color: var(--text-body);
-}
 
 .pray .time {
-  color: var(--color-secondary);
+  color: black;
   font-weight: bold;
+  font: 20px;
 }
 
 .next-prayer {
@@ -1530,8 +1533,8 @@ label {
 /* زر عائم */
 #ai-fab {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
+  bottom: 125px;
+  right: 20px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -1555,9 +1558,9 @@ label {
 /* صندوق الـ AI */
 #ai-box {
   position: fixed;
-  bottom: 100px;
+  bottom: 200px;
   right: 25px;
-  width: 380px;
+  width: 430px;
   max-height: 80vh;
   overflow-y: auto;
 
@@ -1567,7 +1570,7 @@ label {
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 
-  padding: 16px;
+  padding: 20px;
   z-index: 9998;
 
   direction: rtl;
@@ -1585,7 +1588,7 @@ label {
 
 /* textarea داخل الصندوق */
 #ai-box textarea {
-  width: 100%;
+  width: 90%;
   min-height: 80px;
   padding: 10px;
   border-radius: 10px;
@@ -1604,10 +1607,14 @@ label {
   padding: 10px;
   border-radius: 10px;
   border: none;
-  background: linear-gradient(135deg, #4CAF50, #2e7d32);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+}
+
+#ai-box button:hover{
+  background: var(--color-primary-hover);
 }
 
 /* مكان الإجابة */
@@ -1656,4 +1663,24 @@ label {
   font-size: 18px;
   cursor: pointer;
   width: 100px;
+}
+
+
+.pray[data-prayer = "الفجر"]{
+  background: url("../images/fajr.png");
+}
+
+.pray[data-prayer = "الظهر"]{
+  background: url("../images/duhr.png");
+}
+
+.pray[data-prayer = "العصر"]{
+  background: url("../images/asr.png");
+}
+
+.pray[data-prayer = "المغرب"]{
+  background: url("../images/maghrib.png");
+}
+.pray[data-prayer = "العشاء"]{
+  background: url("../images/isha.png");
 }
