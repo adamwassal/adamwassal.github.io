@@ -599,12 +599,13 @@
       <div class="popup-header">
         <button class="close-btn" id="closePopupBtn">×</button>
         <h2>ميزات جديدة وإصلاحات</h2>
-        <p>الإصدار 2.0.0 - تم التحديث في 28 ناير 2026</p>
+        <p>الإصدار 2.5.0 - تم التحديث في 28 ناير 2026</p>
       </div>
 
       <div class="popup-content">
         <div class="features-container">
           <div class="headerpop">
+            <img src="assets/images/logo.png" width="200" alt="">
             <h1>المميزات الجديدة والتحديثات</h1>
             <p>آخر التحديثات والإصلاحات التي تمت على تطبيق الهاتف والموقع الإلكتروني</p>
           </div>
@@ -624,11 +625,11 @@
               <li class="feature-item new-feature">
                 <div class="status-indicator"></div>
                 <div class="feature-header">
-                  <div class="feature-type">➕</div>
+                  <div class="feature-type"><i class="fa fas fa-microphone"></i></div>
                   <h3 class="feature-title">إضافة المزيد من القراء</h3>
                 </div>
                 <p class="feature-desc">تمت إضافة مجموعة جديدة من القراء المشهورين لتحسين تجربة الاستماع إلى القرآن
-                  الكريم. يمكنك الآن الاختيار من بين أكثر من 30 قارئاً مختلفاً.</p>
+                  الكريم.</p>
                 <span class="feature-badge badge-new">ميزة جديدة</span>
               </li>
 
@@ -702,136 +703,146 @@
                 <p class="feature-desc">تمت إضافة الذكاء الاصطناعي للإجابه على جميع اسئلتكم</p>
                 <span class="feature-badge badge-new">ميزة جديدة</span>
               </li>
+              <li class="feature-item new-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type"><i class="fa fa-gear"></i></div>
+                  <h3 class="feature-title">إضافة المزيد من القراء</h3>
+                </div>
+                <p class="feature-desc">تمت إضافة مجموعة جديدة من القراء المشهورين لتحسين تجربة الاستماع إلى القرآن
+                  الكريم.</p>
+                <span class="feature-badge badge-new">ميزة جديدة</span>
+              </li>
             </ul>
           </div>
 
-            <div class="footer-note">
-              <p>آخر تحديث: يناير 2026 | الإصدار 2.0.0</p>
-            </div>
+          <div class="footer-note">
+            <p>آخر تحديث: يناير 2026 | الإصدار 2.5.0</p>
           </div>
         </div>
-
       </div>
+
     </div>
-    <button class="btn-icon show-popup-btn" id="showPopupBtn"
-      style="left:0; width:fit-content; bottom:80px; margin:10px;position:fixed"><i
-        class="fa-solid fa-star yellow-color"></i></button>
+  </div>
+  <button class="btn-icon show-popup-btn" id="showPopupBtn"
+    style="left:0; width:fit-content; bottom:80px; margin:10px;position:fixed"><i
+      class="fa-solid fa-star yellow-color"></i></button>
 
-    <script>
-      const textEl = document.querySelector(".textt");
+  <script>
+    const textEl = document.querySelector(".textt");
 
-      const texts = [
-        "رياض الجنة",
-        "لقراءة القرآن",
-        "للاستماع للقرآن",
-        "لذكر الله",
-        "لمعرفة مواقيت الصلوات"
-      ];
+    const texts = [
+      "رياض الجنة",
+      "لقراءة القرآن",
+      "للاستماع للقرآن",
+      "لذكر الله",
+      "لمعرفة مواقيت الصلوات"
+    ];
 
-      let idx = 0;
+    let idx = 0;
 
-      const gradients = [
-        "linear-gradient(135deg, #f6c201, #f1a300)",
-        "linear-gradient(135deg, #4facfe, #00f2fe)",
-        "linear-gradient(135deg, #43e97b, #38f9d7)",
-        "linear-gradient(135deg, #fa709a, #fee140)",
-        "linear-gradient(135deg, #667eea, #764ba2)"
-      ];
+    const gradients = [
+      "linear-gradient(135deg, #f6c201, #f1a300)",
+      "linear-gradient(135deg, #4facfe, #00f2fe)",
+      "linear-gradient(135deg, #43e97b, #38f9d7)",
+      "linear-gradient(135deg, #fa709a, #fee140)",
+      "linear-gradient(135deg, #667eea, #764ba2)"
+    ];
 
-      function animateText() {
-        // مرحلة الإخفاء
-        textEl.style.opacity = 0;
-        textEl.style.transform = "translateY(20px) scale(0.9) rotateX(15deg)";
-        textEl.style.textShadow = "none";
+    function animateText() {
+      // مرحلة الإخفاء
+      textEl.style.opacity = 0;
+      textEl.style.transform = "translateY(20px) scale(0.9) rotateX(15deg)";
+      textEl.style.textShadow = "none";
 
+      setTimeout(() => {
+        // تحديث النص والـ gradient
+        textEl.textContent = texts[idx];
+        textEl.style.background = gradients[idx];
+        textEl.style.webkitBackgroundClip = "text";
+        textEl.style.backgroundClip = "text";
+        textEl.style.webkitTextFillColor = "transparent";
+        textEl.style.color = "transparent";
+
+        // ظهور النص مع تأثيرات كوكتيل
+        textEl.style.opacity = 1;
+        textEl.style.transform = "translateY(0) scale(1) rotateX(0deg)";
+        textEl.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+
+        // تأثير Glow خفيف بعد الظهور
         setTimeout(() => {
-          // تحديث النص والـ gradient
-          textEl.textContent = texts[idx];
-          textEl.style.background = gradients[idx];
-          textEl.style.webkitBackgroundClip = "text";
-          textEl.style.backgroundClip = "text";
-          textEl.style.webkitTextFillColor = "transparent";
-          textEl.style.color = "transparent";
+          textEl.style.textShadow = "0 0 15px rgba(246, 194, 1, 0.5)";
+          setTimeout(() => textEl.style.textShadow = "0 0 5px rgba(0,0,0,0.1)", 600);
+        }, 200);
 
-          // ظهور النص مع تأثيرات كوكتيل
-          textEl.style.opacity = 1;
-          textEl.style.transform = "translateY(0) scale(1) rotateX(0deg)";
-          textEl.style.transition = "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)";
+        // تحديث الفهرس للنص التالي
+        idx = (idx + 1) % texts.length;
+      }, 500);
+    }
 
-          // تأثير Glow خفيف بعد الظهور
-          setTimeout(() => {
-            textEl.style.textShadow = "0 0 15px rgba(246, 194, 1, 0.5)";
-            setTimeout(() => textEl.style.textShadow = "0 0 5px rgba(0,0,0,0.1)", 600);
-          }, 200);
+    // البداية
+    animateText();
+    setInterval(animateText, 3000);
 
-          // تحديث الفهرس للنص التالي
-          idx = (idx + 1) % texts.length;
-        }, 500);
+  </script>
+
+  <script>
+    // عناصر DOM
+    const showPopupBtn = document.getElementById('showPopupBtn');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const closePopupBtn = document.getElementById('closePopupBtn');
+    const gotItBtn = document.getElementById('gotItBtn');
+
+    // فتح البوب أب
+    showPopupBtn.addEventListener('click', () => {
+      popupOverlay.classList.add('active');
+    });
+
+    // إغلاق البوب أب
+    function closePopup() {
+      popupOverlay.classList.remove('active');
+    }
+
+    closePopupBtn.addEventListener('click', closePopup);
+    gotItBtn.addEventListener('click', closePopup);
+
+    // إغلاق البوب أب عند النقر خارج المحتوى
+    popupOverlay.addEventListener('click', (e) => {
+      if (e.target === popupOverlay) {
+        closePopup();
       }
+    });
 
-      // البداية
-      animateText();
-      setInterval(animateText, 3000);
-
-    </script>
-
-    <script>
-      // عناصر DOM
-      const showPopupBtn = document.getElementById('showPopupBtn');
-      const popupOverlay = document.getElementById('popupOverlay');
-      const closePopupBtn = document.getElementById('closePopupBtn');
-      const gotItBtn = document.getElementById('gotItBtn');
-
-      // فتح البوب أب
-      showPopupBtn.addEventListener('click', () => {
-        popupOverlay.classList.add('active');
-      });
-
-      // إغلاق البوب أب
-      function closePopup() {
-        popupOverlay.classList.remove('active');
+    // إغلاق البوب أب بالزر Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+        closePopup();
       }
+    });
 
-      closePopupBtn.addEventListener('click', closePopup);
-      gotItBtn.addEventListener('click', closePopup);
+    // افتح البوب أب تلقائياً بعد تحميل الصفحة (اختياري)
+    // setTimeout(() => {
+    //     popupOverlay.classList.add('active');
+    // }, 1000);
+  </script>
 
-      // إغلاق البوب أب عند النقر خارج المحتوى
-      popupOverlay.addEventListener('click', (e) => {
-        if (e.target === popupOverlay) {
-          closePopup();
-        }
-      });
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const iframe = document.querySelector('iframe');
 
-      // إغلاق البوب أب بالزر Escape
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
-          closePopup();
-        }
-      });
+      iframe.onload = function () {
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-      // افتح البوب أب تلقائياً بعد تحميل الصفحة (اختياري)
-      // setTimeout(() => {
-      //     popupOverlay.classList.add('active');
-      // }, 1000);
-    </script>
+          // إخفاء العناصر المحددة
+          const elementsToHide = iframeDoc.querySelectorAll('.prayer-times');
+          elementsToHide.forEach(element => {
+            element.style.display = 'none';
+          });
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const iframe = document.querySelector('iframe');
-
-        iframe.onload = function () {
-          try {
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
-            // إخفاء العناصر المحددة
-            const elementsToHide = iframeDoc.querySelectorAll('.prayer-times');
-            elementsToHide.forEach(element => {
-              element.style.display = 'none';
-            });
-
-            // أو باستخدام CSS داخل الـ iframe
-            const style = iframeDoc.createElement('style');
-            style.textContent = `
+          // أو باستخدام CSS داخل الـ iframe
+          const style = iframeDoc.createElement('style');
+          style.textContent = `
                 .hide-in-iframe {
                     display: none !important;
                 }
@@ -839,13 +850,13 @@
                     display: none !important;
                 }
             `;
-            iframeDoc.head.appendChild(style);
-          } catch (error) {
-            console.log('Cannot access iframe content (cross-origin)');
-          }
-        };
-      });
-    </script>
+          iframeDoc.head.appendChild(style);
+        } catch (error) {
+          console.log('Cannot access iframe content (cross-origin)');
+        }
+      };
+    });
+  </script>
 
 </body>
 
