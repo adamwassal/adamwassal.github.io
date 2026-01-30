@@ -447,6 +447,7 @@
               `
               ayahsDiv.appendChild(p);
             });
+            setTimeout(scrollToAyahFromHash, 300);
           })
           .catch((error) => {
             console.error("خطأ أثناء تحميل السورة:", error);
@@ -464,6 +465,23 @@
 
 
     });
+    function scrollToAyahFromHash() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const ayahNumber = hash.replace("#", "");
+      const ayahElement = document.getElementById(ayahNumber);
+
+      if (ayahElement) {
+        ayahElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+        ayahElement.classList.add("highlight");
+      }
+    }
+
+
   </script>
 
   <script>

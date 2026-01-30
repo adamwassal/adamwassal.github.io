@@ -537,15 +537,12 @@
 
         <div class="section-white animate__animated animate__fadeInRight">
 
-          <h2 style="color: var(--text-body);">قال تعالى ( إِنَّ رَبَّكَ يَعْلَمُ أَنَّكَ تَقُومُ أَدْنَىٰ مِن ثُلُثَيِ
-            اللَّيْلِ وَنِصْفَهُ وَثُلُثَهُ
-            وَطَائِفَةٌ مِّنَ الَّذِينَ مَعَكَ ۚ وَاللَّهُ يُقَدِّرُ اللَّيْلَ وَالنَّهَارَ ۚ عَلِمَ أَن لَّن تُحْصُوهُ
-            فَتَابَ عَلَيْكُمْ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنَ الْقُرْآنِ ۚ عَلِمَ أَن سَيَكُونُ مِنكُم مَّرْضَىٰ ۙ
-            وَآخَرُونَ يَضْرِبُونَ فِي الْأَرْضِ يَبْتَغُونَ مِن فَضْلِ اللَّهِ ۙ وَآخَرُونَ يُقَاتِلُونَ فِي سَبِيلِ
-            اللَّهِ ۖ فَاقْرَءُوا مَا تَيَسَّرَ مِنْهُ ۚ وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَأَقْرِضُوا اللَّهَ
-            قَرْضًا حَسَنًا ۚ وَمَا تُقَدِّمُوا لِأَنفُسِكُم مِّنْ خَيْرٍ تَجِدُوهُ عِندَ اللَّهِ هُوَ خَيْرًا
-            وَأَعْظَمَ
-            أَجْرًا ۚ وَاسْتَغْفِرُوا اللَّهَ ۖ إِنَّ اللَّهَ غَفُورٌ رَّحِيمٌ )</h2>
+          <h2 style="color: var(--color-primary); font-family:  'AmiriQuran';" id="ayahrandom">جاري التحميل ...</h2>
+          <p style="color: var(--text-muted); font-size: 20px; font-family:  'AmiriQuran';" id="surahname">سورة الأحزاب
+          </p>
+          <p id="tafseer" style="color: var(--text-muted); font-size: 20px; font-family:  'AmiriQuran';"></p>
+          <button class="btn-icon" onclick="goToSurah()"><i class="far fa-eye"></i></button>
+          <button class="button" onclick="getRandomAyah()"><i class="fas fa-redo"></i></button>
         </div>
 
         <div class="section-white animate__animated animate__fadeInUp">
@@ -729,6 +726,63 @@
       class="fa-solid fa-star yellow-color"></i></button>
 
   <script>
+
+    document.addEventListener("DOMContentLoaded", async function () {
+      await getRandomAyah();
+      await getTafsser();
+    });
+
+    var ayahnumber = ""
+    var surahnumber = ""
+    var surah = ""
+
+    function goToSurah() {
+      window.location.href = `/pages/surah.html?number=${surahnumber}#${ayahnumber}`
+    }
+
+
+    async function getTafsser() {
+
+      await fetch(
+        `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/ar-tafsir-muyassar/${surahnumber}/${ayahnumber}.json`
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+
+
+        })
+        .then((data) => {
+          document.getElementById("tafseer").innerHTML = data.text
+        })
+        .catch((error) => {
+          console.error("خطأ أثناء تحميل التفسير:", error);
+        });
+    }
+    async function getRandomAyah() {
+      const response = await fetch("https://api.qurani.ai/gw/qh/v1/ayah/random");
+      const data = await response.json();
+      const ayahrandom = document.getElementById("ayahrandom");
+      const surahname = document.getElementById("surahname");
+
+      try {
+        ayahrandom.textContent = "جاري التحميل...";
+        const ayah = await data.data.text;
+        surah = await data.data.surah.name
+        surahnumber = await data.data.surah.number
+        ayahnumber = await data.data.numberInSurah
+        ayahrandom.textContent = ayah;
+        surahname.textContent = `${surah} ( ${ayahnumber} )`;
+
+      } catch (err) {
+        ayahrandom.textContent = "تعذر تحميل الآية";
+        console.error(err);
+      }
+
+    }
+
     const textEl = document.querySelector(".textt");
 
     const texts = [
