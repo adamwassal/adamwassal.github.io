@@ -729,7 +729,7 @@
 
     document.addEventListener("DOMContentLoaded", async function () {
       await getRandomAyah();
-      await getTafsser();
+     
     });
 
     var ayahnumber = ""
@@ -760,26 +760,28 @@
         .catch((error) => {
           console.error("خطأ أثناء تحميل التفسير:", error);
         });
-    }
-    async function getRandomAyah() {
-      const response = await fetch("https://api.qurani.ai/gw/qh/v1/ayah/random");
-      const data = await response.json();
-      const ayahrandom = document.getElementById("ayahrandom");
-      const surahname = document.getElementById("surahname");
-
-      try {
-        ayahrandom.textContent = "جاري التحميل...";
-        const ayah = await data.data.text;
-        surah = await data.data.surah.name
-        surahnumber = await data.data.surah.number
-        ayahnumber = await data.data.numberInSurah
-        ayahrandom.textContent = ayah;
-        surahname.textContent = `${surah} ( ${ayahnumber} )`;
-
-      } catch (err) {
-        ayahrandom.textContent = "تعذر تحميل الآية";
-        console.error(err);
       }
+      async function getRandomAyah() {
+        const ayahrandom = document.getElementById("ayahrandom");
+        ayahrandom.textContent = "جاري التحميل...";
+        document.getElementById("tafseer").textContent = "جاري التحميل...";
+        const response = await fetch("https://api.qurani.ai/gw/qh/v1/ayah/random");
+        const data = await response.json();
+        const surahname = document.getElementById("surahname");
+        
+        try {
+          const ayah = await data.data.text;
+          surah = await data.data.surah.name
+          surahnumber = await data.data.surah.number
+          ayahnumber = await data.data.numberInSurah
+          ayahrandom.textContent = ayah;
+          surahname.textContent = `${surah} ( ${ayahnumber} )`;
+          
+          await getTafsser();
+        } catch (err) {
+          ayahrandom.textContent = "تعذر تحميل الآية";
+          console.error(err);
+        }
 
     }
 
