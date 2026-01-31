@@ -716,6 +716,112 @@
     }
   </script>
 
+  <script>
+  let ayahsCache = [];
+
+  // نجمع كل الآيات بعد التحميل
+  function cacheAyahs() {
+    ayahsCache = [];
+    document.querySelectorAll("#surah-ayahs p").forEach(p => {
+      const ayahNumber = p.id;
+      const ayahText = p.childNodes[0]?.textContent?.trim() || "";
+      ayahsCache.push({
+        number: ayahNumber,
+        text: ayahText
+      });
+    });
+  }
+
+  function searchAyah() {
+    const input = document.getElementById("ayahSearch");
+    const query = input.value.trim();
+    const resultsDiv = document.getElementById("searchResults");
+    const clearBtn = document.getElementById("clearSearch");
+
+    resultsDiv.innerHTML = "";
+
+    if (!query) {
+      resultsDiv.style.display = "none";
+      clearBtn.style.display = "none";
+      return;
+    }
+
+    clearBtn.style.display = "inline-block";
+    resultsDiv.style.display = "block";
+
+    const normalizedQuery = normalizeArabic(query);
+
+    const matches = ayahsCache.filter(a =>
+      normalizeArabic(a.text).includes(normalizedQuery)
+    );
+
+    if (matches.length === 0) {
+      resultsDiv.innerHTML = `<div>لا توجد نتائج</div>`;
+      return;
+    }
+
+    matches.forEach(a => {
+      const div = document.createElement("div");
+      div.innerHTML = highlightMatch(a.text, query) + ` <strong>(${a.number})</strong>`;
+      div.onclick = () => goToAyah(a.number);
+      resultsDiv.appendChild(div);
+    });
+  }
+
+  function goToAyah(number) {
+    clearHighlights();
+    const el = document.getElementById(number);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.classList.add("highlight");
+
+    document.getElementById("searchResults").style.display = "none";
+  }
+
+  function clearSearch() {
+    document.getElementById("ayahSearch").value = "";
+    document.getElementById("searchResults").style.display = "none";
+    document.getElementById("clearSearch").style.display = "none";
+    clearHighlights();
+  }
+
+  function clearHighlights() {
+    document.querySelectorAll(".highlight").forEach(el => {
+      el.classList.remove("highlight");
+    });
+  }
+
+  // إزالة التشكيل + توحيد الحروف
+  function normalizeArabic(text) {
+    return text
+      .replace(/[\u064B-\u065F]/g, "") // التشكيل
+      .replace(/[إأآا]/g, "ا")
+      .replace(/ى/g, "ي")
+      .replace(/ؤ/g, "و")
+      .replace(/ئ/g, "ي")
+      .replace(/ة/g, "ه")
+      .toLowerCase();
+  }
+
+  function highlightMatch(text, query) {
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.replace(regex, `<span class="highlight">$1</span>`);
+  }
+
+  // بعد تحميل السورة
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new MutationObserver(() => {
+      if (document.querySelectorAll("#surah-ayahs p").length > 0) {
+        cacheAyahs();
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.getElementById("surah-ayahs"), { childList: true });
+  });
+</script>
+
+
 
 
   <script src="../assets/js/localstorage.js"></script>
