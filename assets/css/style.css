@@ -440,10 +440,19 @@ li {
 }
 
 .android {
-  background-color: white;
   height: fit-content;
   width: fit-content;
+  background-color: white;
   border-radius: 30px;
+  position: relative;
+}
+.android::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 300px;
+  height: 100%;
+  background-color: red;
 }
 
 /* Features */
@@ -1728,4 +1737,32 @@ label {
 .popup-actions .danger {
   background: #c0392b;
   color: white;
+}
+
+.warning {
+  background-color: #FFC107;
+  border-radius: 7px;
+  margin: 30px;
+  padding: 20px;
+  color: #463400;
+  position: relative;
+}
+
+.warning::after {
+  content: "";
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #c99700;
+}
+.warning::before {
+  content: "";
+  width: 10px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: #c99700;
 }
