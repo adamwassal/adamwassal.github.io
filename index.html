@@ -19,7 +19,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
+      background: rgba(3, 8, 23, 0.55);
+      backdrop-filter: blur(6px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -32,26 +33,28 @@
     }
 
     .new-features-popup {
-      background-color: var(--bg);
-      width: 90%;
-      max-width: 600px;
-      border-radius: 20px;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+      background:
+        radial-gradient(circle at top right, rgba(246, 194, 1, 0.16), transparent 45%),
+        radial-gradient(circle at 10% 20%, rgba(33, 91, 164, 0.14), transparent 40%),
+        var(--bg);
+      width: min(92%, 720px);
+      border-radius: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
       overflow: hidden;
       animation: slideUp 0.4s ease-out;
       border: 1px solid var(--border);
     }
 
     .popup-header {
-      background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-hover));
+      background: linear-gradient(135deg, #1f4f9a, #2b6bd1);
       color: white;
-      padding: 25px 30px;
+      padding: 28px 30px;
       position: relative;
       text-align: center;
     }
 
     .popup-header h2 {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       margin-bottom: 5px;
       display: flex;
       align-items: center;
@@ -76,9 +79,9 @@
       background-color: rgba(255, 255, 255, 0.2);
       border: none;
       color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       font-size: 1.5rem;
       cursor: pointer;
       display: flex;
@@ -93,9 +96,18 @@
     }
 
     .popup-content {
-      padding: 30px;
+      padding: 28px;
       max-height: 60vh;
       overflow-y: auto;
+    }
+
+    .popup-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .popup-content::-webkit-scrollbar-thumb {
+      background-color: rgba(33, 91, 164, 0.3);
+      border-radius: 999px;
     }
 
     .features-section {
@@ -274,10 +286,10 @@
     .platform-section {
       margin-bottom: 40px;
       background-color: var(--surface);
-      border-radius: 15px;
-      padding: 25px;
+      border-radius: 18px;
+      padding: 24px;
       border: 1px solid var(--border);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     }
 
     .platform-header {
@@ -330,8 +342,8 @@
 
     .feature-item {
       background-color: var(--bg);
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 18px;
       border: 1px solid var(--border);
       transition: all 0.3s ease;
       position: relative;
@@ -339,8 +351,8 @@
     }
 
     .feature-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
       border-color: var(--color-primary);
     }
 
@@ -512,87 +524,164 @@
 </head>
 
 <body>
+  <div class="page-bg theme-home">
+    <div class="bg-grid"></div>
+    <div class="bg-blob blob-a"></div>
+    <div class="bg-blob blob-b"></div>
+    <div class="bg-blob blob-c"></div>
+  </div>
   <div id="header-container" class="header" data-page-title="الصفحة الرئيسية"></div>
 
   <div class="main">
-    <div class="hero section">
-      <div class="row">
-
-        <div class="welcome animate__animated animate__fadeIn">
-          <h1 style="color: var(--text-body);"> مرحبًا بك في موقع</h1>
-          <h1 class="yellow-color textt">رياض الجنه</h1>
-        </div>
-        <div class="section-white quote animate__animated animate__fadeInLeft">
-          <div class="icon right">
-            🌱
+    <section class="home-hero section">
+      <div class="home-hero-inner">
+        <div class="hero-copy animate-on-scroll" data-animate="animate__fadeIn">
+          <span class="hero-kicker">بوابة المسلم اليومية</span>
+          <h1 class="hero-title">مرحبًا بك في <br/><span class="textt">رياض الجنة</span></h1>
+          <p class="hero-subtitle">اكتشف القرآن الكريم، الأذكار، مواقيت الصلاة، والراديو في تجربة واحدة أنيقة وسريعة.</p>
+          <div class="hero-actions">
+            <a class="home-btn primary" href="pages/quran.html"><i class="fas fa-quran"></i> ابدأ التلاوة</a>
+            <a class="home-btn ghost" href="pages/radio.html"><i class="fa-solid fa-radio"></i> استمع الآن</a>
+            <a class="home-btn soft" href="pages/ai.html"><i class="fas fa-robot"></i> المساعد الذكي</a>
           </div>
-          <div class="icon left">
-            🌱
+          <div class="hero-tags">
+            <span><i class="fas fa-check"></i> تلاوة وتفسير</span>
+            <span><i class="fas fa-check"></i> أذكار يومية</span>
           </div>
-          <h2 class="primary-color">قال صلى الله عليه و سلم</h2>
-          <h2 style="color: var(--text-body);">إذا مررتُم برياضِ الجنةِ فارْتَعوا</h2>
-        </div>
-      </div>
-      <div class="row">
-
-        <div class="section-white animate__animated animate__fadeInRight">
-
-          <h2 style="color: var(--color-primary); font-family:  'AmiriQuran';" id="ayahrandom">جاري التحميل ...</h2>
-          <p style="color: var(--text-muted); font-size: 20px; font-family:  'AmiriQuran';" id="surahname">سورة الأحزاب
-          </p>
-          <p id="tafseer" style="color: var(--text-muted); font-size: 20px; font-family:  'AmiriQuran';"></p>
-          <button class="btn-icon" onclick="goToSurah()"><i class="far fa-eye"></i></button>
-          <button class="button" onclick="getRandomAyah()"><i class="fas fa-redo"></i></button>
         </div>
 
-        <div class="section-white animate__animated animate__fadeInUp">
-          <h2 class="primary-color" style="color: var(--text-body);">تنزيل التطبيق</h2>
-          <a href="https://drive.google.com/file/d/1dMeXnMD9xosuFiUSeKay56YRSDInto2h/view?usp=drive_link"
-            target="_blank"><img src="assets/images/download_app.png" alt="Downlaod app" width="300" height="300"
-              class="android"></a>
-          <h3 class="primary-color warning">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            هذا التطبيق يحتاج الانترنت ل(الاستماع للسورة و الراديو و التفسير)
-          </h3>
+        <div class="hero-card animate-on-scroll" data-animate="animate__fadeInRight">
+          <div class="home-card-header">
+            <span class="pill"><i class="fas fa-star"></i> آية اليوم</span>
+            <button class="btn-icon" onclick="getRandomAyah()"><i class="fas fa-redo"></i></button>
+          </div>
+          <h2 class="home-ayah" id="ayahrandom">جاري التحميل ...</h2>
+          <p class="home-surah" id="surahname">سورة الأحزاب</p>
+          <p class="home-tafseer" id="tafseer"></p>
+          <div class="home-card-actions">
+            <button class="home-btn small" onclick="goToSurah()"><i class="far fa-eye"></i> عرض في المصحف</button>
+          </div>
         </div>
       </div>
 
-    </div>
-    <div class="features section">
-      <h1 style="color: var(--text-body);">مميزات الموقع (بفضل الله)</h1>
-      <br>
-      <div class="row">
-        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
-          <img src="assets/images/quran.png" alt="" class="img">
-          <h2 style="color: var(--text-body);">القرءان كامل مع التفسير
-            و تسهيل القراءة</h2>
-        </div>
-        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
-          <i class="fa-solid fa-radio img"></i>
-          <h2 style="color: var(--text-body);">الإستماع الى الراديو
-            لأشهر الشيوخ و الإذاعات</h2>
-        </div>
-        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
-          <i class="fa-solid fa-clock img"></i>
-          <h2 style="color: var(--text-body);">معرفة أوقات الصلاة
-            بكل سهوله!</h2>
-        </div>
-
+      <div class="hero-quote section-white animate-on-scroll" data-animate="animate__fadeInUp">
+        <div class="icon right">🌱</div>
+        <div class="icon left">🌱</div>
+        <h2 class="primary-color">قال صلى الله عليه و سلم</h2>
+        <h2 style="color: var(--text-body);">إذا مررتُم برياضِ الجنةِ فارْتَعوا</h2>
       </div>
+    </section>
 
-      <br>
-      <div class="row">
-        <div class="feature animate-on-scroll" data-animate="animate__FadeIn">
-          <img src="assets/images/smile.png" class="img" alt="">
-          <h2 style="color: var(--text-body);">و أكثر ان شاء الله</h2>
+    <section class="home-quick section">
+      <div class="section-head animate-on-scroll" data-animate="animate__fadeInUp">
+        <h2>خدمات سريعة</h2>
+        <p>ابدأ من حيث تريد خلال ثوانٍ.</p>
+      </div>
+      <div class="quick-grid">
+        <a class="quick-card animate-on-scroll" data-animate="animate__fadeInUp" href="pages/quran.html">
+          <i class="fas fa-quran"></i>
+          <h3>المصحف</h3>
+          <p>قراءة مريحة مع تفسير وتلاوة.</p>
+        </a>
+        <a class="quick-card animate-on-scroll" data-animate="animate__fadeInUp" href="pages/radio.html">
+          <i class="fa-solid fa-radio"></i>
+          <h3>الراديو</h3>
+          <p>بث مباشر لأشهر القرّاء والإذاعات.</p>
+        </a>
+        <a class="quick-card animate-on-scroll" data-animate="animate__fadeInUp" href="pages/time_prays.html">
+          <i class="fas fa-clock"></i>
+          <h3>مواقيت الصلاة</h3>
+          <p>مواقيت دقيقة حسب موقعك.</p>
+        </a>
+        <a class="quick-card animate-on-scroll" data-animate="animate__fadeInUp" href="pages/alathker.html">
+          <i class="fas fa-pray"></i>
+          <h3>الأذكار</h3>
+          <p>أذكار صباح ومساء بأداء سلس.</p>
+        </a>
+        <a class="quick-card animate-on-scroll" data-animate="animate__fadeInUp" href="pages/ai.html">
+          <i class="fas fa-robot"></i>
+          <h3>المساعد الذكي</h3>
+          <p>اسأل عن أحكام وتفسير بسرعة.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="home-download section">
+      <div class="download-card animate-on-scroll" data-animate="animate__fadeInUp">
+        <div style="padding: 0 20px;">
+          <h2>حمّل التطبيق الآن</h2>
+          <p>تجربة أسرع مع إشعارات مباشرة للمواقيت والأذكار.</p>
+          <div class="download-badges">
+            <a class="home-btn primary" href="https://drive.google.com/file/d/1dMeXnMD9xosuFiUSeKay56YRSDInto2h/view?usp=drive_link" target="_blank">
+              <i class="fa-solid fa-download"></i> تنزيل التطبيق
+            </a>
+            <span class="download-note"><i class="fa-solid fa-triangle-exclamation"></i> يحتاج اتصال إنترنت للتلاوة والراديو والتفسير.</span>
+          </div>
+        </div>
+        <img src="assets/images/logo.png" alt="Downlaod app" width="280" height="280" class="download-img">
+      </div>
+    </section>
+
+    <section class="home-features section">
+      <div class="section-head animate-on-scroll" data-animate="animate__fadeInUp">
+        <h2>مميزات الموقع (بفضل الله)</h2>
+        <p>تصميم واضح، أداء سريع، ومحتوى موثوق.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+          <img src="assets/images/quran.png" alt="" class="feature-icon">
+          <h3>القرآن كامل مع التفسير</h3>
+          <p>قراءة مريحة مع تحسينات لتسهيل المتابعة.</p>
+        </div>
+        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+          <i class="fa-solid fa-radio feature-icon"></i>
+          <h3>راديو القرآن</h3>
+          <p>استمع لأشهر الشيوخ والإذاعات بسهولة.</p>
+        </div>
+        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+          <i class="fa-solid fa-clock feature-icon"></i>
+          <h3>مواقيت الصلاة</h3>
+          <p>عرض واضح وتنبيهات دقيقة لكل صلاة.</p>
+        </div>
+        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+          <img src="assets/images/smile.png" class="feature-icon" alt="">
+          <h3>والمزيد إن شاء الله</h3>
+          <p>ميزات جديدة وتحديثات مستمرة.</p>
         </div>
       </div>
-    </div>
-    <div class="section" style="height: 700px;">
+    </section>
 
-      <iframe src="pages/time_prays.html" frameborder="0" width="100%" height="100%"></iframe>
-      <br>
-    </div>
+    <section class="home-prayer section">
+      <div class="section-head animate-on-scroll" data-animate="animate__fadeInUp">
+        <h2>مواقيت الصلاة</h2>
+        <p>تابع مواقيت اليوم مباشرة من هنا.</p>
+      </div>
+      <div class="home-prayer-card animate-on-scroll" data-animate="animate__fadeInUp">
+        <div id="countdown" class="countdown-card">جاري الحساب...</div>
+        <div class="home-prayer-grid">
+          <div class="home-prayer-item" data-prayer="الفجر">
+            <h3>الفجر</h3>
+            <div class="time" id="alfajr"></div>
+          </div>
+          <div class="home-prayer-item" data-prayer="الظهر">
+            <h3>الظهر</h3>
+            <div class="time" id="alduhr"></div>
+          </div>
+          <div class="home-prayer-item" data-prayer="العصر">
+            <h3>العصر</h3>
+            <div class="time" id="alasr"></div>
+          </div>
+          <div class="home-prayer-item" data-prayer="المغرب">
+            <h3>المغرب</h3>
+            <div class="time" id="almaghreb"></div>
+          </div>
+          <div class="home-prayer-item" data-prayer="العشاء">
+            <h3>العشاء</h3>
+            <div class="time" id="alisha"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
   <div class="popup-overlay" id="popupOverlay">
     <div class="new-features-popup">
@@ -720,6 +809,10 @@
             <p>آخر تحديث: يناير 2026 | الإصدار 2.5.0</p>
           </div>
         </div>
+      </div>
+      <div class="popup-footer">
+        <span class="version-info">شكرا لثقتكم برياض الجنة</span>
+        <button class="action-btn" id="gotItBtn">تم</button>
       </div>
 
     </div>

@@ -50,13 +50,17 @@
 
       <div class="notifications hidden">
         <div class="notification-header">
-
-          <h2>الإشعارات</h2>
+          <div class="notification-header-text">
+            <h2>الإشعارات</h2>
+            <span class="notifications-subtitle">آخر التنبيهات الخاصة بك</span>
+          </div>
           <button class="btn-icon" onclick="clearNotifications()"><i class="fa fa-trash red-color"></i></button>
         </div>
-        <ul>
+        <div class="notifications-body">
+          <ul>
 
-        </ul>
+          </ul>
+        </div>
       </div>
       <button class="btn-icon togglemode" onclick="toggleTheme()">
         <i class="fa fa-moon"></i>
@@ -100,6 +104,19 @@
         <select id="reciters-select">
           <option disabled selected>جاري التحميل...</option>
         </select>
+
+        <div class="popup-divider"></div>
+        <h3>🕌 إعداد الأذان</h3>
+        <div class="popup-radio-group" id="azan-settings">
+          <input type="radio" id="azan-short" name="azanMode" value="short">
+          <label for="azan-short">تذكير أذان غير كامل</label>
+
+          <input type="radio" id="azan-full" name="azanMode" value="full">
+          <label for="azan-full">الأذان كامل</label>
+
+          <input type="radio" id="azan-off" name="azanMode" value="off">
+          <label for="azan-off">عدم تشغيل الأذان</label>
+        </div>
 
         <div class="popup-actions">
           <button onclick="saveReciter()">حفظ</button>

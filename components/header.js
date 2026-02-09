@@ -198,6 +198,7 @@ async function loadReciters() {
 function openRecitersPopup() {
   document.getElementById("reciters-popup").classList.remove("hidden");
   loadReciters();
+  initAzanSettings();
 }
 
 function closeRecitersPopup() {
@@ -207,6 +208,14 @@ function closeRecitersPopup() {
 function saveReciter() {
   const select = document.getElementById("reciters-select");
   localStorage.setItem("reciter", select.value);
+  const azanMode = document.querySelector('input[name="azanMode"]:checked');
+  if (azanMode) localStorage.setItem("azanMode", azanMode.value);
   closeRecitersPopup();
   window.location.reload()
+}
+
+function initAzanSettings() {
+  const saved = localStorage.getItem("azanMode") || "short";
+  const input = document.querySelector(`input[name="azanMode"][value="${saved}"]`);
+  if (input) input.checked = true;
 }

@@ -17,38 +17,45 @@
 </head>
 
 <body>
+  <div class="page-bg theme-athkar">
+    <div class="bg-grid"></div>
+    <div class="bg-blob blob-a"></div>
+    <div class="bg-blob blob-b"></div>
+    <div class="bg-blob blob-c"></div>
+  </div>
   <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
 
   <div id="header-container" class="header" data-page-title="الأذكار"></div>
 
 
   <div class="talkpage">
-    <br>
-    <br>
-    <div class="talk section">
+    <div class="athkar-hero">
+      <div class="athkar-hero-inner">
+        <h1>الأذكار اليومية</h1>
+        <p>اختر الورد المناسب، واقرأ الأذكار بسهولة مع عدّادات منظمة.</p>
+      </div>
+    </div>
+
+    <div class="talk section athkar-list">
 
     </div>
-    <div class="talkmenu">
+    <div class="talkmenu athkar-menu">
       <div class="fixed">
 
         <h2>الأذكار</h2>
-        <div class="radio animate__animated animate__fadeInRight">
+        <div class="radio-group animate__animated animate__fadeInRight">
           <input type="radio" id="talk1" name="talk" onchange="gettalk()" checked>
-          <label for="talk1">أذكار الصباح </label>
-        </div>
-        <div class="radio animate__animated animate__fadeInRight">
+          <label for="talk1">أذكار الصباح</label>
+
           <input type="radio" id="talk4" name="talk" onchange="gettalk()">
           <label for="talk4">أذكار المساء</label>
-        </div>
-        <div class="radio animate__animated animate__fadeInRight">
+
           <input type="radio" id="talk2" name="talk" onchange="gettalk()">
           <label for="talk2">دعاء الإستخاره</label>
-        </div>
-        <div class="radio animate__animated animate__fadeInRight">
+
           <input type="radio" id="talk3" name="talk" onchange="gettalk()">
           <label for="talk3">أذكار النوم</label>
-        </div>
-        <div class="radio animate__animated animate__fadeInRight">
+
           <input type="radio" id="talk5" name="talk" onchange="gettalk()">
           <label for="talk5">أذكار ما بعد الصلاة</label>
         </div>
@@ -97,7 +104,6 @@
 
   </script>
   <script src="../assets/js/script.js"></script>
-  <script src="../assets/js/mode.js"></script>
 
   <script>
     function increaseCount(id) {

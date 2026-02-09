@@ -52,6 +52,9 @@ function toastNotification(
              ${link ? `<a href="${link}" class="noti-link">${linkText}</a>` : ""}
            </div>`,
   });
+  $.notify.addStyle("pray", {
+    html: `<div><div class="msg" data-notify-text="message"></div></div>`,
+  });
 
 
   // Show toast
@@ -90,7 +93,7 @@ function renderNotificationsList() {
   if (!list) return;
 
   if (allNotification.length === 0) {
-    list.innerHTML = "<p class='no-notifications'>لا توجد إشعارات</p>";
+    list.innerHTML = "<li class='no-notifications'>لا توجد إشعارات</li>";
     return;
   }
 
@@ -99,14 +102,14 @@ function renderNotificationsList() {
     const item = document.createElement("li");
     item.className = "notification-item";
     item.innerHTML = `
-      <li>
-            <h3>${notif.message}</h3>
-        </li>
-      ${
-        notif.link
-          ? `<a href="${notif.link}" class="notification-link">${notif.linkText}</a>`
-          : ""
-      }
+      <div class="notification-content">
+        <h3>${notif.message}</h3>
+        ${
+          notif.link
+            ? `<a href="${notif.link}" class="notification-link">${notif.linkText}</a>`
+            : ""
+        }
+      </div>
     `;
     list.appendChild(item);
   });

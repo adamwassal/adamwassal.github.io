@@ -24,6 +24,9 @@
       margin-top: 30px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       height: fit-content;
+      position: absolute; right: 0;
+      top: 70px;
+      
     }
 
     .fontsized h3 {
@@ -174,6 +177,106 @@
       transform: rotate(90deg);
     }
 
+    .recite-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 23, 0.55);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
+
+    .recite-overlay.hidden {
+      display: none;
+    }
+
+    .recite-modal {
+      width: min(520px, 92%);
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+      direction: rtl;
+      text-align: right;
+    }
+
+    .recite-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .recite-header h3 {
+      color: var(--text-heading);
+      font-size: 1.2rem;
+    }
+
+    .recite-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+
+    .recite-ayah {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 1.3rem;
+      line-height: 2.1;
+      margin-bottom: 12px;
+    }
+
+    .recite-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .recite-btn {
+      flex: 1;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .recite-btn.primary {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: #1b1b1b;
+    }
+
+    .recite-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .recite-status {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    .recite-result {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -185,18 +288,45 @@
     }
 
     .search-box {
-      margin: 20px 0;
+      margin: 10px 0 0;
       display: flex;
+      align-items: center;
       gap: 10px;
+      width: 100%;
+    }
+
+    .search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      flex: 1;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .search-wrap:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 12px 30px rgba(246, 194, 1, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .search-wrap i {
+      color: var(--color-secondary);
+      font-size: 1.1rem;
     }
 
     .search-box input {
       flex: 1;
-      padding: 10px 15px;
+      padding: 10px 6px;
       font-size: 16px;
       border-radius: 10px;
-      border: 2px solid var(--color-primary);
+      border: none;
       outline: none;
+      background: transparent;
     }
 
     .search-box button {
@@ -214,24 +344,31 @@
     }
 
     .search-results {
-      margin-top: 10px;
-      background: var(--bg-secondary);
-      border-radius: 10px;
-      padding: 5px;
-      max-height: 300px;
+      margin-top: 12px;
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 8px;
+      max-height: 320px;
       overflow-y: auto;
       display: none;
+      border: 1px solid var(--border);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
     }
 
     .search-results div {
-      padding: 10px;
-      border-bottom: 1px solid #ddd2;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
       cursor: pointer;
+      border-radius: 12px;
+      background: var(--bg);
+      transition: transform 0.15s, border-color 0.15s, background 0.15s;
     }
 
     .search-results div:hover {
-      background: var(--color-primary);
-      color: #fff;
+      background: rgba(246, 194, 1, 0.12);
+      border-color: rgba(246, 194, 1, 0.5);
+      color: var(--text-heading);
+      transform: translateY(-1px);
     }
 
     #ayahSearch:focus {
@@ -242,10 +379,201 @@
     #ayahSearch {
       text-align: end;
     }
+
+    .surah-toolbar {
+      width: min(1100px, 92%);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 10px auto 0;
+    }
+
+    .layout-toggle {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .layout-toggle button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-heading);
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .layout-toggle button.active {
+      background: var(--color-primary);
+      color: #1b1b1b;
+    }
+
+    .layout-toggle button:hover {
+      transform: translateY(-1px);
+    }
+
+    #surah-ayahs {
+      width: min(1100px, 92%);
+      margin: 10px auto 30px;
+      display: block;
+      direction: rtl;
+      text-align: justify;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      font-family: "AmiriQuran", sans-serif;
+      font-size: 1.7em;
+      line-height: 2.4;
+      color: var(--text-body);
+    }
+
+    #surah-ayahs.layout-moshaf {
+      text-align: justify;
+      white-space: normal;
+    }
+
+    #surah-ayahs.layout-moshaf .ayah-inline {
+      display: inline;
+      margin: 0;
+    }
+
+    #surah-ayahs.layout-list {
+      text-align: right;
+    }
+
+    #surah-ayahs.layout-list .ayah-inline {
+      display: block;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px 44px 60px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      font-size: 1.4em;
+      line-height: 2.2;
+    }
+
+    #surah-ayahs.layout-list .ayah-inline .ayah-number {
+      margin-right: 0;
+    }
+
+    .ayah-inline {
+      position: relative;
+      display: inline;
+      padding: 2px 6px;
+      border-radius: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .ayah-inline:hover,
+    .ayah-inline.highlight {
+      background: rgba(246, 194, 1, 0.12);
+    }
+
+    .ayah-inline .ayah-number {
+      display: inline-block;
+      margin: 0 6px;
+      color: var(--color-secondary);
+      font-size: 0.9em;
+    }
+
+    .ayah-inline .controls-inline {
+      position: absolute;
+      top: -42px;
+      right: 0;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      transform: translateY(6px);
+      z-index: 5;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 8px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      backdrop-filter: blur(6px);
+    }
+
+    #surah-ayahs.layout-list .ayah-inline .controls-inline {
+      top: -46px;
+      right: 10px;
+    }
+
+
+
+    .ayah-inline:hover .controls-inline,
+    .ayah-inline.highlight .controls-inline {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .controls-inline .control-btn {
+      background: var(--surface);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+      color: var(--text-heading);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .controls-inline .control-btn i {
+      font-size: 0.95rem;
+    }
+
+    .controls-inline .control-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(246, 194, 1, 0.2);
+      border-color: rgba(246, 194, 1, 0.6);
+      color: var(--text-heading);
+    }
+
+    .controls-inline .control-btn.play-active {
+      background: var(--color-primary);
+      color: #1b1b1b;
+      border-color: rgba(246, 194, 1, 0.8);
+    }
+
+    @media (max-width: 600px) {
+      .search-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      #surah-ayahs {
+        font-size: 1.3em;
+        padding: 20px 16px;
+        text-align: right;
+      }
+
+      .ayah-inline .controls-inline {
+        position: static;
+        margin: 8px 0;
+        flex-wrap: wrap;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="page-bg theme-surah">
+    <div class="bg-grid"></div>
+    <div class="bg-blob blob-a"></div>
+    <div class="bg-blob blob-b"></div>
+    <div class="bg-blob blob-c"></div>
+  </div>
   <div id="header-container" class="header" data-page-title="جاري تحميل السورة"></div>
 
   <div class="main">
@@ -255,9 +583,18 @@
       <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
       <div class="title" id="surah-name"></div>
       <div class="title basmala"> بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
-      <div class="search-box">
-        <button id="clearSearch" onclick="clearSearch()" style="display:none;">مسح</button>
-        <input type="text" id="ayahSearch" placeholder="...ابحث عن آية" oninput="searchAyah()">
+      <div class="surah-toolbar">
+        <div class="search-box">
+          <div class="search-wrap">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="ayahSearch" placeholder="...ابحث عن آية" oninput="searchAyah()">
+          </div>
+          <button id="clearSearch" onclick="clearSearch()" style="display:none;">مسح</button>
+        </div>
+        <div class="layout-toggle" role="group" aria-label="تغيير عرض الآيات">
+          <button type="button" class="layout-btn" data-layout="list"><i class="fas fa-list"></i> قائمة</button>
+          <button type="button" class="layout-btn active" data-layout="moshaf"><i class="fas fa-book-open"></i> مصحف</button>
+        </div>
       </div>
       <div id="searchResults" class="search-results"></div>
       <div id="surah-ayahs"></div>
@@ -282,21 +619,28 @@
   </div>
 
   <div class="tafseer-content" id="tafseer-content">
-    <div class="tafaseer"> <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked /> <label
-        for="tafseer1">التفسير الميسر</label> <input type="radio" name="tafseer" id="tafseer2"
-        onclick="updateTafsir()" /> <label for="tafseer2">تفسير ابن كثير</label> <input type="radio" name="tafseer"
-        id="tafseer3" onclick="updateTafsir()" /> <label for="tafseer3">تفسير السعدي</label> </div>
+    <div class="tafseer-toolbar">
+      <div class="tafaseer">
+        <input type="radio" name="tafseer" id="tafseer1" onclick="updateTafsir()" checked />
+        <label for="tafseer1">التفسير الميسر</label>
+        <input type="radio" name="tafseer" id="tafseer2" onclick="updateTafsir()" />
+        <label for="tafseer2">تفسير ابن كثير</label>
+        <input type="radio" name="tafseer" id="tafseer3" onclick="updateTafsir()" />
+        <label for="tafseer3">تفسير السعدي</label>
+        <input type="radio" name="tafseer" id="tafseer4" onclick="updateTafsir()" />
+        <label for="tafseer4">تفسير الطبري</label>
+      </div>
+      <div class="fontsized">
+        <div class="slider-container"> <input type="range" id="fontSizeSlider" min="20" max="32" value="20" step="1">
+          <div class="size-value" id="sizeValue">20px</div>
+        </div>
+        <div class="size-presets"> <button class="size-btn" data-size="20">صغير</button> <button
+            class="size-btn active" data-size="24">متوسط</button> <button class="size-btn" data-size="28">كبير</button>
+          <button class="size-btn" data-size="32">كبير جداً</button> </div>
+      </div>
+    </div>
     <div class="close_btn" onclick="closeTafsir()">&times;</div>
     <div class="details"></div>
-    <div class="fontsized">
-      <h3 class="primary-color"><i class="fas fa-text-height "></i> تغيير حجم الخط</h3>
-      <div class="slider-container"> <input type="range" id="fontSizeSlider" min="20" max="32" value="20" step="1">
-        <div class="size-value" id="sizeValue">20px</div>
-      </div>
-      <div class="size-presets"> <button class="size-btn" data-size="20">صغير</button> <button class="size-btn active"
-          data-size="24">متوسط</button> <button class="size-btn" data-size="28">كبير</button> <button class="size-btn"
-          data-size="32">كبير جداً</button> </div>
-    </div>
   </div>
 
 
@@ -307,6 +651,22 @@
       <h2 class="name"></h2>
       <h2 class="ayahcount"></h2>
       <h2 class="revelation"></h2>
+    </div>
+  </div>
+
+  <div class="recite-overlay hidden" id="reciteOverlay">
+    <div class="recite-modal">
+      <div class="recite-header">
+        <h3>التسميع بالذكاء الاصطناعي</h3>
+        <button class="recite-close" onclick="closeRecite()">×</button>
+      </div>
+      <div class="recite-ayah" id="reciteAyahText">...</div>
+      <div class="recite-actions">
+        <button class="recite-btn primary" id="reciteStartBtn" onclick="startRecite()">ابدأ التسميع</button>
+        <button class="recite-btn" id="reciteStopBtn" onclick="stopRecite()" disabled>إيقاف</button>
+      </div>
+      <div class="recite-status" id="reciteStatus">جاهز للتسجيل</div>
+      <div class="recite-result" id="reciteResult"></div>
     </div>
   </div>
 
@@ -370,6 +730,10 @@
         ayahsDiv.textContent = "جاري تحميل الآيات...";
 
         var reciter = localStorage.getItem("reciter")
+        if (!reciter) {
+          reciter = "ar.alafasy";
+          localStorage.setItem("reciter", reciter);
+        }
 
         await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${reciter}`)
 
@@ -396,55 +760,49 @@
             ayahsDiv.innerHTML = "";
 
             data.data.ayahs.forEach((ayah) => {
-              const p = document.createElement("p");
+              const p = document.createElement("span");
+              p.classList.add("ayah-inline");
               let ayahtext = ayah.text
-              if (ayah.numberInSurah == 1 && surahNumber != 1) {
-                console.log("hi")
-                ayahtext = ayahtext.replace("بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ", "");
+              if (ayah.numberInSurah == 1 && String(surahNumber) !== "1") {
+                const basmalaPattern = /بِ?سْمِ\s*(ٱ|ا)للَّهِ\s*(ٱ|ا)لرَّحْمَـٰنِ\s*(ٱ|ا)لرَّحِيمِ/g;
+                ayahtext = ayahtext.replace(basmalaPattern, "").trim();
+                ayahtext = ayahtext.replace(/^[:\-–—،.\s]+/, "");
               }
               p.textContent = ayahtext;
+              p.dataset.ayahText = ayahtext;
               const audioUrl =
                 ayah.audio ??
                 (Array.isArray(ayah.audio?.secondary)
                   ? ayah.audio.secondary[0]
                   : null);
-
-
-              p.innerHTML += `
-                <div class="controls audio-${ayah.numberInSurah}" data-audio="${audioUrl || ''}">
-      <button onclick="playAyah(${ayah.numberInSurah})" class="playbtn play-${ayah.numberInSurah}">
-        <i class="fa-solid fa-play"></i>
-      </button>
-    </div>
-              `;
-              p.innerHTML += `
-                  <div class="ayahnumber"> (${ayah.numberInSurah}) الآيه</div>
-                `
-
               p.id = ayah.numberInSurah;
-              if (
+
+              const isMarked =
                 storage.getItem("ayah") == ayah.numberInSurah &&
-                storage.getItem("surah") == surahNumber
-              ) {
-                p.innerHTML += `
-                    
-                    <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);" class = "mark marked"><i class="fa fa-bookmark"></i></button>
-                  `;
-                document.getElementById("gomark").style.visibility =
-                  "visible";
-                document.getElementById(
-                  "gomark"
-                ).href = `#${ayah.numberInSurah}`;
-              } else {
-                p.innerHTML += `
-                  
-                  <button onclick= "mark('${surahNumber}', '${ayah.numberInSurah}', this);"  class = "mark unmark"><i class="fa fa-bookmark"></i></button>
-                `;
+                storage.getItem("surah") == surahNumber;
+
+              if (isMarked) {
+                document.getElementById("gomark").style.visibility = "visible";
+                document.getElementById("gomark").href = `#${ayah.numberInSurah}`;
               }
 
               p.innerHTML += `
-                <button onclick='tafsir(1, ${surahNumber}, ${ayah.numberInSurah}, ${JSON.stringify(ayah.text)})' class="tafseer"><i class="fa-solid fa-circle-info"></i></button>
-              `
+                <span class="ayah-number">﴿${ayah.numberInSurah}﴾</span>
+                <span class="controls-inline audio-${ayah.numberInSurah}" data-audio="${audioUrl || ''}">
+                  <button onclick="playAyah(${ayah.numberInSurah})" class="control-btn play-${ayah.numberInSurah}">
+                    <i class="fa-solid fa-play"></i>
+                  </button>
+                  <button onclick="mark('${surahNumber}', '${ayah.numberInSurah}', this);" class="control-btn ${isMarked ? "marked" : "unmark"}">
+                    <i class="fa fa-bookmark"></i>
+                  </button>
+                  <button onclick='tafsir(1, ${surahNumber}, ${ayah.numberInSurah}, ${JSON.stringify(ayah.text)})' class="control-btn">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </button>
+                  <button onclick='openRecite("${ayah.numberInSurah}", ${JSON.stringify(ayahtext)})' class="control-btn">
+                    <i class="fa-solid fa-microphone"></i>
+                  </button>
+                </span>
+              `;
               ayahsDiv.appendChild(p);
             });
             setTimeout(scrollToAyahFromHash, 300);
@@ -532,17 +890,20 @@
       });
 
       // إعادة الضبط
-      resetBtn.addEventListener('click', function () {
-        updateFontSize(defaultSize);
-        localStorage.removeItem(STORAGE_KEY);
-      });
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          updateFontSize(defaultSize);
+          localStorage.removeItem(STORAGE_KEY);
+        });
+      }
 
-      // تطبيق (يحفظ القيمة)
-      applyBtn.addEventListener('click', function () {
-        const selectedSize = parseInt(fontSizeSlider.value, 10);
-        localStorage.setItem(STORAGE_KEY, selectedSize);
-        alert(`تم تطبيق وحفظ حجم الخط: ${selectedSize}px`);
-      });
+      if (applyBtn) {
+        applyBtn.addEventListener('click', function () {
+          const selectedSize = parseInt(fontSizeSlider.value, 10);
+          localStorage.setItem(STORAGE_KEY, selectedSize);
+          alert(`تم تطبيق وحفظ حجم الخط: ${selectedSize}px`);
+        });
+      }
 
     });
     let currentAyah = null;
@@ -605,6 +966,27 @@
       };
     }
 
+    let autoScrollInterval = null;
+    let autoScrollActive = false;
+
+    function lunch() {
+      const btn = document.getElementById("scroll-btn");
+      if (!autoScrollActive) {
+        autoScrollActive = true;
+        btn.classList.add("lunchscroll");
+        btn.innerHTML = "<i class='fa-solid fa-pause'></i> إيقاف السحب";
+        autoScrollInterval = setInterval(() => {
+          window.scrollBy(0, 1);
+        }, 20);
+      } else {
+        autoScrollActive = false;
+        btn.classList.remove("lunchscroll");
+        btn.innerHTML = "<i class='fa-solid fa-arrow-down'></i> السحب التلقائي";
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    }
+
 
     async function tafsir(tafseerid, surahnumber, ayahnumber, ayahText) {
       const body = document.body;
@@ -657,11 +1039,15 @@
       if (document.getElementById("tafseer3").checked) {
         tafseerId = "ar-tafseer-al-saddi";
       }
+      if (document.getElementById("tafseer4").checked) {
+        tafseerId = "ar-tafsir-al-tabari";
+      }
 
       const tafaseers = {
         "ar-tafsir-muyassar": "التفسير الميسًّر",
         "ar-tafsir-ibn-kathir": "تفسير ابن كثير",
-        "ar-tafseer-al-saddi": "تفسير السعدي"
+        "ar-tafseer-al-saddi": "تفسير السعدي",
+        "ar-tafsir-al-tabari": "تفسير الطبري"
       }
 
       if (surahNumber && ayahNumber) {
@@ -722,9 +1108,9 @@
   // نجمع كل الآيات بعد التحميل
   function cacheAyahs() {
     ayahsCache = [];
-    document.querySelectorAll("#surah-ayahs p").forEach(p => {
+    document.querySelectorAll("#surah-ayahs span.ayah-inline").forEach(p => {
       const ayahNumber = p.id;
-      const ayahText = p.childNodes[0]?.textContent?.trim() || "";
+      const ayahText = p.dataset.ayahText || "";
       ayahsCache.push({
         number: ayahNumber,
         text: ayahText
@@ -812,7 +1198,7 @@
   // بعد تحميل السورة
   document.addEventListener("DOMContentLoaded", () => {
     const observer = new MutationObserver(() => {
-      if (document.querySelectorAll("#surah-ayahs p").length > 0) {
+      if (document.querySelectorAll("#surah-ayahs span.ayah-inline").length > 0) {
         cacheAyahs();
         observer.disconnect();
       }
@@ -821,11 +1207,168 @@
   });
 </script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const ayahsContainer = document.getElementById("surah-ayahs");
+      const buttons = document.querySelectorAll(".layout-btn");
+      const STORAGE_KEY = "surahLayout";
+
+      function setLayout(layout) {
+        ayahsContainer.classList.remove("layout-list", "layout-moshaf");
+        ayahsContainer.classList.add(layout === "list" ? "layout-list" : "layout-moshaf");
+        buttons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.layout === layout);
+        });
+        localStorage.setItem(STORAGE_KEY, layout);
+      }
+
+      const saved = localStorage.getItem(STORAGE_KEY) || "moshaf";
+      setLayout(saved);
+
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => setLayout(btn.dataset.layout));
+      });
+    });
+  </script>
+
+  <script>
+    let currentReciteAyah = null;
+    let recognition = null;
+    let reciteActive = false;
+    let reciteTranscript = "";
+
+    function openRecite(ayahNumber, ayahText) {
+      currentReciteAyah = { number: ayahNumber, text: ayahText };
+      document.getElementById("reciteAyahText").textContent = ayahText;
+      document.getElementById("reciteResult").textContent = "";
+      document.getElementById("reciteStatus").textContent = "جاهز للتسجيل";
+      document.getElementById("reciteOverlay").classList.remove("hidden");
+    }
+
+    function closeRecite() {
+      document.getElementById("reciteOverlay").classList.add("hidden");
+      if (recognition) recognition.stop();
+    }
+
+    function normalizeReciteArabic(text) {
+      return text
+        .replace(/[\u064B-\u065F]/g, "")
+        .replace(/\u0670/g, "")
+        .replace(/[إأآاٱ]/g, "ا")
+        .replace(/ى/g, "ي")
+        .replace(/ؤ/g, "و")
+        .replace(/ئ/g, "ي")
+        .replace(/ة/g, "ه")
+        .trim();
+    }
+
+    function diffReciteWords(refText, hypText) {
+      const ref = normalizeReciteArabic(refText).split(/\s+/).filter(Boolean);
+      const hyp = normalizeReciteArabic(hypText).split(/\s+/).filter(Boolean);
+      const missing = ref.filter(w => !hyp.includes(w));
+      const extra = hyp.filter(w => !ref.includes(w));
+      const matched = hyp.filter(w => ref.includes(w));
+      const score = ref.length ? Math.max(0, Math.min(100, Math.round((matched.length / ref.length) * 100))) : 0;
+      return { missing, extra, matched, score };
+    }
+
+    function renderReciteResult(transcript) {
+      const result = document.getElementById("reciteResult");
+      const diff = diffReciteWords(currentReciteAyah.text, transcript);
+      result.innerHTML = `
+        <div><strong>النص المستخرج:</strong> ${transcript || "—"}</div>
+        <div><strong>الدقة:</strong> ${diff.score}%</div>
+        <div><strong>نواقص:</strong> ${diff.missing.join("، ") || "—"}</div>
+        <div><strong>زيادات:</strong> ${diff.extra.join("، ") || "—"}</div>
+        <div class="ai-meta">تنبيه: هذه مقارنة نصية تقريبية، وليست ضبط تجويد كامل.</div>
+      `;
+    }
+
+    function startRecite() {
+      const status = document.getElementById("reciteStatus");
+      const startBtn = document.getElementById("reciteStartBtn");
+      const stopBtn = document.getElementById("reciteStopBtn");
+      status.textContent = "يتم الاستماع...";
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        status.textContent = "هذه الميزة غير مدعومة في هذا المتصفح.";
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.lang = "ar-SA";
+      recognition.interimResults = true;
+      recognition.continuous = true;
+      recognition._lastTranscript = "";
+      reciteTranscript = "";
+
+      recognition.onresult = (event) => {
+        let finalText = "";
+        let interimText = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const text = event.results[i][0].transcript || "";
+          if (event.results[i].isFinal) finalText += text + " ";
+          else interimText += text + " ";
+        }
+        if (finalText.trim()) {
+          reciteTranscript += finalText;
+          recognition._lastTranscript = reciteTranscript;
+          renderReciteResult(reciteTranscript);
+          status.textContent = "يتم الاستماع...";
+        } else if (interimText.trim()) {
+          status.textContent = "يتم الاستماع...";
+        }
+      };
+
+      recognition.onerror = () => {
+        status.textContent = "حدث خطأ أثناء الاستماع.";
+        reciteActive = false;
+      };
+
+      recognition.onend = () => {
+        if (reciteActive) {
+          recognition.start();
+          return;
+        }
+        if (!recognition._lastTranscript) {
+          renderReciteResult("");
+          status.textContent = "لم يتم التقاط صوت. حاول مرة أخرى.";
+        } else {
+          status.textContent = "تم الإيقاف";
+          renderReciteResult(reciteTranscript);
+        }
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+      };
+
+      reciteActive = true;
+      recognition.start();
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    }
+
+    function stopRecite() {
+      const startBtn = document.getElementById("reciteStartBtn");
+      const stopBtn = document.getElementById("reciteStopBtn");
+      reciteActive = false;
+      if (recognition) recognition.stop();
+      const status = document.getElementById("reciteStatus");
+      status.textContent = "جاري الإيقاف...";
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
+
+    window.openRecite = openRecite;
+    window.closeRecite = closeRecite;
+    window.startRecite = startRecite;
+    window.stopRecite = stopRecite;
+  </script>
+
 
 
 
   <script src="../assets/js/localstorage.js"></script>
-  <script src="../assets/js/mode.js"></script>
 
 
 

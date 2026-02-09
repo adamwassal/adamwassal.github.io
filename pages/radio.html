@@ -11,44 +11,70 @@
 
    <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 
-    <style>
-        /* Radio Page Specific Styles */
-        
-    </style>
+    <style></style>
 
 </head>
 
 <body>
+    <div class="page-bg theme-radio">
+        <div class="bg-grid"></div>
+        <div class="bg-blob blob-a"></div>
+        <div class="bg-blob blob-b"></div>
+        <div class="bg-blob blob-c"></div>
+    </div>
 
     <div id="header-container" class="header" data-page-title="الراديو"></div>
 
-    <body class="radio-page">
+    <div class="main radio-page">
+        <div class="section radio-hero">
+            <div class="radio-hero-inner">
+                <h1>راديو القرآن الكريم</h1>
+                <p>استمع الآن إلى أشهر القرّاء والإذاعات بجودة عالية.</p>
+            </div>
+        </div>
 
-        <div class="main">
-            <div class="section">
-                <div class="radio-container">
-                    <div class="radio-player">
-                        <img src="" alt="" class="radio-image loading">
-                        <div class="radio-name loading"></div>
-                        <div class="audio-player">
-                            <audio class="quranPlayer" controls style="width:100%; background: transparent;"
-                                autoplay></audio>
+        <div class="section">
+            <div class="radio-container radio-layout">
+                <div class="radio-player">
+                    <img src="" alt="" class="radio-image loading">
+                    <div class="radio-name loading"></div>
+                    <div class="audio-player custom-player">
+                        <audio class="quranPlayer" autoplay></audio>
+                        <div class="player-controls">
+                            <button class="player-btn play-toggle" aria-label="تشغيل أو إيقاف">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                            <div class="player-status">
+                                <span class="player-state">متوقف</span>
+                                <span class="player-meta">جودة عالية</span>
+                            </div>
+                            <button class="player-btn mute-toggle" aria-label="كتم الصوت">
+                                <i class="fa-solid fa-volume-high"></i>
+                            </button>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1"
+                                aria-label="مستوى الصوت">
                         </div>
-                        <div class="now-playing">جاري التشغيل...</div>
+                    </div>
+                    <div class="now-playing">جاري التشغيل...</div>
+                </div>
+                <div class="stations-panel">
+                    <div class="stations-header">
+                        <h2>قائمة المحطات</h2>
+                        <span class="stations-subtitle">اختر إذاعتك المفضلة</span>
                     </div>
                     <div class="stations-container"></div>
-
                 </div>
             </div>
         </div>
+    </div>
 
 
 
         <script src="../components/header.js"></script>
-          <script src="../assets/js/notify.js"></script>
-  <script src="../libs/notify.min.js"></script>
-  <script src="../assets/js/toast_notification.js"></script>
-  <script src="../assets/js/global.js"></script>
+        <script src="../assets/js/notify.js"></script>
+        <script src="../libs/notify.min.js"></script>
+        <script src="../assets/js/toast_notification.js"></script>
+        <script src="../assets/js/global.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 // Hide the loading spinner after the page is fully loaded
@@ -138,6 +164,8 @@
                 const radio_name = document.querySelector(".radio-name");
                 const radio_audio = document.querySelector(".quranPlayer");
                 const nowPlaying = document.querySelector(".now-playing");
+                const playToggle = document.querySelector(".play-toggle");
+                const playerState = document.querySelector(".player-state");
 
                 radio_image.classList.add("loading");
                 radio_name.classList.add("loading");
@@ -162,6 +190,8 @@
                         radio_audio.play();
 
                         nowPlaying.textContent = `جاري التشغيل: ${reciter}`;
+                        playerState.textContent = "يعمل الآن";
+                        playToggle.innerHTML = "<i class='fa-solid fa-pause'></i>";
 
                         radio_image.classList.remove("loading");
                         radio_name.classList.remove("loading");
@@ -172,6 +202,8 @@
                         nowPlaying.textContent = "حدث خطأ في التحميل";
                         radio_image.classList.remove("loading");
                         radio_name.classList.remove("loading");
+                        playerState.textContent = "غير متصل";
+                        playToggle.innerHTML = "<i class='fa-solid fa-play'></i>";
                     });
             }
 
@@ -179,6 +211,52 @@
             renderallradios();
             radio(1);
         </script>
-    </body>
 
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const audio = document.querySelector(".quranPlayer");
+                const playToggle = document.querySelector(".play-toggle");
+                const muteToggle = document.querySelector(".mute-toggle");
+                const volumeSlider = document.querySelector(".volume-slider");
+                const playerState = document.querySelector(".player-state");
+
+                function setPlayUI(isPlaying) {
+                    playToggle.innerHTML = isPlaying
+                        ? "<i class='fa-solid fa-pause'></i>"
+                        : "<i class='fa-solid fa-play'></i>";
+                    playerState.textContent = isPlaying ? "يعمل الآن" : "متوقف";
+                }
+
+                playToggle.addEventListener("click", () => {
+                    if (audio.paused) {
+                        audio.play();
+                        setPlayUI(true);
+                    } else {
+                        audio.pause();
+                        setPlayUI(false);
+                    }
+                });
+
+                muteToggle.addEventListener("click", () => {
+                    audio.muted = !audio.muted;
+                    muteToggle.innerHTML = audio.muted
+                        ? "<i class='fa-solid fa-volume-xmark'></i>"
+                        : "<i class='fa-solid fa-volume-high'></i>";
+                });
+
+                volumeSlider.addEventListener("input", (e) => {
+                    audio.volume = parseFloat(e.target.value);
+                    if (audio.volume === 0) {
+                        audio.muted = true;
+                        muteToggle.innerHTML = "<i class='fa-solid fa-volume-xmark'></i>";
+                    } else {
+                        audio.muted = false;
+                        muteToggle.innerHTML = "<i class='fa-solid fa-volume-high'></i>";
+                    }
+                });
+
+                audio.addEventListener("playing", () => setPlayUI(true));
+                audio.addEventListener("pause", () => setPlayUI(false));
+            });
+        </script>
 </html>

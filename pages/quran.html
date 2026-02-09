@@ -22,30 +22,47 @@
 
     .search {
       position: relative;
-      max-width: 720px;
+      max-width: 820px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 40px;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .search-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 6px 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 12px 30px rgba(246, 194, 1, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .search-icon {
+      color: var(--color-secondary);
+      font-size: 1.1rem;
+      margin-left: 8px;
     }
 
     #searchInput {
       width: 100%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
+      padding: 12px 8px;
+      border: none;
+      border-radius: 12px;
       font-size: 1.05rem;
-      background: var(--bg);
+      background: transparent;
       color: var(--text-body);
       outline: none;
-      box-shadow: none;
-      transition: box-shadow 0.15s;
-    }
-
-    #searchInput:focus {
-      box-shadow: 0 6px 18px rgba(184, 124, 12, 0.925);
-
     }
 
     .search-filters {
@@ -59,23 +76,26 @@
     .search-results {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 16px;
       display: none;
-      max-height: 260px;
+      max-height: 320px;
       overflow-y: auto;
       position: absolute;
       width: 100%;
       z-index: 1200;
-      padding: 6px;
-      box-shadow: var(--shadow);
-      margin-top: 40px;
+      padding: 10px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      margin-top: 58px;
     }
 
     .search-results .result-item {
-      padding: 10px;
+      padding: 12px 14px;
       cursor: pointer;
-      border-radius: 6px;
+      border-radius: 12px;
       color: var(--text-body);
+      background: var(--bg);
+      border: 1px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
     }
 
     .search-results .result-item+.result-item {
@@ -84,7 +104,9 @@
 
     .search-results .result-item:hover,
     .search-results .result-item.highlight {
-      background: rgba(0, 0, 0, 0.04);
+      background: rgba(246, 194, 1, 0.12);
+      border-color: rgba(246, 194, 1, 0.5);
+      transform: translateY(-1px);
     }
 
     .search-results small {
@@ -144,9 +166,20 @@
     }
 
     /* responsive adjustments for search results on small screens */
+    @media (max-width: 768px) {
+      .search {
+        max-width: 92%;
+      }
+
+      .search-results {
+        max-height: 240px;
+        margin-top: 54px;
+      }
+    }
+
     @media (max-width: 480px) {
       .search-results {
-        max-height: 180px;
+        max-height: 200px;
       }
 
       #searchInput {
@@ -157,16 +190,34 @@
 </head>
 
 <body>
+  <div class="page-bg theme-quran">
+    <div class="bg-grid"></div>
+    <div class="bg-blob blob-a"></div>
+    <div class="bg-blob blob-b"></div>
+    <div class="bg-blob blob-c"></div>
+  </div>
   <!-- header component placeholder -->
   <div id="header-container" class="header" data-page-title="المصحف"></div>
 
   <div class="main">
-    <div class="section ">
+    <div class="section moshaf-section">
+      <div class="moshaf-hero">
+        <div class="moshaf-hero-inner">
+          <div class="moshaf-title">المصحف</div>
+          <p class="moshaf-subtitle">اختر السورة، واستمتع بتلاوة واضحة مع التفسير والاستماع.</p>
+          <div class="moshaf-chips">
+            <span><i class="fas fa-book-open"></i> 114 سورة</span>
+            <span><i class="fas fa-headphones"></i> تلاوة واستماع</span>
+            <span><i class="fas fa-lightbulb"></i> تفسير مبسط</span>
+          </div>
+        </div>
+      </div>
 
-      <div class="title" style="margin-top:18px;">المصحف</div>
-
-      <div class="search" aria-label="بحث المصحف">
-        <input id="searchInput" type="text" placeholder="ابحث عن سورة" aria-label="حقل البحث" autocomplete="off">
+      <div class="search moshaf-search" aria-label="بحث المصحف">
+        <div class="search-box">
+          <i class="fas fa-magnifying-glass search-icon"></i>
+          <input id="searchInput" type="text" placeholder="ابحث عن سورة" aria-label="حقل البحث" autocomplete="off">
+        </div>
 
         <div class="search-filters  animate__animated animate__fadeInRight" role="radiogroup" aria-label="نوع البحث">
           <label>
@@ -179,9 +230,10 @@
         <div id="searchResults" class="search-results" role="listbox" aria-label="نتائج البحث"></div>
       </div>
 
-      <a href="" class="button" id="gomark" style="visibility: hidden">الذهاب للعلامة <i class="fa fa-bookmark"></i></a>
+      <a href="" class="button moshaf-mark" id="gomark" style="visibility: hidden">الذهاب للعلامة <i
+          class="fa fa-bookmark"></i></a>
 
-      <div class="quranlist" id="quranList" aria-live="polite"></div>
+      <div class="quranlist moshaf-list" id="quranList" aria-live="polite"></div>
     </div>
   </div>
 
@@ -303,7 +355,7 @@
           // bookmark state
           const bookmarked = storage.getItem("surah");
           if (bookmarked && Number(bookmarked) === surahNumber) {
-            a.innerHTML += ` <i class="fa fa-bookmark marked mark" aria-hidden="true"></i>`;
+            a.innerHTML += ` <i class="fa fa-bookmark marked mark" style="width: 40px; height: 40px;" aria-hidden="true"></i>`;
             gomarkBtn.style.visibility = "visible";
             gomarkBtn.href = `#surah-${surahNumber}`;
             gomarkBtn.style.display = "inline-block";
@@ -584,8 +636,6 @@
 </script>
 
 
-  <!-- وضعت mode.js في آخر الصفحة كي يعمل بعد تحميل الـ DOM -->
-  <script src="../assets/js/mode.js" defer></script>
   <script src="../assets/js/global.js"></script>
 </body>
 

@@ -11,152 +11,65 @@
     <script src="../libs/jquery-1.10.2.min.js" type="text/javascript"></script>
     <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 
-    <style>
-        /* Container العام */
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 20px;
-            font-family: 'Arial', sans-serif;
-            background: var(--surface);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-
-        /* textarea */
-        #questioninput {
-            width: 90%;
-            min-height: 80px;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--bg);
-            font-size: 30px;
-            resize: vertical;
-            text-align: end;
-            color: var(--text-body);
-            background-color: var(--bg);
-            font-family: "Lateef";
-        }
-
-        /* زر الاسأل */
-        button[type="submit"] {
-            margin-top: 12px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            background: var(--color-primary);
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        button[type="submit"]:hover {
-            background: var(--color-primary-hover);
-        }
-
-        /* div الرد */
-        #answerdiv {
-            margin-top: 20px;
-            padding: 15px;
-            background: var(--bg);
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            line-height: 1.6;
-            font-size: 16px;
-            color: var(--text-body);
-            white-space: pre-wrap;
-            text-align: end;
-            /* يحافظ على المسافات والسطر الجديد */
-        }
-
-        /* قوائم */
-        #answerdiv ol {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        #answerdiv ul {
-            padding-left: 20px;
-            margin: 10px 0;
-        }
-
-        /* النص الغامق */
-        #answerdiv strong,
-        #answerdiv b {
-            font-weight: bold;
-        }
-
-        /* الخط المائل */
-        #answerdiv em,
-        #answerdiv i {
-            font-style: italic;
-        }
-
-        /* روابط لو موجودة */
-        #answerdiv a {
-            color: #1a73e8;
-            text-decoration: underline;
-        }
-
-        #answerdiv a {
-            pointer-events: auto;
-            color: #1a73e8;
-            text-decoration: underline;
-        }
-
-        .copy {
-            padding: 4px;
-            font-size: 14px;
-            border: none;
-            background-color: rgb(219, 219, 219);
-            border-radius: 4px;
-            cursor: pointer;
-            transform: 0.3s;
-            position: absolute;
-            left: 0;
-            bottom: -10px;
-        }
-
-        .copy:hover {
-            transform: scale(1.1);
-        }
-    </style>
+    <style></style>
 
     <link rel="stylesheet" href="../assets/css/hint.css-2.7.0/hint.css" />
 
 </head>
 
 <body>
+    <div class="page-bg theme-ai">
+        <div class="bg-grid"></div>
+        <div class="bg-blob blob-a"></div>
+        <div class="bg-blob blob-b"></div>
+        <div class="bg-blob blob-c"></div>
+    </div>
     <div id="header-container" class="header" data-page-title="ذكاء اصطناعي الخاص بـــ رياض الجنه"></div>
 
-
-
-    <div class="container">
-        <h1 style="text-align: center; display: flex; align-items: center; gap:10px; color:var(--text-body)">ذكاء
-            اصطناعي الخاص بـــ رياض الجنه <img src="../assets/images/icons8-ai.gif" alt=""></h1>
-
-        <div style="position: relative;">
-            <div class="">
-
+    <div class="ai-page">
+        <div class="ai-hero">
+            <div class="ai-hero-inner">
+                <div class="ai-title">
+                    <h1>مساعد رياض الجنة الذكي</h1>
+                    <i class="fas fa-robot" style="font-size: 40px;"></i>
+                </div>
+                <p>اسأل عن التفسير والأحكام والمعاني، واحصل على إجابة منظمة بسرعة.</p>
             </div>
-            <button class="hint--right copy" onclick="copy()" id="copybtn" aria-label="نسخ الإجابه" style="position: absolute;
-            left: 0;
-            bottom: -10px;"><i class="far fa-copy"></i></button>
-            <div id="answerdiv">في إنتظار السؤال</div>
-        </div>
-        <br>
-        <div style="display: flex; width: 100%; align-items: center; gap: 10px">
-
-            <textarea id="questioninput" placeholder="...اكتب سؤالك الديني هنا"></textarea>
-
-            <button onclick="askGeminiPage()" type="submit"><i class="fas fa-paper-plane"></i></button>
         </div>
 
+        <div class="ai-container">
+            <div class="ai-card ai-input-card">
+                <div class="ai-input-header">
+                    <h2>سؤالك</h2>
+                    <span class="ai-meta">اكتب سؤالك بوضوح</span>
+                </div>
+                <div class="ai-input-row">
+                    <textarea id="questioninput" placeholder="...اكتب سؤالك الديني هنا"></textarea>
+                    <button onclick="askGeminiPage()" type="submit" class="ai-send">
+                        <i class="fas fa-paper-plane"></i>
+                        إرسال
+                    </button>
+                </div>
+                <div class="ai-hints">
+                    <span>مثال: ما معنى آية الكرسي؟</span>
+                    <span>مثال: كيف أقرأ أذكار الصباح؟</span>
+                </div>
+            </div>
+            <div class="ai-card">
+                <div class="ai-card-header">
+                    <div>
+                        <h2>الإجابة</h2>
+                        <span class="ai-meta">مساعد ذكي • إجابات مختصرة وواضحة</span>
+                    </div>
+                    <button class="hint--right ai-copy" onclick="copy()" id="copybtn" aria-label="نسخ الإجابه">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                <div id="answerdiv" class="ai-answer">في إنتظار السؤال</div>
+            </div>
+
+
+        </div>
     </div>
 
     <script src="../components/header.js"></script>

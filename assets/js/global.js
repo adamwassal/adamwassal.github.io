@@ -54,6 +54,33 @@ function highlightNextPrayer(nextPrayerName) {
   if (nextPrayerElement) nextPrayerElement.classList.add("next-prayer");
 }
 
+function maybeShowBrowserNotification(title, body) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission === "granted") {
+    new Notification(title, { body });
+  }
+}
+
+let azanAudio = null;
+function playAzan(prayerName) {
+  const mode = localStorage.getItem("azanMode") || "short";
+  if (mode === "off") return;
+
+  const src =
+    mode === "full"
+      ? "../assets/audio/azan-full.mp3"
+      : "../assets/audio/azan-short.mp3";
+
+  if (azanAudio) {
+    azanAudio.pause();
+    azanAudio.currentTime = 0;
+  }
+  azanAudio = new Audio(src);
+  azanAudio.play().catch(() => {
+    // Autoplay might be blocked; rely on toast/browser notification only.
+  });
+}
+
 const countdownElement = document.getElementById("countdown");
 let timerInterval;
 let notifiedPrayers = new Set(); // لتفادي تكرار التنبيه
@@ -78,6 +105,9 @@ function showLoading() {
 }
 
 function fetchPrayerTimesByCoords(lat, lon) {
+  if (!countdownElement || document.querySelectorAll(".time").length === 0) {
+    return;
+  }
   showLoading();
 
   fetch(
@@ -92,13 +122,16 @@ function fetchPrayerTimesByCoords(lat, lon) {
     .then((data) => {
       const times = data.data.timings;
 
-      document.getElementById("alfajr").innerHTML = convertToAmPm(times.Fajr);
-      document.getElementById("alduhr").innerHTML = convertToAmPm(times.Dhuhr);
-      document.getElementById("alasr").innerHTML = convertToAmPm(times.Asr);
-      document.getElementById("almaghreb").innerHTML = convertToAmPm(
-        times.Maghrib,
-      );
-      document.getElementById("alisha").innerHTML = convertToAmPm(times.Isha);
+      const alfajr = document.getElementById("alfajr");
+      const alduhr = document.getElementById("alduhr");
+      const alasr = document.getElementById("alasr");
+      const almaghreb = document.getElementById("almaghreb");
+      const alisha = document.getElementById("alisha");
+      if (alfajr) alfajr.innerHTML = convertToAmPm(times.Fajr);
+      if (alduhr) alduhr.innerHTML = convertToAmPm(times.Dhuhr);
+      if (alasr) alasr.innerHTML = convertToAmPm(times.Asr);
+      if (almaghreb) almaghreb.innerHTML = convertToAmPm(times.Maghrib);
+      if (alisha) alisha.innerHTML = convertToAmPm(times.Isha);
 
       const prayerTimes = [
         {
@@ -152,6 +185,11 @@ function fetchPrayerTimesByCoords(lat, lon) {
             !notifiedPrayers.has(prayer.key)
           ) {
             toastNotification(`حان الآن موعد صلاة ${prayer.name}`, "pray");
+            maybeShowBrowserNotification(
+              "حان الآن موعد الصلاة",
+              `حان وقت صلاة ${prayer.name}`,
+            );
+            playAzan(prayer.name);
             notifiedPrayers.add(prayer.key);
           }
 
@@ -188,7 +226,13 @@ function fetchPrayerTimesByCoords(lat, lon) {
 }
 
 function detectLocationAndFetch() {
+  if (!countdownElement || document.querySelectorAll(".time").length === 0) {
+    return;
+  }
   if (navigator.geolocation) {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         fetchPrayerTimesByCoords(pos.coords.latitude, pos.coords.longitude);
@@ -230,4 +274,3 @@ const observer = new IntersectionObserver(
 document.querySelectorAll(".animate-on-scroll").forEach((el) => {
   observer.observe(el);
 });
-
