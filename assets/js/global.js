@@ -62,6 +62,46 @@ function maybeShowBrowserNotification(title, body) {
 }
 
 let azanAudio = null;
+const PRAYER_LOCATION_KEY = "prayerLocation";
+const CAIRO_FALLBACK = {
+  name: "القاهرة (افتراضي)",
+  lat: 30.0444,
+  lon: 31.2357,
+  source: "fallback",
+};
+
+function savePrayerLocation(location) {
+  localStorage.setItem(PRAYER_LOCATION_KEY, JSON.stringify(location));
+}
+
+function getSavedPrayerLocation() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(PRAYER_LOCATION_KEY) || "null");
+    if (!parsed) return null;
+    if (Number.isNaN(Number(parsed.lat)) || Number.isNaN(Number(parsed.lon))) {
+      return null;
+    }
+    return {
+      name: parsed.name || "موقع محفوظ",
+      lat: Number(parsed.lat),
+      lon: Number(parsed.lon),
+      source: parsed.source || "manual",
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+function dispatchPrayerTimesUpdated(payload) {
+  window.dispatchEvent(new CustomEvent("prayerTimesUpdated", { detail: payload }));
+}
+
+function dispatchPrayerTimesError(message) {
+  window.dispatchEvent(
+    new CustomEvent("prayerTimesError", { detail: { message } }),
+  );
+}
+
 function playAzan(prayerName) {
   const mode = localStorage.getItem("azanMode") || "short";
   if (mode === "off") return;
@@ -104,7 +144,7 @@ function showLoading() {
   });
 }
 
-function fetchPrayerTimesByCoords(lat, lon) {
+function fetchPrayerTimesByCoords(lat, lon, options = {}) {
   if (!countdownElement || document.querySelectorAll(".time").length === 0) {
     return;
   }
@@ -121,6 +161,7 @@ function fetchPrayerTimesByCoords(lat, lon) {
     })
     .then((data) => {
       const times = data.data.timings;
+      const meta = data.data.meta || {};
 
       const alfajr = document.getElementById("alfajr");
       const alduhr = document.getElementById("alduhr");
@@ -162,7 +203,7 @@ function fetchPrayerTimesByCoords(lat, lon) {
           name: "العشاء",
           key: "Isha",
           time: times.Isha,
-          image: ".../assets/images/isha.png",
+          image: "../assets/images/isha.png",
         },
       ];
 
@@ -219,38 +260,100 @@ function fetchPrayerTimesByCoords(lat, lon) {
           }
         }
       }, 1000);
+
+      const payload = {
+        coords: { lat, lon },
+        times,
+        timezone: meta.timezone || "",
+        method: meta.method?.name || "Umm al-Qura University, Makkah",
+        locationName: options.locationName || "الموقع الحالي",
+        source: options.source || "gps",
+        updatedAt: Date.now(),
+      };
+      window.currentPrayerTimes = payload;
+      dispatchPrayerTimesUpdated(payload);
     })
     .catch(() => {
       countdownElement.innerHTML = ` تحقق من إتصالك بالإنترنت أو حاول مرة أخرى لاحقًا`;
+      dispatchPrayerTimesError("تعذر تحميل مواقيت الصلاة. تحقق من الإنترنت.");
     });
 }
 
-function detectLocationAndFetch() {
+function detectLocationAndFetch(options = {}) {
   if (!countdownElement || document.querySelectorAll(".time").length === 0) {
     return;
   }
+
+  const savedLocation = getSavedPrayerLocation();
+  if (savedLocation && savedLocation.source === "manual" && !options.forceGeolocation) {
+    fetchPrayerTimesByCoords(savedLocation.lat, savedLocation.lon, {
+      locationName: savedLocation.name,
+      source: "manual",
+    });
+    return;
+  }
+
   if (navigator.geolocation) {
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission().catch(() => {});
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        fetchPrayerTimesByCoords(pos.coords.latitude, pos.coords.longitude);
+        savePrayerLocation({
+          name: "موقعك الحالي",
+          lat: pos.coords.latitude,
+          lon: pos.coords.longitude,
+          source: "gps",
+        });
+        fetchPrayerTimesByCoords(pos.coords.latitude, pos.coords.longitude, {
+          locationName: "موقعك الحالي",
+          source: "gps",
+        });
       },
       (error) => {
         console.error("Location error:", error);
-        // fallback للقاهرة
-        fetchPrayerTimesByCoords(30.0444, 31.2357);
+        fetchPrayerTimesByCoords(CAIRO_FALLBACK.lat, CAIRO_FALLBACK.lon, {
+          locationName: CAIRO_FALLBACK.name,
+          source: CAIRO_FALLBACK.source,
+        });
       },
     );
   } else {
-    // fallback للقاهرة
-    fetchPrayerTimesByCoords(30.0444, 31.2357);
+    fetchPrayerTimesByCoords(CAIRO_FALLBACK.lat, CAIRO_FALLBACK.lon, {
+      locationName: CAIRO_FALLBACK.name,
+      source: CAIRO_FALLBACK.source,
+    });
+  }
+}
+
+function setManualPrayerLocation(name, lat, lon) {
+  const location = {
+    name: name || "موقع مخصص",
+    lat: Number(lat),
+    lon: Number(lon),
+    source: "manual",
+  };
+  savePrayerLocation(location);
+  fetchPrayerTimesByCoords(location.lat, location.lon, {
+    locationName: location.name,
+    source: location.source,
+  });
+}
+
+function clearManualPrayerLocation() {
+  const saved = getSavedPrayerLocation();
+  if (saved?.source === "manual") {
+    localStorage.removeItem(PRAYER_LOCATION_KEY);
   }
 }
 
 // تشغيل في أي صفحة
 detectLocationAndFetch();
+
+window.fetchPrayerTimesByCoords = fetchPrayerTimesByCoords;
+window.detectLocationAndFetch = detectLocationAndFetch;
+window.setManualPrayerLocation = setManualPrayerLocation;
+window.clearManualPrayerLocation = clearManualPrayerLocation;
 
 const observer = new IntersectionObserver(
   (entries) => {

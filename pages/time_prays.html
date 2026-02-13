@@ -11,44 +11,146 @@
    <link rel="icon" href="../assets/images/logo.png" type="image/x-icon">
 
   <style>
-    /* Loading Dots */
-    .loading {
+    .prayer-page {
+      background: transparent;
+      width: min(1180px, 95%);
+      padding: 18px 0 40px;
+      gap: 16px;
+    }
+
+    .prayer-hero {
+      width: 100%;
+      background:
+        radial-gradient(circle at top right, rgba(246, 194, 1, 0.2), transparent 48%),
+        radial-gradient(circle at 20% 20%, rgba(33, 91, 164, 0.15), transparent 45%),
+        var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+      padding: 18px;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .prayer-hero h1 {
+      color: var(--text-heading);
+      margin-bottom: 8px;
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+    }
+
+    .prayer-hero p {
+      color: var(--text-body);
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+
+    .prayer-meta {
       display: flex;
-      gap: 6px;
-      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .prayer-chip {
+      display: inline-flex;
       align-items: center;
+      gap: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.9rem;
+      color: var(--text-body);
     }
 
-    .loading span {
-      width: 8px;
-      height: 8px;
-      background: var(--color-primary, #000);
-      border-radius: 50%;
-      display: inline-block;
-      animation: bounce 0.6s infinite;
+    .prayer-controls {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      padding: 12px;
     }
 
-    .loading span:nth-child(1) {
-      animation-delay: 0s;
+    .prayer-controls select,
+    .prayer-controls button {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-body);
+      border-radius: 12px;
+      height: 42px;
+      padding: 0 14px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: 0.2s ease;
     }
 
-    .loading span:nth-child(2) {
-      animation-delay: 0.2s;
+    .prayer-controls select {
+      min-width: min(60vw, 250px);
     }
 
-    .loading span:nth-child(3) {
-      animation-delay: 0.4s;
+    .prayer-controls button:hover,
+    .prayer-controls select:hover {
+      border-color: var(--color-primary);
+      background: rgba(246, 194, 1, 0.12);
     }
 
-    @keyframes bounce {
+    .prayer-grid-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
 
-      0%,
-      100% {
-        transform: translateY(0);
+    #countdown {
+      width: min(100%, 920px);
+      margin-top: 6px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .prays {
+      margin: 0;
+      gap: 20px;
+    }
+
+    .pray {
+      min-width: min(100%, 270px);
+      padding: 36px 30px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background-position: center;
+      background-size: cover;
+      color: #fff;
+    }
+
+    .pray h1,
+    .pray .time {
+      color: #fff;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, 0.45);
+    }
+
+    .next-prayer {
+      outline: 3px solid rgba(246, 194, 1, 0.9);
+      transform: translateY(-4px);
+    }
+
+    @media (max-width: 860px) {
+      .prayer-controls {
+        justify-content: stretch;
       }
 
-      50% {
-        transform: translateY(-6px);
+      .prayer-controls button,
+      .prayer-controls select {
+        width: 100%;
+      }
+
+      .pray {
+        width: min(100%, 92vw);
       }
     }
   </style>
@@ -64,30 +166,55 @@
   <div id="header-container" class="header prayer-times" data-page-title="أوقات الصلاة"></div>
 
   <div class="main">
-    <div class="section">
-      <div class="title">أوقات الصلاة</div>
-      <div style="display: flex; flex-direction: row-reverse; margin: 20px; flex-wrap:wrap; align-content: center; justify-content: center;">
+    <div class="section prayer-page">
+      <div class="prayer-hero">
+        <h1>مواقيت الصلاة اليومية</h1>
+        <p>تابع مواقيت اليوم بدقة حسب موقعك، أو اختر مدينة يدوية لتجربة أكثر ثباتًا أثناء السفر.</p>
+        <div class="prayer-meta">
+          <span class="prayer-chip" id="prayerLocationLabel"><i class="fa fa-location-dot"></i> جاري تحديد الموقع...</span>
+          <span class="prayer-chip" id="prayerUpdatedAt"><i class="fa fa-clock"></i> لم يتم التحديث بعد</span>
+          <span class="prayer-chip" id="prayerTimezone"><i class="fa fa-earth-africa"></i> المنطقة الزمنية: --</span>
+          <span class="prayer-chip" id="prayerToday"><i class="fa fa-calendar-days"></i> --</span>
+        </div>
+      </div>
 
-        <div id="countdown" style="margin-top: 20px; font-weight: bold">جاري الحساب...</div>
-  
+      <div class="prayer-controls">
+        <button id="useCurrentLocationBtn"><i class="fa fa-location-crosshairs"></i> استخدام موقعي الحالي</button>
+        <select id="citySelect" aria-label="اختيار مدينة">
+          <option value="">اختر مدينة يدوية</option>
+          <option value="30.0444,31.2357,القاهرة">القاهرة</option>
+          <option value="24.7136,46.6753,الرياض">الرياض</option>
+          <option value="21.3891,39.8579,مكة المكرمة">مكة المكرمة</option>
+          <option value="24.5247,39.5692,المدينة المنورة">المدينة المنورة</option>
+          <option value="25.2048,55.2708,دبي">دبي</option>
+          <option value="25.2854,51.5310,الدوحة">الدوحة</option>
+          <option value="31.9539,35.9106,عمّان">عمّان</option>
+          <option value="41.0082,28.9784,إسطنبول">إسطنبول</option>
+        </select>
+        <button id="applyCityBtn"><i class="fa fa-check"></i> تطبيق المدينة</button>
+        <button id="refreshPrayerBtn"><i class="fa fa-rotate"></i> تحديث الآن</button>
+      </div>
+
+      <div class="prayer-grid-wrap">
+        <div id="countdown">جاري الحساب...</div>
         <div class="prays">
-          <div class="pray" data-prayer="الفجر" data-image = "../assets/images/fajr.png">
+          <div class="pray" data-prayer="الفجر" data-image="../assets/images/fajr.png">
             <h1>صلاة الفجر</h1>
             <div class="time" id="alfajr"></div>
           </div>
-          <div class="pray" data-prayer="الظهر" data-image = "../assets/images/duhr.png">
+          <div class="pray" data-prayer="الظهر" data-image="../assets/images/duhr.png">
             <h1>صلاة الظهر</h1>
             <div class="time" id="alduhr"></div>
           </div>
-          <div class="pray" data-prayer="العصر" data-image = "../assets/images/asr.png">
+          <div class="pray" data-prayer="العصر" data-image="../assets/images/asr.png">
             <h1>صلاة العصر</h1>
             <div class="time" id="alasr"></div>
           </div>
-          <div class="pray" data-prayer="المغرب" data-image = "../assets/images/maghrib.png">
+          <div class="pray" data-prayer="المغرب" data-image="../assets/images/maghrib.png">
             <h1>صلاة المغرب</h1>
             <div class="time" id="almaghreb"></div>
           </div>
-          <div class="pray" data-prayer="العشاء" data-image = "../assets/images/isha.png">
+          <div class="pray" data-prayer="العشاء" data-image="../assets/images/isha.png">
             <h1>صلاة العشاء</h1>
             <div class="time" id="alisha"></div>
           </div>
@@ -101,6 +228,71 @@
   <script src="../libs/notify.min.js"></script>
   <script src="../assets/js/toast_notification.js"></script>
   <script src="../assets/js/global.js"></script>
+  <script>
+    (function () {
+      const locationLabel = document.getElementById("prayerLocationLabel");
+      const updatedLabel = document.getElementById("prayerUpdatedAt");
+      const timezoneLabel = document.getElementById("prayerTimezone");
+      const todayLabel = document.getElementById("prayerToday");
+      const citySelect = document.getElementById("citySelect");
+      const applyCityBtn = document.getElementById("applyCityBtn");
+      const useCurrentLocationBtn = document.getElementById("useCurrentLocationBtn");
+      const refreshPrayerBtn = document.getElementById("refreshPrayerBtn");
+
+      const formatUpdatedAt = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleTimeString("ar-EG", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
+      };
+
+      const setStatus = (payload) => {
+        locationLabel.innerHTML = `<i class="fa fa-location-dot"></i> ${payload.locationName}`;
+        updatedLabel.innerHTML = `<i class="fa fa-clock"></i> آخر تحديث: ${formatUpdatedAt(payload.updatedAt)}`;
+        timezoneLabel.innerHTML = `<i class="fa fa-earth-africa"></i> المنطقة الزمنية: ${payload.timezone || "--"}`;
+      };
+
+      window.addEventListener("prayerTimesUpdated", (event) => {
+        setStatus(event.detail);
+      });
+
+      window.addEventListener("prayerTimesError", (event) => {
+        const message = event.detail?.message || "تعذر تحميل البيانات";
+        updatedLabel.innerHTML = `<i class="fa fa-triangle-exclamation"></i> ${message}`;
+      });
+
+      applyCityBtn.addEventListener("click", () => {
+        if (!citySelect.value) return;
+        const [lat, lon, name] = citySelect.value.split(",");
+        setManualPrayerLocation(name, Number(lat), Number(lon));
+        if (typeof toastNotification === "function") {
+          toastNotification(`تم اختيار ${name} لحساب المواقيت`, "modern", "", "", {
+            autoHide: true,
+            autoHideDelay: 2600,
+          });
+        }
+      });
+
+      useCurrentLocationBtn.addEventListener("click", () => {
+        clearManualPrayerLocation();
+        detectLocationAndFetch({ forceGeolocation: true });
+      });
+
+      refreshPrayerBtn.addEventListener("click", () => {
+        detectLocationAndFetch();
+      });
+
+      const today = new Date();
+      todayLabel.innerHTML = `<i class="fa fa-calendar-days"></i> ${today.toLocaleDateString("ar-EG", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })}`;
+    })();
+  </script>
 
   
 

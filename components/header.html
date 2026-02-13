@@ -12,7 +12,7 @@
         "></i>
     </div>
     <div class="logo">
-      <img src="../assets/images/logo.png" alt="">
+      <img src="../assets/images/logo.png" alt="" data-asset-logo>
     </div>
     <div class="links">
       <div class="btn-icon menu">
@@ -25,27 +25,21 @@
         "></i>
       </div>
       <ul>
-        <li><a href="../index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
-        <li><a href="../pages/quran.html"><i class="fas fas fa-quran"></i> المصحف</a></li>
-        <li><a href="../pages/alathker.html"><i class="fas fa-pray"></i> الأذكار</a></li>
-        <li><a href="../pages/time_prays.html"><i class="fas fa-clock"></i> مواقيت الصلاة</a></li>
-        <li><a href="../pages/radio.html"><i class="fa-solid fa-radio"></i> الراديو</a></li>
-        <li><a href="../pages/ai.html"><i class="fas fa-robot"></i> الذكاء الاصطناعي </a></li>
+        <li><a href="../index.html" data-nav="home"><i class="fas fa-home"></i> الرئيسية</a></li>
+        <li><a href="../pages/quran.html" data-nav="quran"><i class="fas fas fa-quran"></i> المصحف</a></li>
+        <li><a href="../pages/alathker.html" data-nav="athkar"><i class="fas fa-pray"></i> الأذكار</a></li>
+        <li><a href="../pages/time_prays.html" data-nav="prayer"><i class="fas fa-clock"></i> مواقيت الصلاة</a></li>
+        <li><a href="../pages/radio.html" data-nav="radio"><i class="fa-solid fa-radio"></i> الراديو</a></li>
+        <li><a href="../pages/ai.html" data-nav="ai"><i class="fas fa-robot"></i> الذكاء الاصطناعي </a></li>
         <div id="hijiry">جاري تحميل التاريخ الهجري</div>
       </ul>
     </div>
 
     <div class="left">
-      <div class="notification-badge">4</div>
-      <button class="btn-icon" onclick="
-      const notificationsList = document.querySelector('.notifications');
-      
-      notificationsList.classList.toggle('hidden')
-      
-      
-      
-      
-      "><i class="fa fa-bell"></i></button>
+      <div class="notification-badge">0</div>
+      <button class="btn-icon notification-toggle" aria-label="الإشعارات"><i class="fa fa-bell"></i></button>
+      <button class="btn-icon quick-access-toggle" aria-label="الوصول السريع"><i class="fa fa-compass"></i></button>
+      <span id="network-status" class="network-status online" title="متصل بالإنترنت"></span>
       <button class="btn-icon" onclick="openRecitersPopup()"><i class="fa fa-gear"></i></button>
 
       <div class="notifications hidden">
@@ -54,7 +48,10 @@
             <h2>الإشعارات</h2>
             <span class="notifications-subtitle">آخر التنبيهات الخاصة بك</span>
           </div>
-          <button class="btn-icon" onclick="clearNotifications()"><i class="fa fa-trash red-color"></i></button>
+          <div class="notification-actions">
+            <button class="btn-icon" title="تحديد الكل كمقروء" onclick="markAllNotificationsRead()"><i class="fa fa-check-double"></i></button>
+            <button class="btn-icon" title="مسح الكل" onclick="clearNotifications()"><i class="fa fa-trash red-color"></i></button>
+          </div>
         </div>
         <div class="notifications-body">
           <ul>
@@ -72,11 +69,38 @@
     </div>
     <a href="#" class="btn-icon topbtn hidden"><i class="fa-solid fa-arrow-up yellow-color"></i></a>
 
-    <div class="footer">
-      <h2>❤️ صلي على النبي ❤️</h2>
-      <a href="https://github.com/adamwassal/adamwassal.github.io" target="_blank" class="github"><i
-          class="fa-brands fa-github"></i></a>
+    <div class="quick-access-modal hidden" id="quick-access-modal">
+      <div class="quick-access-content">
+        <div class="quick-access-head">
+          <h3>الوصول السريع</h3>
+          <button class="btn-icon quick-access-close" aria-label="إغلاق"><i class="fa fa-xmark"></i></button>
+        </div>
+        <div class="quick-access-search">
+          <i class="fa fa-search"></i>
+          <input type="text" id="quick-access-input" placeholder="ابحث عن صفحة...">
+        </div>
+        <p class="quick-access-help">اختصارات: Ctrl/Cmd + K أو / للبحث, ↑ ↓ للتنقل, Enter للتنفيذ</p>
+        <div class="quick-access-list" id="quick-access-list"></div>
+      </div>
     </div>
+
+    <footer class="footer">
+      <div class="footer-main">
+        <p class="footer-blessing">❤️ صل على النبي ﷺ ❤️</p>
+        <nav class="footer-links" aria-label="روابط سريعة">
+          <a href="../index.html" data-footer-nav="home">الرئيسية</a>
+          <a href="../pages/quran.html" data-footer-nav="quran">المصحف</a>
+          <a href="../pages/time_prays.html" data-footer-nav="prayer">المواقيت</a>
+          <a href="../pages/radio.html" data-footer-nav="radio">الراديو</a>
+        </nav>
+        <div class="footer-actions">
+          <span class="footer-tip">Ctrl/Cmd + K للوصول السريع</span>
+          <a href="https://github.com/adamwassal/adamwassal.github.io" target="_blank" rel="noopener noreferrer" class="github"
+            aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+      <p class="footer-copy">© <span id="footer-year"></span> رياض الجنة</p>
+    </footer>
     <button id="ai-fab">
       <!-- <img src="../assets/images/icons8-ai.gif" alt="" width="30" style="border-radius: 50%;"> -->
       <i class="fas fa-robot" style="font-size: 30px;"></i>

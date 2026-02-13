@@ -606,6 +606,35 @@
       </div>
     </section>
 
+    <section class="home-dashboard section">
+      <div class="dashboard-card animate-on-scroll" data-animate="animate__fadeInUp">
+        <h3>لوحة الاستخدام السريع</h3>
+        <div class="dashboard-grid">
+          <div class="dashboard-item">
+            <div class="dashboard-label">آخر صفحة</div>
+            <div class="dashboard-value" id="dash-last-page">--</div>
+          </div>
+          <div class="dashboard-item">
+            <div class="dashboard-label">الإشعارات غير المقروءة</div>
+            <div class="dashboard-value" id="dash-unread">0</div>
+          </div>
+          <div class="dashboard-item">
+            <div class="dashboard-label">وضع العرض</div>
+            <div class="dashboard-value" id="dash-theme">فاتح</div>
+          </div>
+          <div class="dashboard-item">
+            <div class="dashboard-label">موقع المواقيت</div>
+            <div class="dashboard-value" id="dash-prayer-location">--</div>
+          </div>
+        </div>
+        <div class="dashboard-actions">
+          <button class="dashboard-btn" id="dash-open-last"><i class="fa fa-arrow-left"></i> متابعة آخر صفحة</button>
+          <button class="dashboard-btn" id="dash-clear-notifications"><i class="fa fa-trash"></i> مسح الإشعارات</button>
+          <button class="dashboard-btn" id="dash-reset-resume"><i class="fa fa-rotate-left"></i> تصفير استرجاع التصفح</button>
+        </div>
+      </div>
+    </section>
+
     <section class="home-download section">
       <div class="download-card animate-on-scroll" data-animate="animate__fadeInUp">
         <div style="padding: 0 20px;">
@@ -623,30 +652,56 @@
     </section>
 
     <section class="home-features section">
-      <div class="section-head animate-on-scroll" data-animate="animate__fadeInUp">
-        <h2>مميزات الموقع (بفضل الله)</h2>
-        <p>تصميم واضح، أداء سريع، ومحتوى موثوق.</p>
-      </div>
-      <div class="feature-grid">
-        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
-          <img src="assets/images/quran.png" alt="" class="feature-icon">
-          <h3>القرآن كامل مع التفسير</h3>
-          <p>قراءة مريحة مع تحسينات لتسهيل المتابعة.</p>
+      <div class="features-shell animate-on-scroll" data-animate="animate__fadeInUp">
+        <div class="section-head feature-head">
+          <span class="features-kicker"><i class="fa-solid fa-star"></i> قسم مطور</span>
+          <h2>مميزات الموقع (بفضل الله)</h2>
+          <p>واجهة عملية، أدوات يومية مفيدة، وتجربة أسرع في التصفح.</p>
         </div>
-        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
-          <i class="fa-solid fa-radio feature-icon"></i>
-          <h3>راديو القرآن</h3>
-          <p>استمع لأشهر الشيوخ والإذاعات بسهولة.</p>
-        </div>
-        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
-          <i class="fa-solid fa-clock feature-icon"></i>
-          <h3>مواقيت الصلاة</h3>
-          <p>عرض واضح وتنبيهات دقيقة لكل صلاة.</p>
-        </div>
-        <div class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
-          <img src="assets/images/smile.png" class="feature-icon" alt="">
-          <h3>والمزيد إن شاء الله</h3>
-          <p>ميزات جديدة وتحديثات مستمرة.</p>
+        <div class="feature-grid">
+          <article class="feature-card feature-card--highlight animate-on-scroll" data-animate="animate__fadeInUp">
+            <div class="feature-card-top">
+              <span class="feature-tag">الأكثر استخدامًا</span>
+              <span class="feature-num">01</span>
+            </div>
+            <img src="assets/images/quran.png" alt="القرآن" class="feature-icon">
+            <h3>القرآن كامل مع التفسير</h3>
+            <p>قراءة واضحة، انتقال سريع بين السور، ودعم تفسير يساعدك على التدبر بسهولة.</p>
+            <a class="feature-link" href="pages/quran.html">افتح المصحف</a>
+          </article>
+
+          <article class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+            <div class="feature-card-top">
+              <span class="feature-tag">صوتيات</span>
+              <span class="feature-num">02</span>
+            </div>
+            <i class="fa-solid fa-radio feature-icon"></i>
+            <h3>راديو القرآن</h3>
+            <p>استمع إلى أشهر القرّاء والإذاعات الإسلامية ببث مباشر دون تعقيد.</p>
+            <a class="feature-link" href="pages/radio.html">افتح الراديو</a>
+          </article>
+
+          <article class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+            <div class="feature-card-top">
+              <span class="feature-tag">اليوميات</span>
+              <span class="feature-num">03</span>
+            </div>
+            <i class="fa-solid fa-clock feature-icon"></i>
+            <h3>مواقيت الصلاة</h3>
+            <p>عرض واضح للمواقيت وتنبيهات دقيقة تساعدك على متابعة الصلاة في وقتها.</p>
+            <a class="feature-link" href="pages/time_prays.html">عرض المواقيت</a>
+          </article>
+
+          <article class="feature-card animate-on-scroll" data-animate="animate__fadeInUp">
+            <div class="feature-card-top">
+              <span class="feature-tag">تحديثات</span>
+              <span class="feature-num">04</span>
+            </div>
+            <img src="assets/images/smile.png" class="feature-icon" alt="ابتسامة">
+            <h3>تطوير مستمر</h3>
+            <p>تحسينات مستمرة في الأداء والتصميم، مع مزايا جديدة في كل إصدار بإذن الله.</p>
+            <a class="feature-link" href="#showPopupBtn">عرض آخر التحديثات</a>
+          </article>
         </div>
       </div>
     </section>
@@ -688,7 +743,7 @@
       <div class="popup-header">
         <button class="close-btn" id="closePopupBtn">×</button>
         <h2>ميزات جديدة وإصلاحات</h2>
-        <p>الإصدار 2.5.0 - تم التحديث في 28 ناير 2026</p>
+        <p>الإصدار 3.0.0 - تم التحديث في 11 فبراير 2026</p>
       </div>
 
       <div class="popup-content">
@@ -782,31 +837,77 @@
             </div>
 
             <ul class="features-list">
-              <!-- ميزة جديدة -->
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type"><i class="fa fa-clock"></i></div>
+                  <h3 class="feature-title">تطوير صفحة مواقيت الصلاة</h3>
+                </div>
+                <p class="feature-desc">إعادة تصميم الصفحة مع أدوات أوضح، اختيار مدينة يدوي، تحديث مباشر، وعرض معلومات
+                  الموقع والمنطقة الزمنية.</p>
+                <span class="feature-badge badge-improvement">تحسين</span>
+              </li>
+
               <li class="feature-item new-feature">
                 <div class="status-indicator"></div>
                 <div class="feature-header">
-                  <div class="feature-type"><img src="assets/images/icons8-ai.gif" alt=""></div>
-                  <h3 class="feature-title">إضافة الذكاء الإصطناعي</h3>
+                  <div class="feature-type"><i class="fa fa-compass"></i></div>
+                  <h3 class="feature-title">لوحة وصول سريع بالأوامر</h3>
                 </div>
-                <p class="feature-desc">تمت إضافة الذكاء الاصطناعي للإجابه على جميع اسئلتكم</p>
+                <p class="feature-desc">إضافة Command Palette مع بحث، اختصارات لوحة مفاتيح، أوامر مباشرة للتنقل، وتخصيص
+                  الواجهة.</p>
                 <span class="feature-badge badge-new">ميزة جديدة</span>
               </li>
+
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type"><i class="fa fa-bell"></i></div>
+                  <h3 class="feature-title">إشعارات محسنة</h3>
+                </div>
+                <p class="feature-desc">دعم حالة مقروء/غير مقروء، وقت الإشعار، حذف عنصر واحد، تحديد الكل كمقروء، وتنظيف
+                  تلقائي للسجل القديم.</p>
+                <span class="feature-badge badge-improvement">تحسين</span>
+              </li>
+
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type"><i class="fa fa-mobile-screen-button"></i></div>
+                  <h3 class="feature-title">دعم PWA والتثبيت</h3>
+                </div>
+                <p class="feature-desc">إتاحة تثبيت الموقع كتطبيق على الأجهزة ودعم فتح الصفحات الأساسية في وضع Offline
+                  عبر Service Worker.</p>
+                <span class="feature-badge badge-improvement">تحسين</span>
+              </li>
+
+              <li class="feature-item improvement-feature">
+                <div class="status-indicator"></div>
+                <div class="feature-header">
+                  <div class="feature-type"><i class="fa fa-universal-access"></i></div>
+                  <h3 class="feature-title">إعدادات تجربة المستخدم</h3>
+                </div>
+                <p class="feature-desc">إضافة تقليل الحركة، التحكم بحجم الخط، مؤشّر الاتصال بالإنترنت، واسترجاع موضع
+                  التصفح تلقائيًا.</p>
+                <span class="feature-badge badge-improvement">تحسين</span>
+              </li>
+
               <li class="feature-item new-feature">
                 <div class="status-indicator"></div>
                 <div class="feature-header">
-                  <div class="feature-type"><i class="fa fa-gear"></i></div>
-                  <h3 class="feature-title">إضافة المزيد من القراء</h3>
+                  <div class="feature-type"><i class="fa fa-chart-simple"></i></div>
+                  <h3 class="feature-title">لوحة متابعة سريعة في الرئيسية</h3>
                 </div>
-                <p class="feature-desc">تمت إضافة مجموعة جديدة من القراء المشهورين لتحسين تجربة الاستماع إلى القرآن
-                  الكريم.</p>
+                <p class="feature-desc">إضافة Dashboard يعرض آخر صفحة، عدد الإشعارات غير المقروءة، وضع العرض، وموقع
+                  المواقيت مع أزرار إدارة سريعة.</p>
                 <span class="feature-badge badge-new">ميزة جديدة</span>
               </li>
+
             </ul>
           </div>
 
           <div class="footer-note">
-            <p>آخر تحديث: يناير 2026 | الإصدار 2.5.0</p>
+            <p>آخر تحديث: 11 فبراير 2026 | الإصدار 3.0.0</p>
           </div>
         </div>
       </div>
@@ -935,6 +1036,77 @@
     // البداية
     animateText();
     setInterval(animateText, 3000);
+
+    function getStoredArray(key) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function updateHomeDashboard() {
+      const recentPages = getStoredArray("recentPages");
+      const notifications = getStoredArray("notifications");
+      const unreadCount = notifications.filter((item) => item && !item.read).length;
+      const theme = localStorage.getItem("theme") === "dark" ? "داكن" : "فاتح";
+
+      const prayerLocationRaw = localStorage.getItem("prayerLocation");
+      let prayerLocation = "--";
+      if (prayerLocationRaw) {
+        try {
+          const loc = JSON.parse(prayerLocationRaw);
+          prayerLocation = loc?.name || "--";
+        } catch (error) {}
+      }
+
+      const lastPage = recentPages[0] || null;
+      const lastPageTitle = lastPage?.title || "لا يوجد";
+
+      const lastPageEl = document.getElementById("dash-last-page");
+      const unreadEl = document.getElementById("dash-unread");
+      const themeEl = document.getElementById("dash-theme");
+      const prayerEl = document.getElementById("dash-prayer-location");
+      const openLastBtn = document.getElementById("dash-open-last");
+      const clearNotifBtn = document.getElementById("dash-clear-notifications");
+      const resetResumeBtn = document.getElementById("dash-reset-resume");
+
+      if (lastPageEl) lastPageEl.textContent = lastPageTitle;
+      if (unreadEl) unreadEl.textContent = String(unreadCount);
+      if (themeEl) themeEl.textContent = theme;
+      if (prayerEl) prayerEl.textContent = prayerLocation;
+
+      if (openLastBtn) {
+        openLastBtn.disabled = !lastPage?.path;
+        openLastBtn.onclick = () => {
+          if (lastPage?.path) window.location.href = lastPage.path;
+        };
+      }
+
+      if (clearNotifBtn) {
+        clearNotifBtn.onclick = () => {
+          if (typeof clearNotifications === "function") clearNotifications();
+          updateHomeDashboard();
+        };
+      }
+
+      if (resetResumeBtn) {
+        resetResumeBtn.onclick = () => {
+          localStorage.removeItem("pageScrollPositions");
+          if (typeof toastNotification === "function") {
+            toastNotification("تم تصفير سجل استرجاع التصفح", "modern", "", "", {
+              autoHide: true,
+              autoHideDelay: 2200,
+            });
+          }
+        };
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(updateHomeDashboard, 200);
+    });
 
   </script>
 

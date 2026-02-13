@@ -25,48 +25,92 @@
 
     <div id="header-container" class="header" data-page-title="الراديو"></div>
 
-    <div class="main radio-page">
-        <div class="section radio-hero">
+    <main class="main radio-page">
+        <section class="section radio-hero">
             <div class="radio-hero-inner">
                 <h1>راديو القرآن الكريم</h1>
-                <p>استمع الآن إلى أشهر القرّاء والإذاعات بجودة عالية.</p>
+                <p>واجهة أبسط، وصول أسرع لمحطاتك المفضلة، وتحكم أدق في التشغيل.</p>
             </div>
-        </div>
+        </section>
 
-        <div class="section">
-            <div class="radio-container radio-layout">
-                <div class="radio-player">
+        <section class="section">
+            <div class="radio-layout">
+                <article class="radio-player">
+                    <div class="radio-player-head">
+                        <span class="live-pill"><i class="fa-solid fa-wave-square"></i> بث مباشر</span>
+                        <button class="player-btn icon-only favorite-toggle" aria-label="إضافة للمفضلة">
+                            <i class="fa-regular fa-star"></i>
+                        </button>
+                    </div>
+
                     <img src="" alt="" class="radio-image loading">
-                    <div class="radio-name loading"></div>
+                    <h2 class="radio-name loading">جاري التحميل...</h2>
+                    <p class="now-playing">جاري تحميل بيانات المحطات...</p>
+
                     <div class="audio-player custom-player">
-                        <audio class="quranPlayer" autoplay></audio>
+                        <audio class="quranPlayer" preload="none"></audio>
                         <div class="player-controls">
-                            <button class="player-btn play-toggle" aria-label="تشغيل أو إيقاف">
+                            <button class="player-btn prev-toggle" aria-label="المحطة السابقة">
+                                <i class="fa-solid fa-backward-step"></i>
+                            </button>
+                            <button class="player-btn play-toggle primary" aria-label="تشغيل أو إيقاف">
                                 <i class="fa-solid fa-play"></i>
                             </button>
+                            <button class="player-btn next-toggle" aria-label="المحطة التالية">
+                                <i class="fa-solid fa-forward-step"></i>
+                            </button>
+                        </div>
+
+                        <div class="player-status-row">
                             <div class="player-status">
                                 <span class="player-state">متوقف</span>
-                                <span class="player-meta">جودة عالية</span>
+                                <span class="player-meta">اضغط تشغيل للبدء</span>
                             </div>
-                            <button class="player-btn mute-toggle" aria-label="كتم الصوت">
-                                <i class="fa-solid fa-volume-high"></i>
-                            </button>
-                            <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1"
-                                aria-label="مستوى الصوت">
+                            <div class="volume-wrap">
+                                <button class="player-btn mute-toggle icon-only" aria-label="كتم الصوت">
+                                    <i class="fa-solid fa-volume-high"></i>
+                                </button>
+                                <input type="range" class="volume-slider" min="0" max="1" step="0.05" value="1"
+                                    aria-label="مستوى الصوت">
+                                <span class="volume-value">100%</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="now-playing">جاري التشغيل...</div>
-                </div>
-                <div class="stations-panel">
+                </article>
+
+                <aside class="stations-panel">
                     <div class="stations-header">
-                        <h2>قائمة المحطات</h2>
-                        <span class="stations-subtitle">اختر إذاعتك المفضلة</span>
+                        <div>
+                            <h2>قائمة المحطات</h2>
+                            <span class="stations-subtitle">ابحث أو صفِّ حسب تفضيلاتك</span>
+                        </div>
+                        <button class="player-btn icon-only refresh-stations" aria-label="تحديث المحطات">
+                            <i class="fa-solid fa-rotate"></i>
+                        </button>
                     </div>
+
+                    <div class="stations-tools">
+                        <div class="stations-search">
+                            <i class="fa fa-search"></i>
+                            <input type="search" id="stationSearch" placeholder="ابحث عن محطة...">
+                        </div>
+                        <div class="stations-filters">
+                            <button class="station-filter active" data-filter="all">الكل</button>
+                            <button class="station-filter" data-filter="favorites">المفضلة</button>
+                            <button class="station-filter" data-filter="recent">آخر تشغيل</button>
+                        </div>
+                    </div>
+
+                    <div class="stations-summary">
+                        <span id="stationsCount">0 محطة</span>
+                        <span id="stationsHint">اختر محطة للبدء</span>
+                    </div>
+
                     <div class="stations-container"></div>
-                </div>
+                </aside>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
 
 
@@ -103,7 +147,6 @@
                         const display = ` ${hijri.weekday.ar} ${hijri.day} ${hijri.month.ar} ${hijri.year}`;
                         const hijiryDiv = document.getElementById("hijiry");
                         if (hijiryDiv) hijiryDiv.innerHTML = display;
-                        console.log(hijri.day);
                         if (hijri.weekday.ar === "الجمعة" && localStorage.getItem("notificationsEnabled") == "true") {
 
                             toastNotification(
@@ -124,139 +167,345 @@
         </script>
 
         <script>
-            // fetch data from https://data-rosy.vercel.app/radio.json
-
-            async function renderallradios() {
-                try {
-                    const response = await fetch(`https://data-rosy.vercel.app/radio.json`);
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                    const data = await response.json();
-
-                    const radioContainer = document.querySelector(".stations-container"); // Updated selector
-
-                    radioContainer.innerHTML = "";
-                    data.radios.forEach((radio, index) => {
-                        const radioDiv = document.createElement("div");
-                        radioDiv.classList.add("station-item");
-
-                        if (index == 0) {
-                            radioDiv.innerHTML = `
-                            <input type="radio" name="radio" id="${index}" onclick="radio(${radio.id})" checked/>
-                            <label for="${index}">${radio.name} <img src="${radio.img}" class="thumb"/></label>
-                        `;
-                        } else {
-                            radioDiv.innerHTML = `
-                            <input type="radio" name="radio" id="${index}" onclick="radio(${radio.id})"/>
-                            <label for="${index}">${radio.name} <img src="${radio.img}" class="thumb"/></label>
-                        `;
-                        }
-
-                        radioContainer.appendChild(radioDiv);
-                    });
-
-                } catch (error) {
-                    console.error("خطأ أثناء تحميل الراديو:", error);
-                }
-            }
-
-            async function radio(id) {
-                const radio_image = document.querySelector(".radio-image");
-                const radio_name = document.querySelector(".radio-name");
-                const radio_audio = document.querySelector(".quranPlayer");
-                const nowPlaying = document.querySelector(".now-playing");
-                const playToggle = document.querySelector(".play-toggle");
-                const playerState = document.querySelector(".player-state");
-
-                radio_image.classList.add("loading");
-                radio_name.classList.add("loading");
-                nowPlaying.textContent = "جاري التحميل...";
-
-                await fetch(`https://data-rosy.vercel.app/radio.json`)
-                    .then((response) => {
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        return response.json();
-                    })
-                    .then((data) => {
-                        let reciter = data.radios[id - 1].name;
-                        let url = data.radios[id - 1].url;
-                        let image = data.radios[id - 1].img;
-
-                        radio_image.src = image;
-                        radio_image.alt = reciter;
-                        radio_name.textContent = reciter;
-
-                        radio_audio.pause();
-                        radio_audio.src = url;
-                        radio_audio.play();
-
-                        nowPlaying.textContent = `جاري التشغيل: ${reciter}`;
-                        playerState.textContent = "يعمل الآن";
-                        playToggle.innerHTML = "<i class='fa-solid fa-pause'></i>";
-
-                        radio_image.classList.remove("loading");
-                        radio_name.classList.remove("loading");
-                    })
-                    .catch((error) => {
-                        console.error("خطأ أثناء تحميل الراديو:", error);
-                        radio_name.textContent = "تأكد من اتصالك بالانترنت";
-                        nowPlaying.textContent = "حدث خطأ في التحميل";
-                        radio_image.classList.remove("loading");
-                        radio_name.classList.remove("loading");
-                        playerState.textContent = "غير متصل";
-                        playToggle.innerHTML = "<i class='fa-solid fa-play'></i>";
-                    });
-            }
-
-            // Initialize
-            renderallradios();
-            radio(1);
-        </script>
-
-        <script>
             document.addEventListener("DOMContentLoaded", () => {
-                const audio = document.querySelector(".quranPlayer");
-                const playToggle = document.querySelector(".play-toggle");
-                const muteToggle = document.querySelector(".mute-toggle");
-                const volumeSlider = document.querySelector(".volume-slider");
-                const playerState = document.querySelector(".player-state");
+                const STORAGE_KEY = "radioPageStateV2";
+                const API_URL = "https://data-rosy.vercel.app/radio.json";
+                const state = {
+                    stations: [],
+                    currentId: null,
+                    search: "",
+                    filter: "all",
+                    favorites: [],
+                    recent: [],
+                    volume: 1,
+                    muted: false,
+                };
 
-                function setPlayUI(isPlaying) {
-                    playToggle.innerHTML = isPlaying
+                const els = {
+                    audio: document.querySelector(".quranPlayer"),
+                    image: document.querySelector(".radio-image"),
+                    name: document.querySelector(".radio-name"),
+                    nowPlaying: document.querySelector(".now-playing"),
+                    playToggle: document.querySelector(".play-toggle"),
+                    prevToggle: document.querySelector(".prev-toggle"),
+                    nextToggle: document.querySelector(".next-toggle"),
+                    muteToggle: document.querySelector(".mute-toggle"),
+                    volumeSlider: document.querySelector(".volume-slider"),
+                    volumeValue: document.querySelector(".volume-value"),
+                    playerState: document.querySelector(".player-state"),
+                    playerMeta: document.querySelector(".player-meta"),
+                    favoriteToggle: document.querySelector(".favorite-toggle"),
+                    stationsContainer: document.querySelector(".stations-container"),
+                    stationSearch: document.getElementById("stationSearch"),
+                    filters: [...document.querySelectorAll(".station-filter")],
+                    stationsCount: document.getElementById("stationsCount"),
+                    stationsHint: document.getElementById("stationsHint"),
+                    refreshStations: document.querySelector(".refresh-stations"),
+                };
+
+                function persistState() {
+                    localStorage.setItem(
+                        STORAGE_KEY,
+                        JSON.stringify({
+                            currentId: state.currentId,
+                            favorites: state.favorites,
+                            recent: state.recent.slice(0, 15),
+                            volume: state.volume,
+                            muted: state.muted,
+                            filter: state.filter,
+                            search: state.search,
+                        }),
+                    );
+                }
+
+                function restoreState() {
+                    try {
+                        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+                        state.currentId = saved.currentId != null ? String(saved.currentId) : null;
+                        state.favorites = Array.isArray(saved.favorites) ? saved.favorites.map((id) => String(id)) : [];
+                        state.recent = Array.isArray(saved.recent) ? saved.recent.map((id) => String(id)) : [];
+                        state.volume = typeof saved.volume === "number" ? Math.max(0, Math.min(1, saved.volume)) : 1;
+                        state.muted = Boolean(saved.muted);
+                        state.filter = typeof saved.filter === "string" ? saved.filter : "all";
+                        state.search = typeof saved.search === "string" ? saved.search : "";
+                    } catch (error) {
+                        // no-op
+                    }
+                }
+
+                function setPlayerState(label, meta) {
+                    els.playerState.textContent = label;
+                    if (meta) els.playerMeta.textContent = meta;
+                }
+
+                function setPlayUi(isPlaying) {
+                    els.playToggle.innerHTML = isPlaying
                         ? "<i class='fa-solid fa-pause'></i>"
                         : "<i class='fa-solid fa-play'></i>";
-                    playerState.textContent = isPlaying ? "يعمل الآن" : "متوقف";
                 }
 
-                playToggle.addEventListener("click", () => {
-                    if (audio.paused) {
-                        audio.play();
-                        setPlayUI(true);
-                    } else {
-                        audio.pause();
-                        setPlayUI(false);
-                    }
-                });
-
-                muteToggle.addEventListener("click", () => {
-                    audio.muted = !audio.muted;
-                    muteToggle.innerHTML = audio.muted
+                function updateVolumeUi() {
+                    els.volumeSlider.value = String(state.volume);
+                    els.volumeValue.textContent = `${Math.round(state.volume * 100)}%`;
+                    els.muteToggle.innerHTML = state.muted || state.volume === 0
                         ? "<i class='fa-solid fa-volume-xmark'></i>"
                         : "<i class='fa-solid fa-volume-high'></i>";
-                });
+                }
 
-                volumeSlider.addEventListener("input", (e) => {
-                    audio.volume = parseFloat(e.target.value);
-                    if (audio.volume === 0) {
-                        audio.muted = true;
-                        muteToggle.innerHTML = "<i class='fa-solid fa-volume-xmark'></i>";
-                    } else {
-                        audio.muted = false;
-                        muteToggle.innerHTML = "<i class='fa-solid fa-volume-high'></i>";
+                function getVisibleStations() {
+                    const q = state.search.trim().toLowerCase();
+                    let list = [...state.stations];
+                    if (state.filter === "favorites") {
+                        list = list.filter((s) => state.favorites.includes(String(s.id)));
+                    } else if (state.filter === "recent") {
+                        list = state.recent
+                            .map((id) => list.find((s) => String(s.id) === id))
+                            .filter(Boolean);
                     }
-                });
+                    if (q) {
+                        list = list.filter((s) => s.name.toLowerCase().includes(q));
+                    }
+                    return list;
+                }
 
-                audio.addEventListener("playing", () => setPlayUI(true));
-                audio.addEventListener("pause", () => setPlayUI(false));
+                function renderStations() {
+                    const visible = getVisibleStations();
+                    els.filters.forEach((btn) => {
+                        btn.classList.toggle("active", btn.dataset.filter === state.filter);
+                    });
+
+                    els.stationsCount.textContent = `${visible.length} محطة`;
+                    els.stationsHint.textContent = state.currentId
+                        ? "استخدم الأسهم للتنقل السريع"
+                        : "اختر محطة للبدء";
+
+                    if (!visible.length) {
+                        els.stationsContainer.innerHTML = `<div class="stations-empty">لا توجد محطات مطابقة.</div>`;
+                        return;
+                    }
+
+                    els.stationsContainer.innerHTML = visible
+                        .map((station) => {
+                            const isActive = String(station.id) === state.currentId;
+                            const isFav = state.favorites.includes(String(station.id));
+                            return `
+                                <button class="station-item ${isActive ? "active" : ""}" data-id="${station.id}">
+                                    <span class="station-main">
+                                        <img src="${station.img}" alt="${station.name}" class="thumb">
+                                        <span class="station-text">${station.name}</span>
+                                    </span>
+                                    <span class="station-actions">
+                                        ${isActive ? "<i class='fa-solid fa-circle-play'></i>" : ""}
+                                        ${isFav ? "<i class='fa-solid fa-star'></i>" : "<i class='fa-regular fa-star'></i>"}
+                                    </span>
+                                </button>
+                            `;
+                        })
+                        .join("");
+                }
+
+                function getCurrentStation() {
+                    return state.stations.find((s) => String(s.id) === state.currentId) || null;
+                }
+
+                function updateFavoriteUi() {
+                    const current = getCurrentStation();
+                    const isFav = current && state.favorites.includes(String(current.id));
+                    els.favoriteToggle.innerHTML = isFav
+                        ? "<i class='fa-solid fa-star'></i>"
+                        : "<i class='fa-regular fa-star'></i>";
+                }
+
+                async function selectStation(stationId, autoplay = true) {
+                    const wantedId = String(stationId);
+                    const station = state.stations.find((s) => String(s.id) === wantedId);
+                    if (!station) return;
+
+                    state.currentId = String(station.id);
+                    state.recent = [state.currentId, ...state.recent.filter((id) => id !== state.currentId)].slice(0, 15);
+                    persistState();
+
+                    els.image.classList.add("loading");
+                    els.name.classList.add("loading");
+                    els.name.textContent = station.name;
+                    els.nowPlaying.textContent = `تم اختيار: ${station.name}`;
+                    setPlayerState("جاري التحميل", "جودة عالية");
+
+                    els.audio.pause();
+                    els.audio.src = station.url;
+                    els.audio.load();
+
+                    els.image.src = station.img;
+                    els.image.alt = station.name;
+                    els.name.textContent = station.name;
+
+                    if (autoplay) {
+                        try {
+                            await els.audio.play();
+                        } catch (error) {
+                            setPlayerState("متوقف", "اضغط تشغيل للبدء");
+                        }
+                    }
+
+                    els.image.classList.remove("loading");
+                    els.name.classList.remove("loading");
+                    els.nowPlaying.textContent = autoplay
+                        ? `جاري التشغيل: ${station.name}`
+                        : `جاهز للتشغيل: ${station.name}`;
+                    updateFavoriteUi();
+                    renderStations();
+                }
+
+                function changeStation(step) {
+                    const visible = getVisibleStations();
+                    if (!visible.length) return;
+                    const currentIndex = visible.findIndex((s) => String(s.id) === state.currentId);
+                    const nextIndex = currentIndex < 0
+                        ? 0
+                        : (currentIndex + step + visible.length) % visible.length;
+                    selectStation(String(visible[nextIndex].id), true);
+                }
+
+                function toggleFavorite() {
+                    const current = getCurrentStation();
+                    if (!current) return;
+                    const currentId = String(current.id);
+                    const exists = state.favorites.includes(currentId);
+                    if (exists) {
+                        state.favorites = state.favorites.filter((id) => id !== currentId);
+                    } else {
+                        state.favorites = [currentId, ...state.favorites];
+                    }
+                    persistState();
+                    updateFavoriteUi();
+                    renderStations();
+                }
+
+                async function fetchStations() {
+                    els.stationsContainer.innerHTML = `<div class="stations-empty">جاري تحميل المحطات...</div>`;
+                    try {
+                        const response = await fetch(API_URL);
+                        if (!response.ok) throw new Error("Failed stations fetch");
+                        const data = await response.json();
+                        state.stations = Array.isArray(data.radios) ? data.radios : [];
+                        if (!state.stations.length) throw new Error("No stations");
+
+                        if (!state.currentId || !state.stations.some((s) => String(s.id) === state.currentId)) {
+                            state.currentId = String(state.stations[0].id);
+                        }
+                        renderStations();
+                        await selectStation(state.currentId, false);
+                    } catch (error) {
+                        els.stationsContainer.innerHTML = `
+                            <div class="stations-empty error">
+                                تعذر تحميل المحطات الآن.
+                                <button class="retry-load">إعادة المحاولة</button>
+                            </div>
+                        `;
+                        els.stationsContainer.querySelector(".retry-load")?.addEventListener("click", fetchStations);
+                        setPlayerState("غير متصل", "تحقق من الإنترنت ثم حاول مرة أخرى");
+                        els.nowPlaying.textContent = "حدث خطأ أثناء تحميل البيانات";
+                    }
+                }
+
+                function bindEvents() {
+                    els.playToggle.addEventListener("click", async () => {
+                        if (!els.audio.src && state.currentId) {
+                            await selectStation(state.currentId, true);
+                            return;
+                        }
+                        if (els.audio.paused) {
+                            try {
+                                await els.audio.play();
+                            } catch (error) {
+                                setPlayerState("متوقف", "تعذر التشغيل تلقائيًا");
+                            }
+                        } else {
+                            els.audio.pause();
+                        }
+                    });
+
+                    els.prevToggle.addEventListener("click", () => changeStation(-1));
+                    els.nextToggle.addEventListener("click", () => changeStation(1));
+                    els.favoriteToggle.addEventListener("click", toggleFavorite);
+                    els.refreshStations.addEventListener("click", fetchStations);
+
+                    els.muteToggle.addEventListener("click", () => {
+                        state.muted = !state.muted;
+                        els.audio.muted = state.muted;
+                        updateVolumeUi();
+                        persistState();
+                    });
+
+                    els.volumeSlider.addEventListener("input", (event) => {
+                        state.volume = Number(event.target.value);
+                        state.muted = state.volume === 0;
+                        els.audio.volume = state.volume;
+                        els.audio.muted = state.muted;
+                        updateVolumeUi();
+                        persistState();
+                    });
+
+                    els.stationSearch.addEventListener("input", (event) => {
+                        state.search = event.target.value;
+                        persistState();
+                        renderStations();
+                    });
+
+                    els.filters.forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            state.filter = btn.dataset.filter;
+                            persistState();
+                            renderStations();
+                        });
+                    });
+
+                    els.stationsContainer.addEventListener("click", (event) => {
+                        const item = event.target.closest(".station-item");
+                        if (!item) return;
+                        const stationId = item.dataset.id;
+                        if (!stationId) return;
+                        selectStation(stationId, true);
+                    });
+
+                    els.audio.addEventListener("playing", () => {
+                        setPlayUi(true);
+                        setPlayerState("يعمل الآن", "جودة عالية");
+                    });
+                    els.audio.addEventListener("pause", () => {
+                        setPlayUi(false);
+                        setPlayerState("متوقف", "يمكنك المتابعة في أي وقت");
+                    });
+                    els.audio.addEventListener("waiting", () => {
+                        setPlayerState("جاري التخزين المؤقت", "انتظر لحظات...");
+                    });
+                    els.audio.addEventListener("error", () => {
+                        setPlayUi(false);
+                        setPlayerState("تعذر التشغيل", "جرّب محطة أخرى");
+                    });
+
+                    document.addEventListener("keydown", (event) => {
+                        const activeTag = document.activeElement?.tagName;
+                        if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+                        if (event.code === "Space") {
+                            event.preventDefault();
+                            els.playToggle.click();
+                        } else if (event.code === "ArrowRight") {
+                            changeStation(1);
+                        } else if (event.code === "ArrowLeft") {
+                            changeStation(-1);
+                        }
+                    });
+                }
+
+                restoreState();
+                els.audio.volume = state.volume;
+                els.audio.muted = state.muted;
+                els.stationSearch.value = state.search;
+                updateVolumeUi();
+                bindEvents();
+                fetchStations();
             });
         </script>
+</body>
 </html>

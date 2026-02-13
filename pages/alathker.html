@@ -37,12 +37,57 @@
     </div>
 
     <div class="talk section athkar-list">
+      <div class="athkar-toolbar">
+        <div class="athkar-progress-head">
+          <div class="athkar-progress-meta">
+            <strong id="athkarTypeLabel">أذكار الصباح</strong>
+            <span id="athkarProgressText">المكتمل 0/0</span>
+          </div>
+          <span id="athkarPercentBadge" class="athkar-percent-badge">0%</span>
+        </div>
 
+        <div class="athkar-progress-track">
+          <div id="athkarProgressBar" class="athkar-progress-bar"></div>
+        </div>
+
+        <div class="athkar-toolbar-actions">
+          <button type="button" id="jumpToNextAthkar" class="athkar-tool-btn">
+            <i class="fa fa-arrow-down"></i>
+            التالي غير المكتمل
+          </button>
+          <button type="button" id="togglePendingOnly" class="athkar-tool-btn">
+            <i class="fa fa-filter"></i>
+            عرض غير المكتمل
+          </button>
+          <button type="button" id="resetCurrentAthkar" class="athkar-tool-btn danger">
+            <i class="fa fa-rotate-left"></i>
+            تصفير الحالي
+          </button>
+        </div>
+
+        <div class="athkar-search-row">
+          <div class="athkar-search">
+            <i class="fa fa-search"></i>
+            <input id="athkarSearchInput" type="search" placeholder="ابحث داخل الأذكار الحالية...">
+          </div>
+          <div class="athkar-font-tools">
+            <button type="button" id="athkarFontDecrease" class="athkar-font-btn" aria-label="تصغير الخط">
+              <i class="fa fa-minus"></i>
+            </button>
+            <span id="athkarFontScaleLabel">100%</span>
+            <button type="button" id="athkarFontIncrease" class="athkar-font-btn" aria-label="تكبير الخط">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="athkarItems" class="athkar-items"></div>
     </div>
     <div class="talkmenu athkar-menu">
       <div class="fixed">
 
         <h2>الأذكار</h2>
+        <p class="athkar-menu-hint">اختَر القسم المناسب ثم اضغط الذكر أو زر + لزيادة العدّاد.</p>
         <div class="radio-group animate__animated animate__fadeInRight">
           <input type="radio" id="talk1" name="talk" onchange="gettalk()" checked>
           <label for="talk1">أذكار الصباح</label>
@@ -103,26 +148,29 @@
 
 
   </script>
-  <script src="../assets/js/script.js"></script>
-
   <script>
-    function increaseCount(id) {
-      let counterEl = document.getElementById(id);
-      let current = parseInt(counterEl.textContent);
-      let max = parseInt(counterEl.parentElement.querySelector(".max").textContent);
+    const ATHKAR_STATE_KEY = "athkarCountersStateV2";
+    const ATHKAR_UI_KEY = "athkarUiStateV2";
+    const talksection = document.getElementById("athkarItems");
+    const athkarSearchInput = document.getElementById("athkarSearchInput");
+    const athkarProgressText = document.getElementById("athkarProgressText");
+    const athkarProgressBar = document.getElementById("athkarProgressBar");
+    const athkarTypeLabel = document.getElementById("athkarTypeLabel");
+    const athkarPercentBadge = document.getElementById("athkarPercentBadge");
+    const togglePendingOnlyBtn = document.getElementById("togglePendingOnly");
+    const resetCurrentAthkarBtn = document.getElementById("resetCurrentAthkar");
+    const jumpToNextAthkarBtn = document.getElementById("jumpToNextAthkar");
+    const athkarFontIncreaseBtn = document.getElementById("athkarFontIncrease");
+    const athkarFontDecreaseBtn = document.getElementById("athkarFontDecrease");
+    const athkarFontScaleLabel = document.getElementById("athkarFontScaleLabel");
 
-      if (current < max) {
-        current++
-        counterEl.textContent = current;
-
-        if (current == max) {
-          counterEl.parentElement.parentElement.classList.add("countDone")
-          counterEl.parentElement.classList.add("countDone")
-        }
-      }
-
-    }
-    const talksection = document.querySelector(".talk")
+    let countersState = {};
+    let uiState = {
+      talk: "talk1",
+      pendingOnly: false,
+      search: "",
+      fontScale: 100,
+    };
 
 
     const talks = {
@@ -523,48 +571,262 @@
 
 
 
-    function gettalk() {
+    function escapeHtml(text) {
+      return text
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
 
-      let talk = "talk1";
-      if (document.getElementById("talk2").checked) {
-        talk = "talk2";
-      }
-      if (document.getElementById("talk3").checked) {
-        talk = "talk3";
-      }
-      if (document.getElementById("talk4").checked) {
-        talk = "talk4";
-      }
-      if (document.getElementById("talk5").checked) {
-        talk = "talk5";
-      }
+    function escapeRegExp(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
 
-      talksection.innerHTML = ""
-
-      for (let i = 0; i < talks[talk].length; i++) {
-        talksection.innerHTML += `
-        <div class="thikr ${(talks[talk][i]["isayah"] === true) ? "isayah" : ""}" onclick="
-                  increaseCount('${i}count')">
-          <div class="text">
-          
-
-          ${(talks[talk][i]["link"]) ? `<a href="${talks[talk][i]["link"]}" class="button"> ${talks[talk][i]["text"]}</a>` : `${talks[talk][i]["text"]}`}
-          </div>
-
-        
-          <div class="counter" >
-            <span class="max">${talks[talk][i]["count"]}</span>
-            /
-            <span class="count" id="${i}count">0</span>
-            <button class="count-btn">+</button>
-          </div>
-        </div>
-
-        
-        `
+    function notify(message) {
+      if (typeof toastNotification === "function") {
+        toastNotification(message, "modern", "", "", { autoHide: true, autoHideDelay: 1700 });
       }
     }
-    gettalk()
+
+    function getCurrentTalk() {
+      if (document.getElementById("talk2").checked) return "talk2";
+      if (document.getElementById("talk3").checked) return "talk3";
+      if (document.getElementById("talk4").checked) return "talk4";
+      if (document.getElementById("talk5").checked) return "talk5";
+      return "talk1";
+    }
+
+    function setCurrentTalk(talkKey) {
+      const id = talkKey === "talk2" ? "talk2"
+        : talkKey === "talk3" ? "talk3"
+        : talkKey === "talk4" ? "talk4"
+        : talkKey === "talk5" ? "talk5"
+        : "talk1";
+      const input = document.getElementById(id);
+      if (input) input.checked = true;
+    }
+
+    function getCurrentTalkLabel() {
+      const checked = document.querySelector('input[name="talk"]:checked');
+      if (!checked) return "الأذكار";
+      const label = document.querySelector(`label[for="${checked.id}"]`);
+      return label ? label.textContent.trim() : "الأذكار";
+    }
+
+    function loadState() {
+      try {
+        countersState = JSON.parse(localStorage.getItem(ATHKAR_STATE_KEY) || "{}");
+      } catch (error) {
+        countersState = {};
+      }
+      try {
+        const storedUi = JSON.parse(localStorage.getItem(ATHKAR_UI_KEY) || "{}");
+        uiState = {
+          talk: typeof storedUi.talk === "string" ? storedUi.talk : "talk1",
+          pendingOnly: Boolean(storedUi.pendingOnly),
+          search: typeof storedUi.search === "string" ? storedUi.search : "",
+          fontScale: Number(storedUi.fontScale) || 100,
+        };
+      } catch (error) {
+        uiState = { talk: "talk1", pendingOnly: false, search: "", fontScale: 100 };
+      }
+      uiState.fontScale = Math.max(85, Math.min(130, uiState.fontScale));
+    }
+
+    function saveState() {
+      localStorage.setItem(ATHKAR_STATE_KEY, JSON.stringify(countersState));
+      localStorage.setItem(ATHKAR_UI_KEY, JSON.stringify(uiState));
+    }
+
+    function getTalkCounters(talk) {
+      if (!Array.isArray(countersState[talk])) {
+        countersState[talk] = new Array(talks[talk].length).fill(0);
+      }
+      if (countersState[talk].length !== talks[talk].length) {
+        countersState[talk] = new Array(talks[talk].length).fill(0);
+      }
+      return countersState[talk];
+    }
+
+    function highlightText(text, query) {
+      if (!query) return text;
+      const pattern = new RegExp(`(${escapeRegExp(query)})`, "gi");
+      return text.replace(pattern, "<mark>$1</mark>");
+    }
+
+    function updateProgress(talk, counters) {
+      const total = talks[talk].length;
+      let done = 0;
+      for (let i = 0; i < total; i++) {
+        if (counters[i] >= talks[talk][i].count) done++;
+      }
+      const remaining = total - done;
+      const percent = total ? Math.round((done / total) * 100) : 0;
+      athkarTypeLabel.textContent = getCurrentTalkLabel();
+      athkarProgressText.textContent = `المكتمل ${done}/${total} • المتبقي ${remaining}`;
+      athkarProgressBar.style.width = `${percent}%`;
+      athkarPercentBadge.textContent = `${percent}%`;
+    }
+
+    function updateUiControls() {
+      togglePendingOnlyBtn.classList.toggle("active", uiState.pendingOnly);
+      togglePendingOnlyBtn.innerHTML = uiState.pendingOnly
+        ? `<i class="fa fa-list"></i> عرض الكل`
+        : `<i class="fa fa-filter"></i> عرض غير المكتمل`;
+      athkarSearchInput.value = uiState.search;
+      athkarFontScaleLabel.textContent = `${uiState.fontScale}%`;
+      talksection.style.setProperty("--athkar-font-scale", String(uiState.fontScale / 100));
+    }
+
+    function increaseCount(index, event) {
+      if (event && event.target && event.target.closest("a")) return;
+      const talk = getCurrentTalk();
+      const counters = getTalkCounters(talk);
+      const max = talks[talk][index].count;
+      if (counters[index] >= max) return;
+      counters[index] += 1;
+      saveState();
+      renderTalk();
+    }
+
+    function decreaseCount(index, event) {
+      if (event) event.stopPropagation();
+      const talk = getCurrentTalk();
+      const counters = getTalkCounters(talk);
+      if (counters[index] <= 0) return;
+      counters[index] -= 1;
+      saveState();
+      renderTalk();
+    }
+
+    function resetItemCount(index, event) {
+      if (event) event.stopPropagation();
+      const talk = getCurrentTalk();
+      const counters = getTalkCounters(talk);
+      counters[index] = 0;
+      saveState();
+      renderTalk();
+    }
+
+    function resetCurrentTalk() {
+      const talk = getCurrentTalk();
+      countersState[talk] = new Array(talks[talk].length).fill(0);
+      saveState();
+      renderTalk();
+      notify("تم تصفير عدادات القسم الحالي");
+    }
+
+    function jumpToNextPending() {
+      const talk = getCurrentTalk();
+      const counters = getTalkCounters(talk);
+      let targetIndex = -1;
+      for (let i = 0; i < talks[talk].length; i++) {
+        if (counters[i] < talks[talk][i].count) {
+          targetIndex = i;
+          break;
+        }
+      }
+      if (targetIndex === -1) {
+        notify("ممتاز، أنهيت كل أذكار هذا القسم");
+        return;
+      }
+      const target = document.getElementById(`thikr-${talk}-${targetIndex}`);
+      if (!target) {
+        notify("العنصر غير ظاهر بسبب الفلترة الحالية");
+        return;
+      }
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      target.classList.add("thikr-focus");
+      setTimeout(() => target.classList.remove("thikr-focus"), 1200);
+    }
+
+    function renderTalk() {
+      const talk = getCurrentTalk();
+      uiState.talk = talk;
+      const counters = getTalkCounters(talk);
+      const query = uiState.search.trim().toLowerCase();
+      let html = "";
+      let shown = 0;
+
+      for (let i = 0; i < talks[talk].length; i++) {
+        const item = talks[talk][i];
+        const max = item.count;
+        const current = counters[i] || 0;
+        const isDone = current >= max;
+        if (uiState.pendingOnly && isDone) continue;
+        if (query && !item.text.toLowerCase().includes(query)) continue;
+
+        const safeText = highlightText(escapeHtml(item.text), query);
+        const textHtml = item.link
+          ? `<a href="${item.link}" class="button">${safeText}</a>`
+          : safeText;
+
+        shown += 1;
+        html += `
+          <article id="thikr-${talk}-${i}" class="thikr ${item.isayah === true ? "isayah" : ""} ${isDone ? "countDone" : ""}" onclick="increaseCount(${i}, event)">
+            <div class="thikr-index">${i + 1}</div>
+            <div class="text">${textHtml}</div>
+            <div class="counter ${isDone ? "countDone" : ""}">
+              <button type="button" class="count-btn minus" onclick="decreaseCount(${i}, event)" aria-label="تقليل">-</button>
+              <span class="count-readout">
+                <span class="count">${current}</span>
+                <span class="divider">/</span>
+                <span class="max">${max}</span>
+              </span>
+              <button type="button" class="count-btn plus" onclick="increaseCount(${i}, event); event.stopPropagation();" aria-label="زيادة">+</button>
+              <button type="button" class="count-btn reset" onclick="resetItemCount(${i}, event)" aria-label="تصفير">×</button>
+            </div>
+          </article>
+        `;
+      }
+
+      if (!shown) {
+        html = uiState.pendingOnly
+          ? `<div class="athkar-empty">كل الأذكار مكتملة في هذا القسم.</div>`
+          : `<div class="athkar-empty">لا توجد نتائج مطابقة للبحث.</div>`;
+      }
+
+      talksection.innerHTML = html;
+      updateProgress(talk, counters);
+      updateUiControls();
+      saveState();
+    }
+
+    function gettalk() {
+      renderTalk();
+    }
+
+    function setupEvents() {
+      athkarSearchInput.addEventListener("input", () => {
+        uiState.search = athkarSearchInput.value;
+        renderTalk();
+      });
+
+      togglePendingOnlyBtn.addEventListener("click", () => {
+        uiState.pendingOnly = !uiState.pendingOnly;
+        renderTalk();
+      });
+
+      resetCurrentAthkarBtn.addEventListener("click", resetCurrentTalk);
+      jumpToNextAthkarBtn.addEventListener("click", jumpToNextPending);
+
+      athkarFontIncreaseBtn.addEventListener("click", () => {
+        uiState.fontScale = Math.min(130, uiState.fontScale + 5);
+        renderTalk();
+      });
+
+      athkarFontDecreaseBtn.addEventListener("click", () => {
+        uiState.fontScale = Math.max(85, uiState.fontScale - 5);
+        renderTalk();
+      });
+    }
+
+    loadState();
+    setCurrentTalk(uiState.talk);
+    setupEvents();
+    renderTalk();
 
   </script>
 

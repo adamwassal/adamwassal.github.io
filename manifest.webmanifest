@@ -1,0 +1,20 @@
+{
+  "name": "رياض الجنة",
+  "short_name": "رياض الجنة",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#05244d",
+  "lang": "ar",
+  "dir": "rtl",
+  "description": "موقع إسلامي متكامل: القرآن الكريم، الأذكار، مواقيت الصلاة، والراديو.",
+  "icons": [
+    {
+      "src": "./assets/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

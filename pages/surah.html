@@ -388,6 +388,55 @@
       margin: 10px auto 0;
     }
 
+    #surah-name {
+      width: min(560px, 92%);
+      margin-inline: auto;
+      color: var(--text-heading);
+      background: linear-gradient(135deg, rgba(246, 194, 1, 0.95), rgba(246, 194, 1, 0.75));
+      border: 1px solid rgba(246, 194, 1, 0.8);
+      border-radius: 22px;
+      padding: 14px 54px 14px 54px;
+      text-align: center;
+      line-height: 1.5;
+      position: relative;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.14);
+      font-size: clamp(1.45rem, 3.2vw, 2.05rem);
+      font-family: "AmiriQuran", "Hafs", serif;
+    }
+
+    #surah-name .surah-name-text {
+      display: inline-block;
+    }
+
+    .surah-info-btn {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      background: var(--color-secondary);
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .surah-info-btn:hover {
+      filter: brightness(1.06);
+    }
+
+    .basmala {
+      width: min(700px, 92%);
+      margin-inline: auto;
+      text-align: center;
+      font-family: "AmiriQuran", "Hafs", serif;
+      font-size: clamp(1.35rem, 3vw, 1.95rem);
+    }
+
     .layout-toggle {
       display: flex;
       gap: 10px;
@@ -744,9 +793,6 @@
             return response.json();
           })
           .then((data) => {
-            if (surahNumber == 1) {
-              document.querySelector(".basmala").style.display = "none"
-            }
             surahNameElement.textContent = `${data.data.name}`;
             document.querySelector(".name").textContent = `${data.data.name}`;
             document.querySelector(".ayahcount").textContent = `عدد الآيات: ${data.data.numberOfAyahs}`;
@@ -755,18 +801,25 @@
             } else {
               document.querySelector(".revelation").textContent = `مكان النزول: المدينة المنورة`;
             }
-            surahNameElement.style.position = "relative";
-            surahNameElement.innerHTML += ` <button class="tafseer" style="position: absolute;right:0; background: var(--color-secondary);" onclick="showInfoPopup()"><i class="fa-solid fa-info"></i></button>`
+            surahNameElement.innerHTML = `
+              <span class="surah-name-text">${data.data.name}</span>
+              <button class="surah-info-btn" onclick="showInfoPopup()" aria-label="معلومات السورة">
+                <i class="fa-solid fa-info"></i>
+              </button>
+            `;
             ayahsDiv.innerHTML = "";
 
             data.data.ayahs.forEach((ayah) => {
               const p = document.createElement("span");
               p.classList.add("ayah-inline");
-              let ayahtext = ayah.text
-              if (ayah.numberInSurah == 1 && String(surahNumber) !== "1") {
+              let ayahtext = ayah.text;
+              if (ayah.numberInSurah == 1) {
                 const basmalaPattern = /بِ?سْمِ\s*(ٱ|ا)للَّهِ\s*(ٱ|ا)لرَّحْمَـٰنِ\s*(ٱ|ا)لرَّحِيمِ/g;
                 ayahtext = ayahtext.replace(basmalaPattern, "").trim();
                 ayahtext = ayahtext.replace(/^[:\-–—،.\s]+/, "");
+              }
+              if (!ayahtext) {
+                return;
               }
               p.textContent = ayahtext;
               p.dataset.ayahText = ayahtext;
@@ -908,60 +961,109 @@
     });
     let currentAyah = null;
     let currentSurah = null;
+    let nextAyahWarmupAudio = null;
 
-    async function playAyah(ayahNumber) {
+    function resetAyahPlayUi() {
+      document.querySelectorAll("#surah-ayahs .ayah-inline").forEach((el) => {
+        el.style.color = "";
+      });
+      document.querySelectorAll("#surah-ayahs .control-btn[class*='play-']").forEach((btn) => {
+        btn.innerHTML = "<i class='fa-solid fa-play'></i>";
+      });
+    }
 
+    function getAyahControl(ayahNumber) {
+      return document.querySelector(`.audio-${ayahNumber}`);
+    }
+
+    function getAyahAudioSrc(ayahNumber) {
+      const controlDiv = getAyahControl(ayahNumber);
+      if (!controlDiv) return "";
+      return controlDiv.getAttribute("data-audio") || "";
+    }
+
+    function warmupNextAyahAudio(nextAyahNumber) {
+      const nextSrc = getAyahAudioSrc(nextAyahNumber);
+      if (!nextSrc) return;
+
+      if (nextAyahWarmupAudio && nextAyahWarmupAudio.src === nextSrc) return;
+
+      nextAyahWarmupAudio = new Audio();
+      nextAyahWarmupAudio.preload = "auto";
+      nextAyahWarmupAudio.src = nextSrc;
+      nextAyahWarmupAudio.load();
+    }
+
+    async function playAyah(ayahNumber, options = {}) {
+      const { autoAdvance = false } = options;
+      const parsedAyah = Number(ayahNumber);
+      if (!Number.isFinite(parsedAyah)) return;
 
       const audioEl = document.getElementById("ayah-player");
-      const controlDiv = document.querySelector(`.audio-${ayahNumber}`);
-
+      const controlDiv = getAyahControl(parsedAyah);
       if (!controlDiv) {
-        console.warn("Audio not found for ayah:", ayahNumber);
+        console.warn("Audio not found for ayah:", parsedAyah);
         return;
       }
 
+      const ayahEl = controlDiv.parentElement;
+      const audioSrc = getAyahAudioSrc(parsedAyah);
+      if (!audioSrc) {
+        console.error("❌ مفيش لينك صوت للآية:", parsedAyah);
+        return;
+      }
+
+      audioEl.preload = "auto";
+
+      const isSameAyah = currentAyah === parsedAyah;
+      if (!autoAdvance && isSameAyah && !audioEl.paused) {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        currentAyah = null;
+        resetAyahPlayUi();
+        return;
+      }
 
       if (!audioEl.paused) {
-        document.querySelectorAll("#surah-ayahs p").forEach(p => {
-          p.style.color = "";
-          console.log(p)
-        });
-
-        document.querySelectorAll(".playbtn").forEach(btn => {
-          btn.innerHTML = "<i class='fa-solid fa-play'></i>"
-        });
-        document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-play'></i>"
-
-        audioEl.pause()
-
-
-        audioEl.currentTime = 0;
-        return
+        audioEl.pause();
       }
-      document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-stop'></i>"
 
-      const audioSrc = controlDiv.getAttribute("data-audio");
-      if (!audioSrc) {
-        console.error("❌ مفيش لينك صوت للآية:", ayahNumber);
+      resetAyahPlayUi();
+      currentAyah = parsedAyah;
+      window.location.hash = ayahEl.id;
+
+      if (audioEl.src !== audioSrc) {
+        audioEl.src = audioSrc;
+      }
+      audioEl.currentTime = 0;
+
+      ayahEl.style.color = "var(--color-primary)";
+      const playBtn = document.querySelector(`.play-${parsedAyah}`);
+      if (playBtn) playBtn.innerHTML = "<i class='fa-solid fa-stop'></i>";
+
+      const nextEl = ayahEl.nextElementSibling;
+      const nextAyah = nextEl ? Number(nextEl.id) : NaN;
+      if (Number.isFinite(nextAyah)) {
+        warmupNextAyahAudio(nextAyah);
+      }
+
+      try {
+        await audioEl.play();
+      } catch (error) {
+        resetAyahPlayUi();
+        currentAyah = null;
         return;
       }
 
-      // نشغل الصوت
-      window.location.hash = controlDiv.parentElement.id
-      audioEl.src = audioSrc;
-      controlDiv.parentElement.style.color = "var(--color-primary)";
-      audioEl.currentTime = 0;
-      await audioEl.play();
+      audioEl.onended = async () => {
+        ayahEl.style.color = "";
+        if (playBtn) playBtn.innerHTML = "<i class='fa-solid fa-play'></i>";
 
-      // نجهز اللي بعدها
-      audioEl.onended = () => {
-        controlDiv.parentElement.style.color = "";
-        document.querySelector(`.play-${ayahNumber}`).innerHTML = "<i class='fa-solid fa-play'></i>"
-
-        const nextEl = document.getElementById(ayahNumber)?.nextElementSibling;
-        if (nextEl) {
-          const nextAyah = parseInt(nextEl.id);
-          playAyah(nextAyah);
+        if (Number.isFinite(nextAyah)) {
+          await playAyah(nextAyah, { autoAdvance: true });
+        } else {
+          currentAyah = null;
+          resetAyahPlayUi();
         }
       };
     }
